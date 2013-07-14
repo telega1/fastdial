@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://fastdial/skin/css/preferences.css" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://fastdial/locale/fastdial.dtd">
+<prefwindow id="fd-dialog-preferences"
+            buttons="cancel, extra2, help"
+            buttonlabelcancel="&close;"
+            buttonlabelextra2="&defaults;"
+            onload="initialize();"
+            ondialoghelp="openHelp();"
+            ondialogextra2="defaults();"
+            persist="screenX screenY"
+            title="&preferences;"
+            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul ">
+
+    <prefpane id="general" label="&general;" helpTopic="true">
+        <tabpanels>
+            <tabpanel orient="vertical">
+                <grid>
+                    <columns>
+                        <column/>
+                        <column/>
+                        <column/>
+                    </columns>
+                    <rows>
+                        <row align="center">
+                            <label value="&homeFolder;:"/>
+                            <label id="folder"/>
+                            <button label="&select;" onclick="selectHomeFolder();"/>
+                        </row>
+                        <row align="center">
+                            <label value="&quantity;:"/>
+                            <hbox align="center">
+                                <textbox id="width" type="number" min="1"
+                                         onchange="saveOptions();"/>
+                                <label value="x"/>
+                                <textbox id="height" type="number" min="1"
+                                         onchange="saveOptions();"/>
+                            </hbox>
+                        </row>
+                        <row align="center">
+                            <label value="&size;:"/>
+                            <hbox align="center">
+                                <textbox id="thumbWidth" type="number"
+                                         increment="100" onchange="updateThumbHeight(); saveOptions();"/>
+                                <label value="x"/>
+                                <textbox id="thumbHeight" readonly="true"/>
+                            </hbox>
+                            <checkbox id="fixed" label="&fixed;" oncommand="saveOptions();"/>
+                        </row>
+                        <row align="center">
+                            <label value="&search;:"/>
+                            <hbox>
+                                <textbox id="search" type="number"
+                                                   onchange="saveSearch();"/>
+                            </hbox>
+                        </row>
+                    </rows>
+                </grid>
+                <hbox>
+                    <checkbox id="enable" label="&showInBlankTabs;"
+                              oncommand="FdPrefs.setGlobalString('browser.newtab.url', this.checked ? FdInfo.URI : 'about:newtab');"/>
+                </hbox>
+                <hbox>
+                    <checkbox id="hideEmpty"
+                              label="&hideEmptyBoxes;" oncommand="saveOptions();"/>
+                </hbox>
+                <hbox>
+                    <checkbox id="hideBack" label="&hideBackLinks;"
+                              oncommand="saveOptions();"/>
+                </hbox>
+                <separator/>
+                <grid>
+                    <rows>
+                        <row align="center">
+                            <label value="&openLinksIn;:"/>
+                            <hbox>
+                                <menulist id="openIn" oncommand="saveOptions();">
+                                    <menupopup>
+                                        <menuitem label="&currentTab;" value=""/>
+                                        <menuitem label="&newTab;" value="tab"/>
+                                        <menuitem label="&backgroundTab;" value="tabshifted"/>
+                                    </menupopup>
+                                </menulist>
+                            </hbox>
+                        </row>
+                        <row align="center">
+                            <label value="&shortcutKey;:"/>
+                            <hbox align="center">
+                                <textbox id="shortcutKey" onkeypress="onShortcutKey(event);"/>
+                                <label id="restartIsNeeded" value="&restartIsNeeded;"/>
+                            </hbox>
+                        </row>
+                        <row align="center">
+                            <label value="&connectionSpeed;:"/>
+                            <hbox>
+                                <menulist id="timeout" oncommand="saveOptions();">
+                                    <menupopup>
+                                        <menuitem label="&fast;" value="1000"/>
+                                        <menuitem label="&medium;" value="5000"/>
+                                        <menuitem label="&slow;" value="10000"/>
+                                    </menupopup>
+                                </menulist>
+                            </hbox>
+                        </row>
+                    </rows>
+                </grid>
+            </tabpanel>
+        </tabpanels>
+    </prefpane>
+    <prefpane id="appearance" label="&appearance;" helpTopic="true">
+        <tabbox flex="1">
+            <tabs>
+                <tab label="&theme;"/>
+                <tab label="&page;"/>
+                <tab label="&search;"/>
+                <tab label="&thumbnail;"/>
+                <tab label="&title;"/>
+            </tabs>
+            <tabpanels flex="1">
+                <tabpanel orient="vertical">
+                    <hbox flex="1">
+                        <tree id="themes" hidecolumnpicker="true" flex="1">
+                            <treecols>
+                                <treecol hideheader="true" flex="1"/>
+                            </treecols>
+                            <treechildren/>
+                        </tree>
+                        <vbox>
+                            <button label="&import;&#x2026;" oncommand="importThemes();"/>
+                            <button label="&export;&#x2026;" oncommand="exportTheme();"/>
+                            <button id="rename" label="&rename;" oncommand="renameTheme();"/>
+                            <button id="remove" label="&remove;" oncommand="removeThemes();"/>
+                        </vbox>
+                    </hbox>
+                    <label href="http://userlogos.org/fdthemes" class="text-link"
+                           tooltiptext="http://userlogos.org/fdthemes" value="&searchThemes;"/>
+                </tabpanel>
+                <tabpanel orient="vertical">
+                    <grid>
+                        <columns>
+                            <column/>
+                            <column flex="1"/>
+                        </columns>
+                        <rows>
+                            <row align="center">
+                                <label value="&font;:"/>
+                                <menulist id="font-family"
+                                          flex="1" oncommand="saveStyle();">
+                                    <menupopup/>
+                                </menulist>
+                                <textbox id="font-size"
+                                         type="number" onchange="saveStyle();"/>
+                            </row>
+                            <row align="center">
+                                <label value="&image;:"/>
+                                <textbox id="image" flex="1" onchange="setImage('image', this.value);"/>
+                                <hbox>
+                                    <button class="browse" label="&#x2026;"
+                                            tabindex="-1" oncommand="browseImage('image');"/>
+                                    <checkbox id="center" oncommand="saveStyle();"/>
+                                </hbox>
+                            </row>
+                            <row align="center">
+                                <label value="&back;:"/>
+                                <textbox id="back" onchange="setImage('back', this.value);"/>
+                                <hbox>
+                                    <button class="browse" label="&#x2026;"
+                                            tabindex="-1" oncommand="browseImage('back');"/>
+                                </hbox>
+                            </row>
+                            <row align="center">
+                                <label value="&background;:"/>
+                                <hbox>
+                                    <textbox id="background" class="color" onchange="updateColor(this);"/>
+                                    <colorpicker type="button" onchange="updateColor(this);"/>
+                                </hbox>
+                            </row>
+                        </rows>
+                    </grid>
+                </tabpanel>
+                <tabpanel orient="vertical">
+                    <grid>
+                        <columns>
+                            <column/>
+                            <column flex="1"/>
+                        </columns>
+                        <rows>
+                            <row align="center">
+                                <label value="&image;:"/>
+                                <textbox id="search.image" flex="1"
+                                         onchange="setImage('search.image', this.value);"/>
+                                <button class="browse" label="&#x2026;"
+                                        tabindex="-1" oncommand="browseImage('search.image');"/>
+                            </row>
+                            <row align="center">
+                                <label value="&text;:"/>
+                                <hbox>
+                                    <textbox id="search.color" class="color"
+                                             onchange="updateColor(this);"/>
+                                    <colorpicker type="button" onchange="updateColor(this);"/>
+                                </hbox>
+                            </row>
+                            <row align="center">
+                                <label value="&background;:"/>
+                                <hbox>
+                                    <textbox id="search.background" class="color"
+                                             onchange="updateColor(this);"/>
+                                    <colorpicker type="button" onchange="updateColor(this);"/>
+                                </hbox>
+                            </row>
+                            <row align="center">
+                                <label value="&border;:"/>
+                                <hbox>
+                                    <textbox id="search.border" class="color"
+                                             onchange="updateColor(this);"/>
+                                    <colorpicker type="button" onchange="updateColor(this);"/>
+                                </hbox>
+                            </row>
+                        </rows>
+                    </grid>
+                </tabpanel>
+                <tabpanel orient="vertical">
+                    <grid>
+                        <rows>
+                            <row align="center">
+                                <spacer/>
+                                <label value="&normal;"/>
+                                <spacer/>
+                                <label value="&active;"/>
+                            </row>
+                            <row align="center">
+                                <label value="&background;:"/>
+                                <textbox id="thumbnail.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                            <row align="center">
+                                <label value="&border;:"/>
+                                <textbox id="thumbnail.border" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.border" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                            <row align="center">
+                                <label value="&margin;:"/>
+                                <textbox id="thumbnail.margin"
+                                         type="number" onchange="saveStyle();"/>
+                                <spacer/>
+                                <textbox id="hover.margin"
+                                         type="number" onchange="saveStyle();"/>
+                                <spacer/>
+                            </row>
+                            <row align="center">
+                                <label value="&opacity;:"/>
+                                <textbox id="thumbnail.opacity"
+                                         type="number" max="10" onchange="saveStyle();"/>
+                                <spacer/>
+                                <textbox id="hover.opacity"
+                                         type="number" max="10" onchange="saveStyle();"/>
+                                <spacer/>
+                            </row>
+                        </rows>
+                    </grid>
+                </tabpanel>
+                <tabpanel orient="vertical">
+                    <grid>
+                        <rows>
+                            <row align="center">
+                                <spacer/>
+                                <label value="&normal;"/>
+                                <spacer/>
+                                <label value="&active;"/>
+                            </row>
+                            <row align="center">
+                                <label value="&visibility;:"/>
+                                <checkbox id="thumbnail.title"
+                                          class="no-label" oncommand="saveStyle();"/>
+                                <spacer/>
+                                <checkbox id="hover.title"
+                                          class="no-label" oncommand="saveStyle();"/>
+                            </row>
+                            <row align="center">
+                                <label value="&text;:"/>
+                                <textbox id="thumbnail.title.color" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.title.color" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                            <row align="center">
+                                <label value="&background;:"/>
+                                <textbox id="thumbnail.title.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.title.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                            <row align="center">
+                                <label value="&border;:"/>
+                                <textbox id="thumbnail.title.border" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.title.border" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                        </rows>
+                    </grid>
+                </tabpanel>
+            </tabpanels>
+        </tabbox>
+    </prefpane>
+
+    <script src="utils.js"/>
+    <script src="dom.js"/>
+    <script src="file.js"/>
+    <script src="bookmark.js"/>
+    <script src="template/template.js"/>
+    <script src="thumbnail/thumbnail.js"/>
+    <script>
+    <![CDATA[
+        const SCREENSHOT_SIZE = 400;
+        var wnd = FdUtils.getBrowserWindow();
+        var content = wnd.content.wrappedJSObject;
+        var images = {};
+
+        function initialize() {
+            FdDom.get("folder").value = FdBookmark.getHome().title;
+            initOptions();
+            FdDom.get("search").value =
+                    FdPrefs.getObject("search").length || 0;
+            initThemes();
+            initStyle();
+            initColorPickers();
+        }
+
+        function defaults() {
+            FdPrefs.clear("options");
+            FdPrefs.clear("browser.newtab.url");
+            FdTheme.remove("current");
+            wnd.Fd.updateView();
+            setTimeout(initialize, 100);
+        }
+
+        function initOptions() {
+            var options = FdPrefs.getObject("options");
+            FdDom.get("width").value = options.width;
+            FdDom.get("height").value = options.height;
+            FdDom.get("thumbWidth").value = options.thumbWidth;
+            FdDom.get("fixed").checked = options.fixed;
+            updateThumbHeight();
+            FdDom.get("hideEmpty").checked = options.hideEmpty;
+            FdDom.get("hideBack").checked = options.hideBack;
+            FdUtils.selectItem("openIn", options.openIn);
+            FdDom.get("shortcutKey").value = options.shortcutKey || "";
+            FdUtils.selectItem("timeout", options.timeout);
+            FdDom.get("enable").checked =
+                FdPrefs.getGlobalString('browser.newtab.url') == FdInfo.URI ? true : false;
+        }
+
+        function saveOptions() {
+            var options = {};
+            options.width = FdDom.get("width").value;
+            options.height = FdDom.get("height").value;
+            options.thumbWidth = FdDom.get("thumbWidth").value;
+            options.fixed = FdDom.get("fixed").checked;
+            options.hideEmpty = FdDom.get("hideEmpty").checked;
+            options.hideBack = FdDom.get("hideBack").checked;
+            options.openIn = FdDom.get("openIn").value;
+            options.shortcutKey = FdDom.get("shortcutKey").value;
+            options.timeout = FdDom.get("timeout").value;
+            FdPrefs.setObject("options", options);
+            wnd.Fd.updateView();
+        }
+
+        function updateThumbHeight() {
+            var width = FdDom.get("thumbWidth").value;
+            FdDom.get("thumbHeight").value = FdThumbnail.getHeight(width);
+        }
+
+        function saveSearch() {
+            var oldSearch = FdPrefs.getObject("search");
+            var count = FdDom.get("search").value;
+            var search = [];
+            var defaultEngine = FdUtils.getSearchEngine();
+            for (var i = 0; i < count; i++) {
+                search[i] = oldSearch[i] || defaultEngine.name;
+            }
+            FdPrefs.setObject("search", search);
+            wnd.Fd.updateView();
+        }
+
+        function setShortcutKey(key) {
+            FdDom.get("shortcutKey").value = key || "";
+            FdDom.get("restartIsNeeded").style.visibility = key ? "visible" : "hidden";
+        }
+
+        function onShortcutKey(e) {
+            if (e.keyCode != e.DOM_VK_TAB) {
+                setShortcutKey(FdUtils.getShortcutKey(e));
+                e.preventDefault();
+                saveOptions();
+            }
+        }
+
+        function initThemes() {
+            var current = FdPrefs.getString("theme");
+            var tree = FdDom.get("themes");
+            tree.onselect = "";
+            tree.currentIndex = -1;
+            var children = tree.lastChild;
+            FdDom.clear(children);
+            var infos = FdTheme.getInfos();
+            infos.unshift({});
+            var index = 0;
+            for (var i in infos) {
+                var name = infos[i].name || "";
+                var cell = document.createElement("treecell");
+                cell.setAttribute("value", name);
+                var title = infos[i].title || "";
+                if (!title || title == "*") {
+                    title += FdBundle.getString("defaultTheme");
+                }
+                cell.setAttribute("label", title);
+                var item = document.createElement("treeitem");
+                var row = document.createElement("treerow");
+                row.appendChild(cell);
+                item.appendChild(row);
+                children.appendChild(item);
+                if (name == (current || "")) {
+                    tree.view.selection.select(index);
+                }
+                index++;
+            }
+            tree.onselect = onThemeSelect;
+            updateThemeButtons();
+        }
+
+        function updateThemeButtons() {
+            FdDom.get("rename").disabled = !getTheme();
+            var removable = false;
+            for (var i in getThemes()) removable |= i != 0;
+            FdDom.get("remove").disabled = !removable;
+        }
+
+        function getTheme() {
+            var tree = FdDom.get("themes");
+            if (tree.currentIndex != -1) {
+                var column = tree.columns.getFirstColumn();
+                return tree.view.getCellValue(tree.currentIndex, column);
+            }
+        }
+
+        function getThemes() {
+            var themes = {};
+            var tree = FdDom.get("themes");
+            var start = new Object();
+            var end = new Object();
+            var column = tree.columns.getFirstColumn();
+            var rangeCount = tree.view.selection.getRangeCount();
+            for (var i = 0; i < rangeCount; i++) {
+                tree.view.selection.getRangeAt(i, start, end);
+                for (var j = start.value; j <= end.value; j++)
+                    themes[j] = tree.view.getCellValue(j, column);
+            }
+            return themes;
+        }
+
+        function onThemeSelect() {
+            var theme = FdPrefs.getString("theme");
+            if (/^~/.test(theme)) {
+                FdTheme.copy("current", theme);
+            }
+            var newTheme = getTheme();
+            FdPrefs.setString("theme", newTheme);
+            FdTheme.copy(newTheme, "current");
+            updateThemeButtons();
+            reloadView();
+            setTimeout(initStyle, 100);
+        }
+
+        function importThemes() {
+            var files = FdFile.chooseFile("multiple", ["*.zip"]);
+            if (!files.length) return;
+            for (var i in files) {
+                FdTheme.import(files[i]);
+            }
+            initThemes();
+            onThemeSelect();
+        }
+
+        function exportTheme() {
+            var file = FdFile.chooseFile("save", ["*.zip"]);
+            if (!file) return;
+            if (!file.leafName.match(/\.zip$/)) {
+                file.leafName += ".zip";
+            }
+            var theme = FdPrefs.getString("theme");
+            var title = FdTheme.getTitle(theme);
+            FdTheme.setStyle(getStyle(title));
+
+            FdFile.zip(file, FdTheme.getDirectory("current"));
+            var snapshot = file.clone();
+            snapshot.leafName = snapshot.leafName.replace(/\.zip$/, ".png");
+            wnd.FdLoader.load(FdInfo.URI,
+                    function(browser) {
+                        setTimeout(function() {
+                            var image = wnd.FdSnapshot.createImage(
+                                    browser.contentWindow, SCREENSHOT_SIZE);
+                            FdFile.writeFile(snapshot, image);
+                            browser.close();
+                        }, wnd.FdSnapshot.TIMEOUT_ULTRAFAST);
+                    });
+        }
+
+        function renameTheme() {
+            var name = getTheme();
+            var title = {
+                value: FdTheme.getTitle(name)
+            }
+            var message = FdBundle.getString("title");
+            var proceed = FdUtils.prompt(message, title);
+            if (proceed && title.value) {
+                FdTheme.remove(name);
+                FdTheme.setStyle(getStyle(title.value));
+                var newName = "user" + new Date().getTime();
+                FdTheme.copy("current", newName);
+                FdPrefs.setString("theme", newName);
+                initThemes();
+            }
+        }
+
+        function removeThemes() {
+            var message = FdBundle.getString("removeThemes");
+            if (!FdUtils.confirm(message)) return;
+            var themes = getThemes();
+            for (var i in themes) {
+                FdTheme.remove(themes[i]);
+            }
+            FdPrefs.clear("theme");
+            initThemes();
+            onThemeSelect();
+        }
+
+        function initStyle() {
+            if (!content.initThumbnails) {
+                return wnd.FdLoader.load(FdInfo.URI, function(browser) {
+                    content = browser.contentWindow.wrappedJSObject;
+                    initStyle();
+                    browser.close();
+                });
+            }
+            initPageStyle();
+            initSearchStyle();
+            initThumbnailStyle();
+        }
+
+        function initPageStyle() {
+            initFontFamily();
+            var doc = content.document;
+            FdDom.get("image").value = images["image"] = getImage(doc.body);
+            var repeat = FdDom.css(doc.body, "background-repeat");
+            FdDom.get("center").checked = repeat != "repeat";
+            var back = doc.createElement("div");
+            FdDom.addClass(back, "back");
+            FdDom.get("back").value = images["back"] = getImage(back);
+            var fontFamily = FdDom.css(doc.body, "font-family");
+            FdUtils.selectItem("font-family", fontFamily.match(/[^'"]+/));
+            var fontSize = FdDom.css(doc.body, "font-size");
+            FdDom.get("font-size").value = parseInt(fontSize);
+            var background = FdDom.css(doc.body, "background-color");
+            setColor("background", background);
+        }
+
+        function getImage(element) {
+            var image = FdDom.css(element, "background-image");
+            var url = image.match(/url\(\"(.*)\"\)/i);
+            return url ? url[1] : "";
+        }
+
+        function initFontFamily() {
+            var menupopup = FdDom.get("font-family").menupopup;
+            FdDom.clear(menupopup);
+            var fonts = FdUtils.getFontList();
+            for (var i = 0; i < fonts.length; i++) {
+                var menuitem = document.createElement("menuitem");
+                menuitem.setAttribute("label", fonts[i]);
+                menupopup.appendChild(menuitem);
+            }
+        }
+
+        function initSearchStyle() {
+            var doc = content.document;
+            var search = doc.getElementById("search");
+            var input = doc.createElement("input");
+            input.className = "search-input";
+            search.appendChild(input);
+            setColor("search.color", FdDom.css(input, "color"));
+            setColor("search.background", FdDom.css(input, "background-color"));
+            setColor("search.border", FdDom.css(input, "border-top-color"));
+            FdDom.get("search.image").value = images["search.image"] = getImage(input);
+            FdDom.remove(input);
+        }
+
+        function initThumbnailStyle() {
+            var doc = content.document;
+            var box = doc.getElementById(0);
+            var thumbnail = FdDom.child(box, "thumbnail");
+            var title = FdDom.child(thumbnail, "title");
+            var names = ["thumbnail", "hover"];
+            for (var i in names) {
+                var name = names[i];
+                FdDom.addClass(thumbnail, name);
+                var background = FdDom.css(thumbnail, "background-color");
+                setColor(name + ".background", background);
+                var border = FdDom.css(thumbnail, "border-top-color");
+                setColor(name + ".border", border);
+                var margin = FdDom.css(thumbnail, "margin-top");
+                FdDom.get(name + ".margin").value = parseInt(margin);
+                var opacity = FdDom.css(thumbnail, "opacity");
+                FdDom.get(name + ".opacity").value = opacity * 10;
+                var titleColor = FdDom.css(title, "color");
+                setColor(name + ".title.color", titleColor);
+                var titleBackground = FdDom.css(title, "background-color");
+                setColor(name + ".title.background", titleBackground);
+                var titleBorder = FdDom.css(title, "border-top-color");
+                setColor(name + ".title.border", titleBorder);
+                var visibility = FdDom.css(title, "visibility");
+                FdDom.get(name + ".title").checked = visibility != "hidden";
+                FdDom.removeClass(thumbnail, "hover");
+            }
+        }
+
+        function saveStyle() {
+            var theme = FdPrefs.getString("theme");
+            var title = FdTheme.getTitle(theme);
+            FdTheme.setStyle(getStyle(title));
+            if (!/^~/.test(theme)) {
+                var modified = theme ? "~" + theme : "~";
+                FdPrefs.setString("theme", modified);
+                FdTheme.copy("current", modified);
+                initThemes();
+            }
+            reloadView();
+        }
+
+        function getStyle(title) {
+            var style = [];
+            var center = FdDom.get("center").checked
+                    ? "center center no-repeat" : "top left repeat";
+            style["body"] = {
+                "background"       : getImageURL("image") + " " + center,
+                "font-family"      : "\"" + FdDom.get("font-family").label + "\"",
+                "font-size"        : FdDom.get("font-size").value,
+                "background-color" : FdDom.get("background").value
+            }
+            style[".back"] = {
+                "background-image" : getImageURL("back")
+            }
+            style[".search-input"] = {
+                "background-image" : getImageURL("search.image"),
+                "color"            : getColor("search.color"),
+                "background-color" : getColor("search.background"),
+                "border"           : "1px solid " + getColor("search.border")
+            }
+            style[".thumbnail"] = {
+                "background-color" : getColor("thumbnail.background"),
+                "border"           : "1px solid " + getColor("thumbnail.border"),
+                "margin"           : FdDom.get("thumbnail.margin").value,
+                "opacity"          : FdDom.get("thumbnail.opacity").value / 10
+            }
+            style["div.thumbnail:hover, .hover"] = {
+                "background-color" : getColor("hover.background"),
+                "border"           : "1px solid " + getColor("hover.border"),
+                "margin"           : FdDom.get("hover.margin").value,
+                "opacity"          : FdDom.get("hover.opacity").value / 10
+            }
+            style[".title"] = {
+                "visibility"       : FdDom.get("thumbnail.title").checked ? "visible" : "hidden",
+                "color"            : getColor("thumbnail.title.color"),
+                "background-color" : getColor("thumbnail.title.background"),
+                "border-top"       : "1px solid " + getColor("thumbnail.title.border")
+            }
+            style["div.thumbnail:hover .title, .hover .title"] = {
+                "visibility"       : FdDom.get("hover.title").checked ? "visible" : "hidden",
+                "color"            : getColor("hover.title.color"),
+                "background-color" : getColor("hover.title.background"),
+                "border-top"       : "1px solid " + getColor("hover.title.border")
+            }
+            var data = FdURL.readURL("chrome://fastdial/content/template/style.tpl");
+            var template = new JsTemplate.Template(data);
+            return template.run({ title: title, style: style });
+        }
+
+        function getImageURL(id) {
+            return images[id] ? "url(" + images[id] + ")" : "none";
+        }
+
+        function getColor(id) {
+            return FdDom.get(id).value || "transparent";
+        }
+
+        function setColor(id, value) {
+            var value = convertColor(value);
+            var textbox = FdDom.get(id);
+            textbox.value = value;
+            textbox.nextSibling.color = value;
+        }
+
+        function convertColor(color) {
+            var match = color.match(/rgb\((\d+), (\d+), (\d+)\)/);
+            if (match) {
+                function toHex(value) {
+                    value = parseInt(value).toString(16);
+                    return value.length == 1 ? "0" + value : value;
+                }
+
+                color = "#" + toHex(match[1]) + toHex(match[2]) + toHex(match[3]);
+            }
+            return color;
+        }
+
+        function updateColor(element) {
+            element.nodeName == "colorpicker"
+                    ? element.previousSibling.value = element.color.toLowerCase()
+                    : element.nextSibling.color = element.value;
+            saveStyle();
+        }
+
+        function browseImage(id) {
+            var file = FdFile.chooseFile("open", ["images"]);
+            if (file) {
+                var url = FdFile.getFileURL(file);
+                setImage(id, url);
+            }
+        }
+
+        function setImage(id, url) {
+            if (images[id]) {
+                var file = FdTheme.getDirectory("current");
+                var uri = FdURL.getNsiURL(images[id]);
+                file.append(decodeURI(uri.fileName));
+                try {
+                    file.remove(false);
+                } catch(e) {
+                }
+                delete images[id];
+            }
+            if (url) {
+                var uri = FdURL.getNsiURL(url);
+                var file = FdTheme.getDirectory("current");
+                file.append(decodeURI(uri.fileName));
+                try {
+                    FdFile.writeFile(file, FdURL.readURL(url));
+                    FdDom.get(id).value = images[id] =
+                            "chrome://fastdial-profile/content/themes/current/" + uri.fileName;
+                }
+                catch(e) {
+                }
+            }
+            saveStyle();
+        }
+
+        function initColorPickers() {
+            var colorpickers = document.getElementsByTagName("colorpicker");
+            for (var i = 0; i < colorpickers.length; i++) {
+                var colorpicker = colorpickers[i];
+                colorpicker.tabIndex = -1;
+                colorpicker.addEventListener("click", onColorPickerClick, false);
+            }
+        }
+
+        function onColorPickerClick(e) {
+            if (e.button == 2) {
+                e.target.color = "transparent";
+                updateColor(e.target);
+            }
+        }
+
+        function reloadView() {
+            flushXULCache();
+            FdUtils.forEachTab(function(w) {
+                if (w.initThumbnails) w.location.reload();
+            });
+        }
+
+        function flushXULCache() {
+            var DISABLE_XUL_CACHE = "nglayout.debug.disable_xul_cache";
+            var cache = FdPrefs.getGlobalBool(DISABLE_XUL_CACHE);
+            FdPrefs.setGlobalBool(DISABLE_XUL_CACHE, true);
+            FdPrefs.setGlobalBool(DISABLE_XUL_CACHE, cache);
+        }
+
+        function openHelp() {
+            FdUtils.openLink("http://www.userlogos.org/support#support", "tab");
+        }
+
+        function selectHomeFolder() {
+            var result = [];
+            openDialog("chrome://fastdial/content/folder.xul",
+                                   "", "chrome, centerscreen, modal", result);
+            if (result.folderId) {
+                FdBookmark.setHome(result.folderId);
+                FdDom.get("folder").value = FdBookmark.getHome().title;
+                reloadView();
+            }
+        }
+      ]]>
+  </script>
+</prefwindow>

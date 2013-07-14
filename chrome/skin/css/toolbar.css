@@ -1,0 +1,7 @@
+#fd-button {
+    list-style-image: url(../images/toolbar.png);
+}
+
+toolbar[iconsize="small"] #fd-button {
+    list-style-image: url(../icons/fastdial.png);
+}

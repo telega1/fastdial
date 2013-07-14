@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://fastdial/skin/css/toolbar.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://fastdial/locale/fastdial.dtd">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <window id="main-window">
+        <hbox style="overflow:hidden; height: 0;">
+            <vbox id="hidden-box"/>
+        </hbox>
+        <menupopup id="fd-menu"
+                   oncommand="Fd.onContextCommand(event, event.target.id);">
+            <menu id="fd-add-menu" label="&add;">
+                <menupopup oncommand="Fd.onContextCommand(event, this.parentNode.id);">
+                    <menuitem label="&bookmark;" value="bookmark"/>
+                    <menuitem label="&folder;" value="folder"/>
+                </menupopup>
+            </menu>
+            <menu id="fd-sort-menu" label="&sort;">
+                <menupopup oncommand="Fd.onContextCommand(event, this.parentNode.id);">
+                    <menuitem name="sort" type="radio" label="&none;"/>
+                    <menuitem name="sort" type="radio" value="auto" label="&auto;"/>
+                    <menuitem name="sort" type="radio" value="title" label="&title;"/>
+                    <menuitem name="sort" type="radio" value="visits" label="&visits;"/>
+                </menupopup>
+            </menu>
+            <menuitem id="fd-preferences" label="&preferences;"/>
+            <menuseparator id="fd-separator1"/>
+            <menuitem id="fd-open-all" label="&openAll;"/>
+            <menuitem id="fd-refresh" label="&refresh;"/>
+            <menuitem id="fd-refresh-all" label="&refreshAll;"/>
+            <menuitem id="fd-remove" label="&remove;"/>
+            <menuseparator id="fd-separator2"/>
+            <menuitem id="fd-properties" label="&properties;"/>
+        </menupopup>
+        <menupopup id="fd-folders-menu"
+                   onclick="Fd.openFolder(event); this.hidePopup();"
+                   onpopupshowing="return Fd.initFoldersMenu(this, true);"/>
+        <menupopup id="fd-search-menu"
+                   onpopupshowing="Fd.initSearchMenu(this);"/>
+    </window>
+
+    <toolbarpalette id="BrowserToolbarPalette">
+        <toolbarbutton id="fd-button" label="Fast Dial"
+                       class="toolbarbutton-1" onclick="Fd.onButtonClick(event);"/>
+    </toolbarpalette>
+
+    <popup id="contentAreaContextMenu">
+        <menu id="fd-add-page-menu" label="&addToFastDial;" class="menu-iconic"
+              image="chrome://fastdial/skin/icons/fastdial.png" onclick="Fd.addPage(event);">
+            <menupopup onclick="this.hidePopup();"/>
+        </menu>
+        <menuitem id="fd-add-page" label="&addToFastDial;" class="menuitem-iconic"
+                  image="chrome://fastdial/skin/icons/fastdial.png" onclick="Fd.addPage(event);"/>
+    </popup>
+
+    <script src="utils.js"/>
+    <script src="dom.js"/>
+    <script src="file.js"/>
+    <script src="bookmark.js"/>
+    <script src="storage.js"/>
+    <script src="snapshot.js"/>
+    <script src="template/template.js"/>
+    <script src="thumbnail/thumbnail.js"/>
+    <script src="legacy.js"/>
+    <script>
+    <![CDATA[
+        var Fd = {
+            openPreferences: function() {
+                openDialog("chrome://fastdial/content/preferences.xul",
+                                      "preferences", "chrome,centerscreen,toolbar");
+            },
+
+            initialize: function() {
+                if (gInitialPages) {
+                  gInitialPages.push(FdInfo.URI);
+                }
+                FdLegacy.migrate();
+                Fd.initShortcutKeys();
+                Fd.autoRefresh();
+                Fd.initSort();
+                FdDom.get("contentAreaContextMenu")
+                        .addEventListener("popupshowing", function(e) {
+                            var menu = FdDom.get("fd-add-page-menu");
+                            var menuitem = FdDom.get("fd-add-page");
+                            menuitem.hidden = Fd.initFoldersMenu(menu.firstChild);
+                            menu.hidden = !menuitem.hidden;
+                        }, false);
+            },
+
+            initShortcutKeys: function() {
+                var options = FdPrefs.getObject("options");
+                if (options.shortcutKey) {
+                    Fd.createShortcutKey(options.shortcutKey, FdInfo.URI);
+                }
+                var items = FdStorage.getAnnotatedItems(FdStorage.SHORTCUT_KEY);
+                for (var i in items) {
+                    var item = items[i];
+                    Fd.createShortcutKey(item.shortcutKey,
+                            FdStorage.getURL(item));
+                }
+            },
+
+            createShortcutKey: function(shortcutKey, url) {
+                var modifiers = "";
+                if (shortcutKey.match(/Ctrl/)) modifiers += "accel ";
+                if (shortcutKey.match(/Alt/)) modifiers += "alt ";
+                if (shortcutKey.match(/Shift/)) modifiers += "shift ";
+                var key = document.createElement("key");
+                key.setAttribute("modifiers", modifiers);
+                key.setAttribute("key", shortcutKey.match(/.$/));
+                var command = "FdUtils.openLink('" + url + "');";
+                key.setAttribute("oncommand", command);
+                FdDom.prepend(FdDom.get("mainKeyset"), key);
+            },
+
+            autoRefresh: function() {
+                var currentTime = new Date().getTime();
+                var items = FdStorage.getAnnotatedItems(FdStorage.REFRESH);
+                var refreshing = false;
+                for (var i in items) {
+                    var item = items[i];
+                    var url = FdStorage.getURL(item);
+                    var lastRefresh = FdCache.getCachedTime(url);
+                    if (!lastRefresh ||
+                            lastRefresh + item.refresh * 60 * 1000 < currentTime) {
+                        refreshing = true;
+                        FdSnapshot.create(item);
+                    }
+                }
+                if (refreshing) Fd.updateView();
+                setTimeout(Fd.autoRefresh, 60 * 1000);
+            },
+
+            initSort: function() {
+                var menupopup = FdDom.get("fd-sort-menu").firstChild;
+                var sort = FdPrefs.getString("sort");
+                for (var i = 0; i < menupopup.childNodes.length; i++) {
+                    var menuitem = menupopup.childNodes[i];
+                    if (menuitem.value == sort) {
+                        menuitem.setAttribute("checked", "true");
+                    }
+                }
+            },
+
+            thumbnail: null,
+
+            showContextMenu: function(e, thumbnail) {
+                Fd.thumbnail = thumbnail;
+                var wnd = content.wrappedJSObject;
+                var isReadOnly = !thumbnail || thumbnail.isReadOnly();
+                FdDom.get("fd-add-menu").hidden = FdBookmark.isDynamic(wnd.folder);
+                FdDom.get("fd-open-all").hidden = !thumbnail ||
+                        !thumbnail.properties.isFolder || thumbnail.properties.isBack;
+                FdDom.get("fd-refresh").hidden = !thumbnail || thumbnail.properties.isBack;
+                FdDom.get("fd-remove").hidden = isReadOnly;
+                FdDom.get("fd-separator2").hidden = isReadOnly;
+                FdDom.get("fd-properties").hidden = isReadOnly;
+                FdDom.get("fd-menu").openPopupAtScreen(e.screenX, e.screenY, true);
+            },
+
+            onContextCommand: function(e, command) {
+                var thumbnail = Fd.thumbnail;
+                var wnd = content.wrappedJSObject;
+                switch (command) {
+                    case "fd-open-all"   :
+                        thumbnail.openAll();
+                        break;
+                    case "fd-refresh"    :
+                        thumbnail.refresh();
+                        break;
+                    case "fd-remove"     :
+                        thumbnail.remove(true);
+                        break;
+                    case "fd-preferences":
+                        Fd.openPreferences();
+                        break;
+                    case "fd-properties" :
+                        thumbnail.openProperties();
+                        break;
+                    case "fd-add-menu":
+                        var box = FdDom.parent(document.popupNode, "box");
+                        var properties = {
+                            folderId: wnd.folder.id,
+                            isFolder: e.target.value == "folder",
+                            logo: e.target.value == "folder"
+                                  && "chrome://fastdial/skin/images/folder.png",
+                            thumbIndex: box && wnd.getThumbIndex(box.id),
+                            index: -1,
+                        }
+                        var thumbnail = new FdThumbnail(properties);
+                        thumbnail.openProperties();
+                        break;
+                    case "fd-sort-menu":
+                        FdPrefs.setString("sort", e.target.value);
+                        wnd.initThumbnails();
+                        break;
+                    case "fd-refresh-all":
+                        var wnd = content.wrappedJSObject;
+                        for (var i in wnd.thumbnails) {
+                            var thumbnail = wnd.thumbnails[i];
+                            if (thumbnail.isRefreshAll())
+                                FdCache.remove(thumbnail.getSnapshotURL());
+                        }
+                        Fd.updateView();
+                        break;
+                }
+            },
+
+            createFoldersMenu: function(folderId, menupopup, dynamic) {
+                var bookmarks = FdBookmark.getBookmarks(folderId);
+                for (var i in bookmarks) {
+                    var bookmark = bookmarks[i];
+                    if (!bookmark.isFolder || !dynamic &&
+                            FdBookmark.isDynamic(bookmark)) continue;
+                    var menuitem;
+                    var submenu = document.createElement("menupopup");
+                    submenu.setAttribute("onpopupshowing", "event.stopPropagation();");
+                    Fd.createFoldersMenu(bookmark.id, submenu);
+                    if (submenu.childNodes.length > 0) {
+                        menuitem = document.createElement("menu");
+                        menuitem.appendChild(submenu);
+                    }
+                    else menuitem = document.createElement("menuitem");
+                    menuitem.setAttribute("label", bookmark.title);
+                    menuitem.setAttribute("value", bookmark.id);
+                    menupopup.appendChild(menuitem);
+                }
+            },
+
+            initFoldersMenu: function(menupopup, dynamic) {
+                FdDom.clear(menupopup);
+                var home = FdBookmark.getHome();
+                Fd.createFoldersMenu(home.id, menupopup, dynamic);
+                return menupopup.childNodes.length > 0;
+            },
+
+            openFolder: function(e) {
+                var folderId = e.target.value;
+                var url = folderId ? FdStorage.getFolderURL(folderId) : FdInfo.URI;
+                FdUtils.openLink(url, e);
+            },
+
+            initSearchMenu: function(menupopup) {
+                FdDom.clear(menupopup);
+                var engines = FdUtils.getSearchEngines();
+
+                for (var i in engines) {
+                    var menuitem = document.createElement("menuitem");
+                    menuitem.setAttribute("label", engines[i].name);
+                    var icon = engines[i].iconURI;
+                    if (icon) {
+                        menuitem.setAttribute("class", "menuitem-iconic");
+                        menuitem.setAttribute("image", icon.spec);
+                        menuitem.setAttribute("onclick", "Fd.setSearchEngine(event);");
+                    }
+                    menupopup.appendChild(menuitem);
+                }
+            },
+
+            setSearchEngine: function(event) {
+                var search = FdPrefs.getObject("search");
+                var wnd = content.wrappedJSObject;
+                var searchIcons = wnd.document.getElementsByClassName("search-icon");
+
+                for(var i = 0; i < searchIcons.length; i++) {
+                    if (searchIcons[i] == wnd.currentSearch) search[i] = event.target.label;
+                }
+                FdPrefs.setObject("search", search);
+                Fd.updateView();
+            },
+
+            onButtonClick: function(e) {
+                if (e.button != 2) {
+                    FdUtils.openLink(FdInfo.URI, e);
+                }
+                else {
+                    var menu = FdDom.get("fd-folders-menu");
+                    menu.openPopup(e.target, "after_start", -1, -1);
+                    e.preventDefault();
+                }
+            },
+
+            addPage: function(e) {
+                FdDom.get("contentAreaContextMenu").hidePopup();
+                FdDom.get("fd-menu").hidePopup();
+                var folderId = e.target.getAttribute("value") ||
+                                                FdBookmark.getHome().id;
+                var bookmark = {
+                    url: content.location.href,
+                    title: content.document.title,
+                    folderId: folderId,
+                    index: -1
+                }
+                FdBookmark.saveBookmark(bookmark);
+                Fd.updateView();
+            },
+
+            updateView: function() {
+                FdUtils.forEachTab(function(w) {
+                    if (w.initThumbnails) w.initThumbnails();
+                });
+            },
+        }
+        addEventListener("load",
+                Fd.initialize, false);
+        ]]>
+  </script>
+</overlay>

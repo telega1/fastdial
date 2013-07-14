@@ -1,0 +1,10 @@
+content fastdial chrome/content/
+content fastdial-profile ../../fastdial/
+
+overlay chrome://browser/content/browser.xul chrome://fastdial/content/overlay.xul
+
+skin fastdial classic chrome/skin/
+style chrome://global/content/customizeToolbar.xul chrome://fastdial/skin/css/toolbar.css
+
+locale fastdial en-US chrome/locale/en-US/
+locale fastdial ru-RU chrome/locale/ru-RU/

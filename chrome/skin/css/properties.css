@@ -1,0 +1,18 @@
+@import url(chrome://global/skin/);
+
+radio[pane="general"] {
+    list-style-image: url(../images/general.png);
+}
+
+radio[pane="advanced"] {
+    list-style-image: url(../images/advanced.png);
+}
+
+.browse {
+    min-width: 25px;
+    margin: 0px;
+}
+
+#restartIsNeeded {
+    visibility: hidden;
+}

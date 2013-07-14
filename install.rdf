@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+    <Description about="urn:mozilla:install-manifest">
+        <em:unpack>true</em:unpack>
+        <em:id>fastdial@telega.phpnet.us</em:id>
+        <em:version>4.6</em:version>
+        <em:type>2</em:type>
+
+        <em:targetApplication>
+            <Description>
+                <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+                <em:minVersion>3.0</em:minVersion>
+                <em:maxVersion>24.0</em:maxVersion>
+            </Description>
+        </em:targetApplication>
+
+        <em:name>Fast Dial</em:name>
+        <em:creator>telega</em:creator>
+        <em:contributor>mafi0z</em:contributor>
+        <em:contributor>chiaroscuro</em:contributor>
+        <em:contributor>Efreak15</em:contributor>        
+        <em:contributor>rlebrette</em:contributor>
+        
+	      
+        <em:iconURL>chrome://fastdial/skin/images/fastdial.png</em:iconURL>
+        <em:optionsURL>chrome://fastdial/content/preferences.xul</em:optionsURL>
+        <em:homepageURL>http://userlogos.org/extensions/fastdial</em:homepageURL>
+    </Description>
+</RDF>

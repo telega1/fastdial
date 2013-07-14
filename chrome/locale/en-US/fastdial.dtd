@@ -1,0 +1,71 @@
+<!ENTITY add "Add">
+<!ENTITY folder "Folder">
+<!ENTITY bookmark "Bookmark">
+<!ENTITY sort "Sort">
+<!ENTITY none "None">
+<!ENTITY auto "Auto">
+<!ENTITY visits "Visits">
+<!ENTITY preferences "Preferences">
+<!ENTITY help "Help">
+<!ENTITY open "Open">
+<!ENTITY openAll "Open All">
+<!ENTITY refresh "Refresh">
+<!ENTITY remove "Remove">
+<!ENTITY properties "Properties">
+<!ENTITY url "URL">
+<!ENTITY title "Title">
+<!ENTITY description "Description">
+<!ENTITY logo "Logo">
+<!ENTITY favicon "Favicon">
+<!ENTITY shortcutKey "Shortcut Key">
+<!ENTITY restartIsNeeded "(restart is needed)">
+<!ENTITY refreshEvery "Refresh every">
+<!ENTITY minutes "minutes">
+<!ENTITY refreshAll "Refresh All">
+<!ENTITY preview "Preview">
+<!ENTITY background "Background">
+<!ENTITY theme "Theme">
+<!ENTITY export "Export">
+<!ENTITY import "Import">
+<!ENTITY rename "Rename">
+<!ENTITY makeHome "Make home">
+<!ENTITY addToFastDial "Add to Fast Dial">
+<!ENTITY general "General">
+<!ENTITY advanced "Advanced">
+<!ENTITY appearance "Appearance">
+<!ENTITY defaults "Defaults">
+<!ENTITY quantity "Quantity">
+<!ENTITY thumbnails "Thumbnails">
+<!ENTITY size "Size">
+<!ENTITY fixed "Fixed">
+<!ENTITY hideEmptyBoxes "Hide empty boxes">
+<!ENTITY hideSearch "Hide search bar">
+<!ENTITY hideBackLinks "Hide Back links">
+<!ENTITY openLinksIn "Open links in">
+<!ENTITY currentTab "current tab">
+<!ENTITY newTab "new tab">
+<!ENTITY backgroundTab "background tab">
+<!ENTITY connectionSpeed "Connection speed">
+<!ENTITY fast "Fast">
+<!ENTITY medium "Medium">
+<!ENTITY slow "Slow">
+<!ENTITY showInBlankTabs "Show Fast Dial in blank tabs">
+<!ENTITY page "Page">
+<!ENTITY font "Font">
+<!ENTITY image "Image">
+<!ENTITY back "Back">
+<!ENTITY background "Background">
+<!ENTITY search "Search">
+<!ENTITY thumbnail "Thumbnail">
+<!ENTITY normal "Normal">
+<!ENTITY active "Active">
+<!ENTITY text "Text">
+<!ENTITY border "Border">
+<!ENTITY margin "Margin">
+<!ENTITY opacity "Opacity">
+<!ENTITY visibility "Visibility">
+<!ENTITY close "Close">
+<!ENTITY searchLogos "Search logos on UserLogos.org">
+<!ENTITY searchThemes "Search themes on UserLogos.org">
+<!ENTITY homeFolder "Home folder">
+<!ENTITY select "Select">

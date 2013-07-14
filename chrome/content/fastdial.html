@@ -1,0 +1,317 @@
+<head>
+    <link rel="stylesheet" href="chrome://fastdial/skin/css/fastdial.css">
+    <link rel="stylesheet" href="chrome://fastdial-profile/content/themes/current/style.css">
+    <style id="size" type="text/css"></style>
+</head>
+
+<body>
+</body>
+
+<script src="utils.js" type="text/javascript"></script>
+<script src="dom.js" type="text/javascript"></script>
+<script src="drag.js" type="text/javascript"></script>
+<script src="file.js" type="text/javascript"></script>
+<script src="bookmark.js" type="text/javascript"></script>
+<script src="storage.js" type="text/javascript"></script>
+<script src="template/template.js" type="text/javascript"></script>
+<script src="thumbnail/thumbnail.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var options, sort, thumbnails;
+var page = 0, pageCount, perPage;
+var params = FdUtils.getQueryParams(document.location);
+var wnd = FdUtils.getBrowserWindow();
+
+var folder, home = FdStorage.getHome();
+if (!params.folder || params.folder == home.id) folder = home;
+else try {
+    folder = FdStorage.getItem(params.folder);
+    folder.parent = FdStorage.getItem(folder.folderId);
+    folder.parent.isBack = true;
+}
+catch(e) {
+}
+window.addEventListener("resize", onResize, false);
+document.addEventListener("contextmenu", onContextMenu, false);
+document.addEventListener("mousedown", onMouseDown, true);
+document.addEventListener("mouseup", onMouseUp, false);
+document.addEventListener("drop", onDragDrop, false);
+document.addEventListener("click", onClick, false);
+document.addEventListener("DOMMouseScroll", onMouseWheel, false);
+document.addEventListener("keyup", onKeyUp, false);
+initThumbnails();
+setTimeout(function() {
+    document.title = folder.title; // 2ms
+    showIcon(); // 2ms
+}, 0);
+function initThumbnails() {
+    options = FdPrefs.getObject("options");
+    sort = FdPrefs.getString("sort");
+    thumbnails = getThumbnails(); // 6ms : 1ms
+    // 8ms : 6ms
+    var data = FdURL.readURL("chrome://fastdial/content/template/fastdial.tpl");
+    var template = new JsTemplate.Template(data);
+    var html = template.run({
+        search: FdPrefs.getObject("search"),
+        options: options,
+        thumbnails: thumbnails
+    });
+    document.body.innerHTML = html;
+    onResize(); // 9ms : 9ms
+}
+function showIcon() {
+    var icon = FdDom.parse("<link rel='icon' href='chrome://fastdial/skin/icons/fastdial.png'>");
+    document.documentElement.appendChild(icon);
+}
+function getThumbnails() {
+    var thumbs = [];
+    var items = FdStorage.getItems(folder.id, sort);
+    perPage = (showBack() ? -1 : 0) + options.width * options.height;
+    pageCount = Math.ceil(items.length / perPage);
+    for (var i = 0; i < perPage; i++) {
+        var properties = items[page * perPage + i];
+        if (properties) {
+            var thumb = new FdThumbnail(properties);
+            if (!thumb.isLoading() &&
+                    !thumb.getImageFile().exists())
+                wnd.FdSnapshot.create(thumb.properties);
+            thumbs[i] = thumb;
+        }
+    }
+    if (showBack()) {
+        var back = new FdThumbnail(folder.parent);
+        thumbs.unshift(back);
+    }
+    return thumbs;
+}
+function showBack() {
+    return !options.hideBack && folder.parent;
+}
+function getThumbIndex(index) {
+    return !sort && page * perPage + (showBack() ? -1 : 0) + parseInt(index);
+}
+function onResize() {
+    var bodyPadding = parseInt(FdDom.css(document.body, "padding-top"));
+    var grid = FdDom.get("grid");
+    var search = FdDom.get("search");
+    var box = FdDom.get(0);
+    var thumbnail = FdDom.child(box, "thumbnail");
+    var thumbnailBorder = parseInt(FdDom.css(thumbnail, "border-top-width"));
+    var thumbnailMargin = parseInt(FdDom.css(thumbnail, "margin-left"));
+
+    var title = FdDom.child(thumbnail, "title");
+    var width = options.thumbWidth;
+    var height = FdThumbnail.getHeight(width);
+    if (!options.fixed) {
+        width = (window.innerWidth - bodyPadding * 2) / options.width -
+                thumbnailMargin * 2 - thumbnailBorder * 2;
+
+        height = (window.innerHeight - bodyPadding * 2 - search.offsetHeight) /
+                options.height - thumbnailMargin * 2 - thumbnailBorder
+* 2 - title.offsetHeight;
+
+        if (height < FdThumbnail.getHeight(width)) {
+            width = FdThumbnail.getWidth(height);
+        }
+    }
+    width = Math.max(width, FdThumbnail.MIN_WIDTH);
+    height = FdThumbnail.getHeight(width);
+
+    width += thumbnailMargin * 2 + thumbnailBorder * 2;
+    height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
+
+    // Center #layout
+    var layoutTop = (window.innerHeight - height * options.height - search.offsetHeight) / 2;
+    var layoutLeft = (window.innerWidth - width * options.width) / 2;
+
+    FdDom.get("size").innerHTML = 
+            "#layout {" + 
+            "top: " + layoutTop + ";" +
+            "left: " + layoutLeft + ";" +
+            "}" +
+            ".box {" +
+            "width: " + width + ";" +
+            "height: " + height + ";" +
+            "}";
+}
+
+function onContextMenu(e) {
+    if (FdDom.is(e.target, "search-input")) return;
+    wnd.document.popupNode = e.target;
+    var box = FdDom.parent(e.target, "box");
+    wnd.Fd.showContextMenu(e, box && thumbnails[box.id]);
+    e.preventDefault();
+}
+var source;
+var previewTimeout;
+
+function onMouseDown(e) {
+    if (!FdDom.is(e.target, "image")) return;
+    FdDrag.draggable(e.target);
+    var box = FdDom.parent(e.target, "box");
+    source = thumbnails[box.id];
+    if (e.button == 0 && source.properties.preview) {
+        previewTimeout = setTimeout(function() {
+            showPreview(source);
+        }, 500);
+    }
+}
+function onMouseUp(e) {
+    clearTimeout(previewTimeout);
+    hidePreview();
+    FdDrag.enable();
+}
+function showPreview(thumb) {
+    if (FdDrag.inProgress()) return;
+    FdDrag.disable();
+    var snapshot = thumb.getSnapshotURL();
+    var image = FdCache.getCachedURL(snapshot, "preview");
+    var doc = "<div id='preview'>" + 
+              "<div class='overlay'>" +
+              "<div class='container'>" +
+              "<img src='" + image + "'/>" +
+              "</div></div></div>";
+    document.body.appendChild(FdDom.parse(doc));
+}
+function hidePreview() {
+    var preview = FdDom.get("preview");
+    if (preview) {
+        FdDom.remove(preview);
+    }
+}
+function onDragDrop(e) {
+    for (var i = 0; i < options.width * options.height; i++) {
+        if (!isMouseOver(FdDom.get(i), e.pageX - document.body.scrollLeft, e.pageY - document.body.scrollTop)) continue;
+        var target = thumbnails[i];
+        if (target) {
+            if (target.properties.isBack || e.ctrlKey && target.properties.isFolder) {
+                source.properties.folderId = target.properties.id;
+                source.properties.index = -1;
+                delete source.properties.thumbIndex;
+                source.save();
+                var targetURL = FdStorage.getFolderURL(target.properties.id);
+                FdCache.remove(targetURL);
+            }
+            else {
+                [source.properties.index, target.properties.index] =
+                        [target.properties.index, source.properties.index];
+                [source.properties.thumbIndex, target.properties.thumbIndex] =
+                        sort ? [source.properties.index, target.properties.index]
+                                : [target.properties.thumbIndex, source.properties.thumbIndex];
+                if (source.properties.index < target.properties.index) {
+                    [source, target] = [target, source];
+                }
+                source.save();
+                target.save();
+            }
+        }
+        else {
+            source.properties.thumbIndex = getThumbIndex(i);
+            if (sort) source.properties.index = -1;
+            source.save();
+        }
+        var folderURL = FdStorage.getFolderURL(folder.id);
+        FdCache.remove(folderURL);
+        wnd.Fd.updateView();
+    }
+}
+function isMouseOver(element, x, y) {
+    x += document.body.scrollLeft;
+    y += document.body.scrollTop;
+    var position = FdDom.position(element);
+    return x > position.left &&
+            y > position.top &&
+            x < position.left + element.offsetWidth &&
+            y < position.top + element.offsetHeight;
+}
+
+var currentSearch;
+
+function onClick(e) {
+    if (FdDom.is(e.target, "search-icon")) {
+        currentSearch = e.target;
+        e.preventDefault();
+        var menupopup = wnd.FdDom.get("fd-search-menu");
+        var offset = -0.4 * parseFloat(FdDom.css(e.target, "font-size"));
+        return menupopup.openPopup(e.target, "after_start", 0, offset, false, true);
+    }
+    var box = FdDom.parent(e.target, "box");
+    if (!box || e.button != 0) return;
+
+    var thumbnail = thumbnails[box.id];
+    if (!thumbnail) {
+        var properties = {
+            folderId: folder.id,
+            thumbIndex: getThumbIndex(box.id),
+            index: -1
+        };
+        var thumbnail = new FdThumbnail(properties);
+        return thumbnail.openProperties();
+    }
+    if (FdDom.is(e.target, "refresh")) {
+        return thumbnail.refresh();
+    }
+    else if (FdDom.is(e.target, "remove")) {
+        return thumbnail.remove(true);
+    }
+    else if (FdDom.is(e.target, "properties")) {
+        return thumbnail.openProperties();
+    }
+    else if (FdDom.is(e.target, "image")) {
+        window.focus();
+        e.preventDefault();
+        FdUtils.openLink(thumbnail.getURL(), options.openIn || e);
+    }
+    return null;
+}
+const TIMEOUT_WHEEL = 250;
+var wheelTime = 0;
+
+function onMouseWheel(e) {
+    if (scrollMaxY) return;
+    var time = new Date().getTime();
+    if (time - wheelTime > TIMEOUT_WHEEL) {
+        wheelTime = time;
+        setPage(page + e.detail / Math.abs(e.detail));
+    }
+}
+function onKeyUp(e) {
+    switch (e.keyCode) {
+        case e.DOM_VK_PAGE_UP:
+            if (!scrollMaxY) setPage(page - 1);
+            break;
+        case e.DOM_VK_PAGE_DOWN:
+            if (!scrollMaxX) setPage(page + 1);
+            break;
+        case e.DOM_VK_ESCAPE:
+            if (FdDom.is(e.target, "search-input")) {
+                e.target.value = null;
+            }
+            break;
+        case e.DOM_VK_RETURN:
+            if (!FdDom.is(e.target, "search-input")) break;
+
+            var search = FdPrefs.getObject("search");
+            var searchInputs = document.getElementsByClassName("search-input");
+
+            for(var i = 0; i < searchInputs.length; i++) {
+                if (searchInputs[i] == e.target) {
+                    var engine = FdUtils.getSearchEngine(search[i]);
+                    var submission = engine.getSubmission(e.target.value, null);
+                    document.location = submission.uri.spec;
+                }
+            }
+            break;
+    }
+}
+function setPage(aPage) {
+    if (aPage >= pageCount) {
+      aPage = FdDrag.inProgress() ? pageCount : pageCount - 1;
+    }
+    if (aPage < 0) aPage = 0;
+    if (page != aPage) {
+        page = aPage;
+        initThumbnails();
+    }
+}
+</script>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/"?>
+<?xml-stylesheet href="chrome://browser/skin/places/places.css"?>
+<?xml-stylesheet href="chrome://browser/content/places/places.css"?>
+
+<?xul-overlay href="chrome://browser/content/places/placesOverlay.xul"?>
+<!DOCTYPE dialog SYSTEM "chrome://fastdial/locale/fastdial.dtd">
+
+<dialog id="folder"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        ondialogaccept="return onAccept(event);"
+        title="&folder;"
+        onload="initialize();"
+        style="width: 24em; height: 18em;"
+        persist="screenX screenY width height">
+
+    <hbox flex="1">
+      <tree id="foldersTree"
+            class="placesTree"
+            flex="1"
+            type="places"
+            seltype="single"
+            hidecolumnpicker="true">
+        <treecols>
+          <treecol id="title" flex="1" primary="true" hideheader="true"/>
+        </treecols>
+        <treechildren id="placesListChildren"
+                      view="placesList" flex="1"/>
+      </tree>
+    </hbox>
+
+    <script>
+        <![CDATA[
+            function initialize() {
+                var tree = document.getElementById("foldersTree");
+                tree.place =
+                    "place:excludeItems=1&excludeQueries=1&excludeReadOnlyFolders=1&folder=" +
+                    PlacesUIUtils.allBookmarksFolderId;
+            }
+
+            function onAccept() {
+                var tree = document.getElementById("foldersTree");
+                window.arguments[0].folderId = PlacesUtils.getConcreteItemId(tree.selectedNode);
+            }
+        ]]>
+    </script>
+</dialog>

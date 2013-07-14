@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://fastdial/skin/css/properties.css" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://fastdial/locale/fastdial.dtd">
+<prefwindow id="fd-dialog-properties"
+            buttons="accept, cancel"
+            onload="initialize();"
+            ondialogaccept="return onAccept();"
+            persist="screenX screenY"
+            title="&properties;"
+            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <prefpane id="general" label="&general;">
+        <grid>
+            <columns>
+                <column/>
+                <column flex="1"/>
+            </columns>
+            <rows>
+                <row align="center">
+                    <spacer/>
+                    <radiogroup id="isFolder" orient="horizontal"
+                                oncommand="setFolder(this.value);">
+                        <radio label="&bookmark;"/>
+                        <radio label="&folder;" value="1"/>
+                    </radiogroup>
+                </row>
+                <row id="row-url" align="center">
+                    <label value="&url;:"/>
+                    <menulist id="url" editable="true" oncommand="onSelectURL(this);">
+                        <menupopup/>
+                    </menulist>
+                    <button class="browse" label="&#x2026;"
+                            tabindex="-1" oncommand="browseURL();"/>
+                </row>
+                <row align="center">
+                    <label value="&title;:"/>
+                    <textbox id="title"/>
+                </row>
+                <row align="center">
+                    <label value="&description;:"/>
+                    <textbox id="description" multiline="true" rows="3"/>
+                </row>
+            </rows>
+        </grid>
+    </prefpane>
+    <prefpane id="advanced" label="&advanced;">
+        <grid>
+            <columns>
+                <column/>
+                <column flex="1"/>
+            </columns>
+            <rows>
+                <row align="center">
+                    <label value="&logo;:"/>
+                    <textbox id="logo" flex="1" onchange="updateRefreshAll();"/>
+                    <button class="browse" label="&#x2026;"
+                            tabindex="-1" oncommand="browseImage('logo');"/>
+                </row>
+                <row align="center">
+                    <label value="&shortcutKey;:"/>
+                    <hbox align="center">
+                        <textbox id="shortcutKey" onkeypress="onShortcutKey(event);"/>
+                        <label id="restartIsNeeded" value="&restartIsNeeded;"/>
+                    </hbox>
+                </row>
+                <row id="row-refresh" align="center">
+                    <label value="&refreshEvery;:"/>
+                    <hbox align="center">
+                        <textbox id="refresh" size="2"/>
+                        <label value="&minutes;"/>
+                        <checkbox id="refreshAll" label="&refreshAll;"/>
+                    </hbox>
+                </row>
+                <row>
+                    <checkbox id="preview" label="&preview;"/>
+                </row>
+                <row>
+                    <spacer/>
+                    <label href="http://userlogos.org/logos" class="text-link"
+                           tooltiptext="http://userlogos.org/logos" value="&searchLogos;"/>
+                </row>
+            </rows>
+        </grid>
+    </prefpane>
+
+    <script src="../utils.js"/>
+    <script src="../dom.js"/>
+    <script src="../file.js"/>
+    <script src="../bookmark.js"/>
+    <script src="../storage.js"/>
+    <script src="../thumbnail/thumbnail.js"/>
+    <script>
+    <![CDATA[
+        var properties = window.arguments[0];
+        var thumbnail = new FdThumbnail(properties);
+        var wnd = FdUtils.getBrowserWindow();
+
+        function initialize() {
+            initDialog();
+            initTabURLs();
+            setFolder(properties.isFolder);
+            var url = thumbnail.getURL();
+            FdDom.get("url").value = url || "";
+            FdDom.get("title").value = properties.title || "";
+            FdDom.get("description").value = properties.description || "";
+            FdDom.get("logo").value = properties.logo || "";
+            FdDom.get("shortcutKey").value = properties.shortcutKey || "";
+            FdDom.get("refresh").value = properties.refresh || 0;
+            FdDom.get("refreshAll").checked = thumbnail.isRefreshAll();
+            FdDom.get("refreshAll").disabled = properties.logo;
+            FdDom.get("preview").checked = properties.preview;
+            FdUtils.merge(properties, getProperties());
+            updateFocus();
+        }
+
+        function getProperties() {
+            var props = {};
+            props.isFolder = FdDom.get("isFolder").value;
+            var url = FdDom.get("url").value;
+            props.url = !url || FdURL.getScheme(url) ? url : "http://" + url + "/";
+            props.title = FdDom.get("title").value;
+            props.description = FdDom.get("description").value;
+            props.logo = FdDom.get("logo").value;
+            props.shortcutKey = FdDom.get("shortcutKey").value;
+            var refresh = FdDom.get("refresh").value;
+            props.refresh = Math.max(refresh, 0);
+            props.refreshAll = FdDom.get("refreshAll").checked;
+            props.preview = FdDom.get("preview").checked;
+            return props;
+        }
+
+        function clear() {
+            FdDom.get("url").value = "";
+            FdDom.get("title").value = "";
+            FdDom.get("description").value = "";
+            FdDom.get("logo").value = "";
+            setShortcutKey("");
+            FdDom.get("refresh").value = 0;
+            FdDom.get("preview").checked = false;
+            updateRefreshAll();
+        }
+
+        function setFolder(isFolder) {
+            clear();
+            FdDom.get("isFolder").selectedIndex = isFolder ? 1 : 0;
+            FdDom.get("row-url").collapsed = isFolder;
+            FdDom.get("row-refresh").collapsed = isFolder;
+            FdDom.get("logo").value = isFolder 
+                ? "chrome://fastdial/skin/images/folder.png" : "";
+            updateFocus();
+        }
+
+        function updateFocus() {
+            var isFolder = FdDom.get("isFolder").value;
+            var id = isFolder ? "title" : "url";
+            FdDom.get(id).select();
+        }
+
+        function initDialog() {
+            var dialog = FdDom.get("fd-dialog-properties");
+            if (dialog.instantApply) {
+                var accept = dialog.getButton("accept");
+                accept.hidden = false;
+                accept.disabled = false;
+                var cancel = dialog.getButton("cancel");
+                cancel.hidden = false;
+                cancel.setAttribute("label", FdBundle.getString("cancel"));
+            }
+            if (!properties.id) {
+                var general = dialog.preferencePanes[0];
+                dialog.showPane(general);
+            }
+        }
+
+        function initTabURLs() {
+            var menulist = FdDom.get("url");
+            FdUtils.forEachTab(function(w) {
+                var doc = w.document;
+                menulist.appendItem(doc.title, doc.location, doc.location);
+            });
+        }
+
+        function onSelectURL() {
+            var menulist = FdDom.get("url");
+            FdDom.get("title").value = menulist.selectedItem.label;
+            menulist.value = menulist.selectedItem.value;
+        }
+
+        function browseURL() {
+            var file = FdFile.chooseFile("open");
+            if (file) {
+                FdDom.get("url").value = FdFile.getFileURL(file);
+            }
+        }
+
+        function browseImage(id) {
+            var file = FdFile.chooseFile("open", ["images"]);
+            if (file) {
+                var url = FdFile.getFileURL(file);
+                FdDom.get(id).value = url;
+                updateRefreshAll();
+            }
+        }
+
+        function onAccept() {
+            var props = getProperties();
+            if (properties.isFolder != props.isFolder) {
+                var children = properties.isFolder &&
+                        FdStorage.getItems(properties.id);
+                if (!thumbnail.remove(children && children.length)) return false;
+                delete properties.id;
+            }
+            if ((props.isFolder && !props.title) ||
+                (!props.isFolder && !props.url)) return thumbnail.remove();
+
+            var isRefreshNeeded =
+                    props.logo != properties.logo ||
+                            props.preview != properties.preview ||
+                            (properties.isFolder && !properties.id) ||
+                            (!properties.isFolder && props.url != properties.url);
+
+            if (isRefreshNeeded) {
+                wnd.FdLoader.stop(thumbnail.properties.logo);
+                wnd.FdLoader.stop(thumbnail.getURL());
+                var snapshot = thumbnail.getSnapshotURL();
+                FdCache.remove(snapshot, "preview");
+                FdCache.remove(snapshot);
+            }
+            FdUtils.merge(properties, props);
+            thumbnail.save();
+            if (isRefreshNeeded)
+                wnd.FdSnapshot.create(properties);
+            wnd.Fd.updateView();
+        }
+
+        function setShortcutKey(key) {
+            FdDom.get("shortcutKey").value = key || "";
+            FdDom.get("restartIsNeeded").style.visibility = key ? "visible" : "hidden";
+        }
+
+        function onShortcutKey(e) {
+            if (e.keyCode != e.DOM_VK_TAB) {
+                setShortcutKey(FdUtils.getShortcutKey(e));
+                e.preventDefault();
+            }
+        }
+
+        function updateRefreshAll() {
+            FdDom.get("refreshAll").checked = !FdDom.get("logo").value;
+            FdDom.get("refreshAll").disabled = FdDom.get("logo").value;
+        }
+
+        function searchLogo() {
+            var url = FdURL.getNsiURL(properties.url);
+            var searchUrl = "http://userlogos.org/logos/top-rated?filter0=" +
+                    (properties.isFolder ? "folder" : url.host);
+            FdUtils.openLink(searchUrl, "tab");
+        }
+        ]]>
+  </script>
+</prefwindow>

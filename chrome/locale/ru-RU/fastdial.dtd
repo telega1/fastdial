@@ -1,0 +1,71 @@
+<!ENTITY add "Добавить">
+<!ENTITY folder "Папка">
+<!ENTITY bookmark "Закладка">
+<!ENTITY sort "Сортировка">
+<!ENTITY none "Нет">
+<!ENTITY auto "Авто">
+<!ENTITY visits "Посещения">
+<!ENTITY preferences "Настройки">
+<!ENTITY help "Справка">
+<!ENTITY open "Открыть">
+<!ENTITY openAll "Открыть Все">
+<!ENTITY refresh "Обновить">
+<!ENTITY remove "Удалить">
+<!ENTITY properties "Свойства">
+<!ENTITY url "Адрес">
+<!ENTITY title "Заголовок">
+<!ENTITY description "Описание">
+<!ENTITY logo "Лого">
+<!ENTITY favicon "Иконка">
+<!ENTITY shortcutKey "Горячая клавиша">
+<!ENTITY restartIsNeeded "(нужен перезапуск)">
+<!ENTITY refreshEvery "Обновлять каждые">
+<!ENTITY minutes "минут">
+<!ENTITY refreshAll "Обновить Все">
+<!ENTITY preview "Предпросмотр">
+<!ENTITY background "Фон">
+<!ENTITY theme "Тема">
+<!ENTITY export "Экспорт">
+<!ENTITY import "Импорт">
+<!ENTITY rename "Переименовать">
+<!ENTITY makeHome "Сделать домашней">
+<!ENTITY addToFastDial "Добавить в Fast Dial">
+<!ENTITY general "Общие">
+<!ENTITY advanced "Дополнительно">
+<!ENTITY appearance "Внешний вид">
+<!ENTITY defaults "По умолчанию">
+<!ENTITY thumbnails "Изображения">
+<!ENTITY quantity "Количество">
+<!ENTITY size "Размер">
+<!ENTITY fixed "Фиксировать">
+<!ENTITY hideEmptyBoxes "Спрятать пустые рамки">
+<!ENTITY hideSearch "Спрятать строку поиска">
+<!ENTITY hideBackLinks "Спрятать ссылки Назад">
+<!ENTITY openLinksIn "Открывать ссылки в">
+<!ENTITY currentTab "текущей вкладке">
+<!ENTITY newTab "новой вкладке">
+<!ENTITY backgroundTab "фоновой вкладке">
+<!ENTITY connectionSpeed "Скорость соединения">
+<!ENTITY fast "Быстрая">
+<!ENTITY medium "Средняя">
+<!ENTITY slow "Медленная">
+<!ENTITY showInBlankTabs "Показывать Fast Dial в пустых вкладках">
+<!ENTITY page "Страница">
+<!ENTITY font "Шрифт">
+<!ENTITY image "Изображение">
+<!ENTITY back "Назад">
+<!ENTITY background "Фон">
+<!ENTITY search "Поиск">
+<!ENTITY thumbnail "Изображение">
+<!ENTITY normal "Обычное">
+<!ENTITY active "Активное">
+<!ENTITY text "Текст">
+<!ENTITY border "Рамка">
+<!ENTITY margin "Отступ">
+<!ENTITY opacity "Прозрачность">
+<!ENTITY visibility "Видимость">
+<!ENTITY close "Закрыть">
+<!ENTITY searchLogos "Искать лого на UserLogos.org">
+<!ENTITY searchThemes "Искать темы на UserLogos.org">
+<!ENTITY homeFolder "Домашняя папка">
+<!ENTITY select "Выбрать">

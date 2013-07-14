@@ -1,0 +1,217 @@
+var FdBookmark = new function() {
+    var historyService =
+            Components.classes["@mozilla.org/browser/nav-history-service;1"]
+                    .getService(Components.interfaces.nsINavHistoryService);
+    var bookmarksService =
+            Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"]
+                    .getService(Components.interfaces.nsINavBookmarksService);
+    var annotationService =
+            Components.classes["@mozilla.org/browser/annotation-service;1"]
+                    .getService(Components.interfaces.nsIAnnotationService);
+
+    this.DESCRIPTION = "bookmarkProperties/description";
+    this.BOOKMARKS_MENU = bookmarksService.bookmarksMenuFolder;
+    var queryOptions = Components.interfaces.nsINavHistoryQueryOptions;
+    this.SORT_TITLE = queryOptions.SORT_BY_TITLE_ASCENDING;
+    this.SORT_VISITS = queryOptions.SORT_BY_VISITCOUNT_DESCENDING;
+    this.HOME = "fastdial/home";
+
+    this.getHome = function() {
+        var ids = FdBookmark.getAnnotatedIds(FdBookmark.HOME);
+        if (ids.length) {
+            return FdBookmark.getBookmark(ids[0]);
+        } else {
+            var root = getRoot();
+            FdBookmark.setAnnotation(root.id,
+                                  FdBookmark.HOME, "true");
+            return root;
+        }
+    };
+
+    this.setHome = function(id) {
+        var oldHome = FdBookmark.getHome();
+        FdBookmark.removeAnnotation(oldHome.id, FdBookmark.HOME);
+        FdBookmark.setAnnotation(id, FdBookmark.HOME, "true");
+    }
+
+    function getRoot() {
+        var root;
+        try {
+            var rootId = FdPrefs.getInt("root");
+            if (rootId) {
+                root = FdBookmark.getBookmark(rootId);
+                FdPrefs.clear("root");
+            }
+        } catch(e) {}
+
+        if (!root || !root.isFolder) {
+            root = getLegacyRoot() || createRoot();
+        }
+        return root;
+    }
+
+    function getLegacyRoot() {
+        var bookmarks = FdBookmark.getBookmarks(FdBookmark.BOOKMARKS_MENU);
+        for (var i in bookmarks) {
+            var bookmark = bookmarks[i];
+            if (bookmark.isFolder &&
+                    bookmark.title == FdInfo.NAME) return bookmark;
+        }
+    }
+
+    function createRoot() {
+        var root = {
+            folderId: bookmarksService.bookmarksMenuFolder,
+            isFolder: true,
+            title:    FdInfo.NAME,
+            index:    0
+        };
+        FdBookmark.saveBookmark(root);
+        return root;
+    }
+
+    this.query = function(id, sort, maxResults) {
+        var query = getURL(id);
+        if (sort) query += "&sort=" + sort;
+        if (maxResults) query += "&maxResults=" + maxResults;
+        var queries = {}, options = {};
+        historyService.queryStringToQueries(query, queries, {}, options);
+        return historyService.executeQueries(queries.value,
+                queries.value.length, options.value);
+    };
+    function getURL(id) {
+        try {
+            return bookmarksService.getBookmarkURI(id).spec;
+        }
+        catch(e) {
+            return "place:folder=" + id;
+        }
+    }
+
+    this.isQuery = function(url) {
+        return /^place:(?!folder)|^place:.*&(?!sort).*/.test(url);
+    };
+    this.isDynamic = function(bookmark) {
+        return bookmark.feed || this.isQuery(bookmark.url);
+    };
+    this.getBookmarks = function(id, sort, maxResults) {
+        var result = this.query(id, sort, maxResults);
+        var container = result.root;
+        var bookmarks = [];
+        container.containerOpen = true;
+        for (var i = 0; i < container.childCount; i++) {
+            var item = container.getChild(i);
+                       if (item.type != item.RESULT_TYPE_SEPARATOR) {
+                bookmarks.push({
+                    id:       item.itemId,
+                    folderId: item.parent.itemId,
+                    isFolder: item.type == item.RESULT_TYPE_FOLDER ||
+                            item.type == item.RESULT_TYPE_FOLDER_SHORTCUT ||
+                            this.isQuery(item.uri),
+                    url:      item.uri,
+                    title:    item.title,
+                    index:    item.bookmarkIndex,
+                                        description: this.getAnnotation(item.itemId, this.DESCRIPTION)
+                });
+            }
+        }
+        container.containerOpen = false;
+        return bookmarks;
+    }
+    function getSystemId(id) {
+        try {
+            var annotation = FdBookmark.getAnnotation(id, "placesInternal/READ_ONLY");
+            switch (annotation) {
+                case "AllBookmarks":
+                    return bookmarksService.placesRoot;
+                case "BookmarksMenu":
+                    return bookmarksService.bookmarksMenuFolder;
+                case "BookmarksToolbar":
+                    return bookmarksService.toolbarFolder;
+                case "UnfiledBookmarks":
+                    return bookmarksService.unfiledBookmarksFolder;
+                case "Tags":
+                    return bookmarksService.tagsFolder;
+            }
+        } catch(e) {
+        }
+    }
+
+    this.getBookmark = function(id) {
+        if (!id) return null;
+        id = getSystemId(id) || id;
+        var url = getURL(id);
+               var bookmark = {
+            id:       id,
+            url:      url,
+            title:    bookmarksService.getItemTitle(id),
+            index:    bookmarksService.getItemIndex(id),
+            folderId: bookmarksService.getFolderIdForItem(id),
+            isFolder: this.isQuery(url) ||
+                    bookmarksService.getItemType(id) == bookmarksService.TYPE_FOLDER,
+                        description: this.getAnnotation(id, this.DESCRIPTION)
+        };
+        return bookmark;
+    };
+    this.saveBookmark = function(bookmark) {
+        if (!bookmark.title) bookmark.title = "";
+        if (!bookmark.id) bookmark.id = createBookmark(bookmark);
+        else updateBookmark(bookmark);
+        this.setAnnotation(bookmark.id, this.DESCRIPTION, bookmark.description);
+        if (bookmark.index == -1) {
+            bookmark.index = bookmarksService.getItemIndex(bookmark.id);
+        }
+    };
+    function createBookmark(bookmark) {
+        if (bookmark.isFolder && !FdBookmark.isQuery(bookmark.url)) {
+            return bookmarksService.createFolder(bookmark.folderId,
+                    bookmark.title, bookmark.index);
+        }
+        else {
+            return bookmarksService.insertBookmark(bookmark.folderId,
+                    FdURL.getNsiURI(bookmark.url), bookmark.index, bookmark.title);
+        }
+    }
+
+    function updateBookmark(bookmark) {
+        if (!bookmark.isFolder) {
+            var uri = FdURL.getNsiURI(bookmark.url);
+            bookmarksService.changeBookmarkURI(bookmark.id, uri);
+        }
+        bookmarksService.setItemTitle(bookmark.id, bookmark.title);
+        if (bookmark.folderId != -1) {
+            bookmarksService.moveItem(bookmark.id, bookmark.folderId, bookmark.index);
+        }
+    }
+
+    this.removeBookmark = function(id) {
+        this.removeAnnotation(id, this.DESCRIPTION);
+        try {
+            bookmarksService.removeItem(id);
+        }
+        catch(e) {
+        }
+    };
+    this.getAnnotation = function(id, name) {
+        try {
+            return annotationService.getItemAnnotation(id, name);
+        }
+        catch(e) {
+        }
+    };
+    this.setAnnotation = function(id, name, value) {
+        if (!value) return this.removeAnnotation(id, name);
+        annotationService.setItemAnnotation(id,
+                name, value, 0, annotationService.EXPIRE_NEVER);
+    };
+    this.removeAnnotation = function(id, name) {
+        try {
+            annotationService.removeItemAnnotation(id, name);
+        }
+        catch(e) {
+        }
+    };
+    this.getAnnotatedIds = function(name) {
+        return annotationService.getItemsWithAnnotation(name, {});
+    };
+}
