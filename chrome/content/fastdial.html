@@ -43,6 +43,9 @@ initThumbnails();
 setTimeout(function() {
     document.title = folder.title; // 2ms
     showIcon(); // 2ms
+    if (document.location == FdPrefs.getGlobalString("browser.newtab.url")) {
+        FdURL.addToHistory(document.location, document.title);
+    }
 }, 0);
 function initThumbnails() {
     options = FdPrefs.getObject("options");
