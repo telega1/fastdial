@@ -60,7 +60,7 @@
                 </grid>
                 <hbox>
                     <checkbox id="enable" label="&showInBlankTabs;"
-                              oncommand="FdPrefs.setGlobalString('browser.newtab.url', this.checked ? FdInfo.URI : 'about:newtab');"/>
+                              oncommand="setShowInBlankTabs(this.checked);"/>
                 </hbox>
                 <hbox>
                     <checkbox id="hideEmpty"
@@ -813,6 +813,11 @@
                 FdDom.get("folder").value = FdBookmark.getHome().title;
                 reloadView();
             }
+        }
+
+        function setShowInBlankTabs(value) {
+           value ? FdPrefs.setGlobalString('browser.newtab.url', FdInfo.URI)
+                 : FdPrefs.clearGlobal('browser.newtab.url');
         }
       ]]>
   </script>

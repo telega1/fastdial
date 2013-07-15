@@ -1,11 +1,21 @@
 var FdLegacy = new function() {
     this.migrate = function() {
         var previousVersion = FdPrefs.getString("version");
-        var version = "4.5.1";
+        var version = "4.7";
         FdPrefs.setString("version", version);
 
-        if (!previousVersion) addToolbarButton();
-        if (version != previousVersion) initThemes();
+        if (isOlder(previousVersion, "4.7")) {
+            FdPrefs.setGlobalString(
+                         "browser.newtab.url", FdInfo.URI);
+        }
+        if (!previousVersion) {
+            FdPrefs.setGlobalString(
+                      "browser.newtab.url", FdInfo.URI);
+            addToolbarButton();
+        }
+        if (version != previousVersion) {
+           initThemes();
+        }
     }
     function isOlder(version1, version2) {
         if (!version1) return false;
