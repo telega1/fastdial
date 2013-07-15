@@ -1,4 +1,4 @@
-<!ENTITY add "Hinzufügen">
+<!ENTITY add "HinzufÃ¼gen">
 <!ENTITY folder "Ordner">
 <!ENTITY bookmark "Lesezeichen">
 <!ENTITY sort "Sortieren">
@@ -7,8 +7,8 @@
 <!ENTITY visits "Besuche">
 <!ENTITY preferences "Einstellungen">
 <!ENTITY help "Hilfe">
-<!ENTITY open "Öffnen">
-<!ENTITY openAll "Alle Öffnen">
+<!ENTITY open "Ã–ffnen">
+<!ENTITY openAll "Alle Ã–ffnen">
 <!ENTITY refresh "Aktualisieren">
 <!ENTITY remove "Entfernen">
 <!ENTITY properties "Einstellungen">
@@ -18,7 +18,7 @@
 <!ENTITY logo "Logo">
 <!ENTITY favicon "Favicon">
 <!ENTITY shortcutKey "Tastenkombination">
-<!ENTITY restartIsNeeded "(Neustart nötig)">
+<!ENTITY restartIsNeeded "(Neustart nÃ¶tig)">
 <!ENTITY refreshEvery "Aktualisiere alle">
 <!ENTITY minutes "Minute(n)">
 <!ENTITY refreshAll "Alle Aktualisieren">
@@ -29,19 +29,19 @@
 <!ENTITY import "Importieren">
 <!ENTITY rename "Umbenennen">
 <!ENTITY makeHome "Als Startseite">
-<!ENTITY addToFastDial "Zu Fast Dial hinzufügen">
+<!ENTITY addToFastDial "Zu Fast Dial hinzufÃ¼gen">
 <!ENTITY general "Allgemein">
 <!ENTITY advanced "Erweitert">
 <!ENTITY appearance "Aussehen">
 <!ENTITY defaults "Standards">
-<!ENTITY quantity "Quantität">
+<!ENTITY quantity "QuantitÃ¤t">
 <!ENTITY thumbnails "Thumbnails">
-<!ENTITY size "Größe">
+<!ENTITY size "GrÃ¶ÃŸe">
 <!ENTITY fixed "Fixiert">
 <!ENTITY hideEmptyBoxes "Leere Boxen ausblenden">
 <!ENTITY hideSearch "Suchleiste ausblenden">
-<!ENTITY hideBackLinks "Zurück Links ausblenden">
-<!ENTITY openLinksIn "Öffne Links in">
+<!ENTITY hideBackLinks "ZurÃ¼ck Links ausblenden">
+<!ENTITY openLinksIn "Ã–ffne Links in">
 <!ENTITY currentTab "Aktuellen Tab">
 <!ENTITY newTab "Neuen Tab">
 <!ENTITY backgroundTab "Hintergrund-Tab">
@@ -53,7 +53,7 @@
 <!ENTITY page "Seite">
 <!ENTITY font "Schriftart">
 <!ENTITY image "Bild(er)">
-<!ENTITY back "Zurück">
+<!ENTITY back "ZurÃ¼ck">
 <!ENTITY background "Hintergrund">
 <!ENTITY search "Suche">
 <!ENTITY thumbnail "Thumbnail">
@@ -64,8 +64,8 @@
 <!ENTITY margin "Begrenzen">
 <!ENTITY opacity "Deckkraft">
 <!ENTITY visibility "Sichtbarkeit">
-<!ENTITY close "Schließen">
+<!ENTITY close "SchlieÃŸen">
 <!ENTITY searchLogos "Logos auf UserLogos.org suchen">
 <!ENTITY searchThemes "Themen auf UserLogos.org suchen">
 <!ENTITY homeFolder "Startseiten-Ordner">
-<!ENTITY select "Auswählen">
+<!ENTITY select "AuswÃ¤hlen">
