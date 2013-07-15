@@ -261,11 +261,12 @@ var FdURL = {
                 .createInstance(Components.interfaces.nsISHEntry);
         entry.setURI(FdURL.getNsiURL(url));
         entry.setTitle(title);
-        var browser = FdUtils.getBrowserWindow();
-        var history = browser.gBrowser.sessionHistory;
+        var history = gBrowser.sessionHistory;
         if (history) {
             history.QueryInterface(Components.interfaces.nsISHistoryInternal);
-            history.addEntry(entry, true);
+            if (!history.count) {
+                history.addEntry(entry, true);
+            }
         }
     }
 }
