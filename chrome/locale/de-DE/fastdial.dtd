@@ -1,0 +1,71 @@
+<!ENTITY add "Hinzufügen">
+<!ENTITY folder "Ordner">
+<!ENTITY bookmark "Lesezeichen">
+<!ENTITY sort "Sortieren">
+<!ENTITY none "Nichts">
+<!ENTITY auto "Auto">
+<!ENTITY visits "Besuche">
+<!ENTITY preferences "Einstellungen">
+<!ENTITY help "Hilfe">
+<!ENTITY open "Öffnen">
+<!ENTITY openAll "Alle Öffnen">
+<!ENTITY refresh "Aktualisieren">
+<!ENTITY remove "Entfernen">
+<!ENTITY properties "Einstellungen">
+<!ENTITY url "URL">
+<!ENTITY title "Titel">
+<!ENTITY description "Beschreibung">
+<!ENTITY logo "Logo">
+<!ENTITY favicon "Favicon">
+<!ENTITY shortcutKey "Tastenkombination">
+<!ENTITY restartIsNeeded "(Neustart nötig)">
+<!ENTITY refreshEvery "Aktualisiere alle">
+<!ENTITY minutes "Minute(n)">
+<!ENTITY refreshAll "Alle Aktualisieren">
+<!ENTITY preview "Vorschau">
+<!ENTITY background "Hintergrund">
+<!ENTITY theme "Thema">
+<!ENTITY export "Exportieren">
+<!ENTITY import "Importieren">
+<!ENTITY rename "Umbenennen">
+<!ENTITY makeHome "Als Startseite">
+<!ENTITY addToFastDial "Zu Fast Dial hinzufügen">
+<!ENTITY general "Allgemein">
+<!ENTITY advanced "Erweitert">
+<!ENTITY appearance "Aussehen">
+<!ENTITY defaults "Standards">
+<!ENTITY quantity "Quantität">
+<!ENTITY thumbnails "Thumbnails">
+<!ENTITY size "Größe">
+<!ENTITY fixed "Fixiert">
+<!ENTITY hideEmptyBoxes "Leere Boxen ausblenden">
+<!ENTITY hideSearch "Suchleiste ausblenden">
+<!ENTITY hideBackLinks "Zurück Links ausblenden">
+<!ENTITY openLinksIn "Öffne Links in">
+<!ENTITY currentTab "Aktuellen Tab">
+<!ENTITY newTab "Neuen Tab">
+<!ENTITY backgroundTab "Hintergrund-Tab">
+<!ENTITY connectionSpeed "Verbindungsgeschwindigkeit">
+<!ENTITY fast "Schnell">
+<!ENTITY medium "Mittel">
+<!ENTITY slow "Langsam">
+<!ENTITY showInBlankTabs "Zeige Fast Dial in leeren Tabs">
+<!ENTITY page "Seite">
+<!ENTITY font "Schriftart">
+<!ENTITY image "Bild(er)">
+<!ENTITY back "Zurück">
+<!ENTITY background "Hintergrund">
+<!ENTITY search "Suche">
+<!ENTITY thumbnail "Thumbnail">
+<!ENTITY normal "Normal">
+<!ENTITY active "Aktiv">
+<!ENTITY text "Text">
+<!ENTITY border "Rahmen">
+<!ENTITY margin "Begrenzen">
+<!ENTITY opacity "Deckkraft">
+<!ENTITY visibility "Sichtbarkeit">
+<!ENTITY close "Schließen">
+<!ENTITY searchLogos "Logos auf UserLogos.org suchen">
+<!ENTITY searchThemes "Themen auf UserLogos.org suchen">
+<!ENTITY homeFolder "Startseiten-Ordner">
+<!ENTITY select "Auswählen">
