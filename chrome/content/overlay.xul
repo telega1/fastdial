@@ -300,6 +300,17 @@
                 });
             },
         }
+
+        var OriginalBrowserOpenTab = BrowserOpenTab;
+
+        window.BrowserOpenTab = function() {
+           if (FdPrefs.getBool("enable")) {
+               FdUtils.openLink(FdInfo.URI, "tab");
+           } else {
+               OriginalBrowserOpenTab();
+           }
+        }
+
         addEventListener("load",
                 Fd.initialize, false);
         ]]>

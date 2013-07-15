@@ -60,7 +60,7 @@
                 </grid>
                 <hbox>
                     <checkbox id="enable" label="&showInBlankTabs;"
-                              oncommand="FdPrefs.setGlobalString('browser.newtab.url', this.checked ? FdInfo.URI : 'about:newtab');"/>
+                              oncommand="FdPrefs.setBool('enable', this.checked);"/>
                 </hbox>
                 <hbox>
                     <checkbox id="hideEmpty"
@@ -345,7 +345,7 @@
 
         function defaults() {
             FdPrefs.clear("options");
-            FdPrefs.clear("browser.newtab.url");
+            FdPrefs.clear("enable");
             FdTheme.remove("current");
             wnd.Fd.updateView();
             setTimeout(initialize, 100);
@@ -363,8 +363,7 @@
             FdUtils.selectItem("openIn", options.openIn);
             FdDom.get("shortcutKey").value = options.shortcutKey || "";
             FdUtils.selectItem("timeout", options.timeout);
-            FdDom.get("enable").checked =
-                FdPrefs.getGlobalString('browser.newtab.url') == FdInfo.URI ? true : false;
+            FdDom.get("enable").checked = FdPrefs.getBool("enable");
         }
 
         function saveOptions() {
