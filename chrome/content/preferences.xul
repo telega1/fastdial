@@ -793,10 +793,9 @@
         }
 
         function flushXULCache() {
-            var DISABLE_XUL_CACHE = "nglayout.debug.disable_xul_cache";
-            var cache = FdPrefs.getGlobalBool(DISABLE_XUL_CACHE);
-            FdPrefs.setGlobalBool(DISABLE_XUL_CACHE, true);
-            FdPrefs.setGlobalBool(DISABLE_XUL_CACHE, cache);
+            var os = Components.classes["@mozilla.org/observer-service;1"].
+                             getService(Components.interfaces.nsIObserverService);
+            os.notifyObservers(null, "chrome-flush-caches", null);
         }
 
         function openHelp() {
