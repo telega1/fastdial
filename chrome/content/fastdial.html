@@ -298,7 +298,7 @@ function onKeyUp(e) {
                 if (searchInputs[i] == e.target) {
                     var engine = FdUtils.getSearchEngine(search[i]);
                     var submission = engine.getSubmission(e.target.value, null);
-                    document.location = submission.uri.spec;
+                    document.location.assign(submission.uri.spec);
                 }
             }
             break;
