@@ -139,10 +139,10 @@ var FdUtils = {
     },
 
     fromJSON: function(string) {
-        string = "(" + string + ")";
-        var sandbox = Components.utils.Sandbox("about:blank");
-        return Components.utils.
-                evalInSandbox(string, sandbox);
+        try {
+            return JSON.parse(string);
+        }
+        catch(e) {}
     },
 
     md5: function(string) {
