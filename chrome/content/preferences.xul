@@ -344,7 +344,9 @@
         }
 
         function defaults() {
+            setShortcutKey("");
             FdPrefs.clear("options");
+            FdPrefs.clear("search");
             FdPrefs.clear("enable");
             FdTheme.remove("current");
             wnd.Fd.updateView();
