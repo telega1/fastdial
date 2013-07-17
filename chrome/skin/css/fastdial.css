@@ -1,9 +1,9 @@
 body {
     margin: 0px;
-    padding: 10px;
     font-family: Tahoma;
     font-size: 11px;
     text-align: center;
+    height: 100%;
 }
 
 table, table td {
