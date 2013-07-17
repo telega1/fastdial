@@ -577,7 +577,8 @@
 
             var customStyle = doc.getElementById("customStyle").cloneNode(false);
             doc.head.appendChild(customStyle);
-            var urls = getImages(doc.body);
+            var urls = 
+                getImageURLs(doc.body);
             doc.head.removeChild(customStyle);
 
             var listbox = FdDom.get("image");
@@ -592,7 +593,7 @@
             FdDom.get("center").checked = repeat != "repeat";
             var back = doc.createElement("div");
             FdDom.addClass(back, "back");
-            FdDom.get("back").value = images["back"] = getImage(back);
+            FdDom.get("back").value = images["back"] = getImageURL(back);
             var fontFamily = FdDom.css(doc.body, "font-family");
             FdUtils.selectItem("font-family", fontFamily.match(/[^'"]+/));
             var fontSize = FdDom.css(doc.body, "font-size");
@@ -601,7 +602,7 @@
             setColor("background", background);
         }
 
-        function getImages(element) {
+        function getImageURLs(element) {
             var result = [];
             var image = FdDom.css(element, "background-image");
             var urls = image.split(/[, ]/);
@@ -615,9 +616,10 @@
             return result;
         }
 
-        function getImage(element) {
-            var urls = getImages(element);
-            return urls.length ? urls[0] : "";
+        function getImageURL(element) {
+            var urls = getImageURLs(element);
+            return urls.length 
+                       ? urls[0] : "";
         }
 
         function initFontFamily() {
@@ -640,7 +642,7 @@
             setColor("search.color", FdDom.css(input, "color"));
             setColor("search.background", FdDom.css(input, "background-color"));
             setColor("search.border", FdDom.css(input, "border-top-color"));
-            FdDom.get("search.image").value = images["search.image"] = getImage(input);
+            FdDom.get("search.image").value = images["search.image"] = getImageURL(input);
             FdDom.remove(input);
         }
 
@@ -690,7 +692,7 @@
             var style = [];
             var center = FdDom.get("center").checked;
             style["body"] = {
-                "background-image"    : getImageURLs(),
+                "background-image"    : createImageURLs(),
                 "background-repeat"   : center ? "no-repeat" : "repeat",
                 "background-position" : center ? "center center" : "top left",
                 "font-family"         : "\"" + FdDom.get("font-family").label + "\"",
@@ -698,10 +700,10 @@
                 "background-color"    : FdDom.get("background").value
             }
             style[".back"] = {
-                "background-image" : getImageURL("back")
+                "background-image" : createImageURL("back")
             }
             style[".search-input"] = {
-                "background-image" : getImageURL("search.image"),
+                "background-image" : createImageURL("search.image"),
                 "color"            : getColor("search.color"),
                 "background-color" : getColor("search.background"),
                 "border"           : "1px solid " + getColor("search.border")
@@ -735,7 +737,7 @@
             return template.run({ title: title, style: style });
         }
 
-        function getImageURL(id) {
+        function createImageURL(id) {
             return images[id] ? "url(" + images[id] + ")" : "none";
         }
 
@@ -886,7 +888,7 @@
            }
         }
 
-        function getImageURLs() {
+        function createImageURLs() {
             var result = "";
             var listbox = FdDom.get("image");
 
