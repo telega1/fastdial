@@ -1,4 +1,5 @@
 <head>
+    <link rel="icon" href="chrome://fastdial/skin/icons/fastdial.png">
     <link rel="stylesheet" href="chrome://fastdial/skin/css/fastdial.css">
     <link rel="stylesheet" href="chrome://fastdial-profile/content/themes/current/style.css">
     <style id="size" type="text/css"></style>
@@ -31,6 +32,8 @@ else try {
 }
 catch(e) {
 }
+document.title = folder.title;
+
 window.addEventListener("resize", onResize, false);
 document.addEventListener("contextmenu", onContextMenu, false);
 document.addEventListener("mousedown", onMouseDown, true);
@@ -40,15 +43,12 @@ document.addEventListener("click", onClick, false);
 document.addEventListener("DOMMouseScroll", onMouseWheel, false);
 document.addEventListener("keyup", onKeyUp, false);
 initThumbnails();
-setTimeout(function() {
-    document.title = folder.title; // 2ms
-    showIcon(); // 2ms
-}, 0);
+
 function initThumbnails() {
     options = FdPrefs.getObject("options");
     sort = FdPrefs.getString("sort");
-    thumbnails = getThumbnails(); // 6ms : 1ms
-    // 8ms : 6ms
+    thumbnails = getThumbnails();
+
     var data = FdURL.readURL("chrome://fastdial/content/template/fastdial.tpl");
     var template = new JsTemplate.Template(data);
     var html = template.run({
@@ -57,12 +57,9 @@ function initThumbnails() {
         thumbnails: thumbnails
     });
     document.body.innerHTML = html;
-    onResize(); // 9ms : 9ms
+    onResize();
 }
-function showIcon() {
-    var icon = FdDom.parse("<link rel='icon' href='chrome://fastdial/skin/icons/fastdial.png'>");
-    document.documentElement.appendChild(icon);
-}
+
 function getThumbnails() {
     var thumbs = [];
     var items = FdStorage.getItems(folder.id, sort);
