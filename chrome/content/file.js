@@ -254,20 +254,6 @@ var FdURL = {
         }
         catch(e) {
         }
-    },
-
-    addToHistory: function(url, title) {
-        var entry = Components.classes["@mozilla.org/browser/session-history-entry;1"]
-                .createInstance(Components.interfaces.nsISHEntry);
-        entry.setURI(FdURL.getNsiURL(url));
-        entry.setTitle(title);
-        var history = gBrowser.sessionHistory;
-        if (history) {
-            history.QueryInterface(Components.interfaces.nsISHistoryInternal);
-            if (!history.count) {
-                history.addEntry(entry, true);
-            }
-        }
     }
 }
 var FdCache = {
