@@ -140,11 +140,13 @@
                 <tabpanel orient="vertical">
                     <hbox align="center">
                         <label value="&image;:"/>
-                        <button class="browse" label="&#x2026;"
-                                tabindex="-1" oncommand="browseMultipleImages();"/>
                         <checkbox id="center" oncommand="saveStyle();"/>
                     </hbox>
-                    <listbox id="image" flex="1"/>
+                    <listbox id="image" seltype="multiple" flex="1"/>
+                    <hbox>
+                        <button label="&add;" oncommand="browseMultipleImages();"/>
+                        <button label="&remove;" oncommand="removeMultipleImages();"/>
+                    </hbox>
                     <grid>
                         <columns>
                             <column/>
@@ -855,12 +857,14 @@
 
             var listbox = FdDom.get("image");
             var dir = FdTheme.getDirectory("current");
+
             for(var i in files) {
                 try {
                     files[i].copyTo(dir, files[i].leafName);
                     var listitem = document.createElement("listitem");
                     listitem.setAttribute("label",
-                        "chrome://fastdial-profile/content/themes/current/" + encodeURI(files[i].leafName));
+                        "chrome://fastdial-profile/content/themes/current/" +
+                                                      FdUtils.encode(files[i].leafName));
                     listbox.appendChild(listitem);
                 }
                 catch(e) {}
@@ -870,22 +874,26 @@
 
         function onListboxKey(e) {
            if (e.keyCode == e.DOM_VK_DELETE) {
-               var listbox = e.target;
-               var listitem = listbox.selectedItem;
-
-               if (listitem) {
-                   var uri = FdURL.getNsiURL(listitem.getAttribute("label"));
-                   var file = FdTheme.getDirectory("current");
-                   file.append(decodeURI(uri.fileName));
-                   try {
-                       file.remove(false);
-                   }
-                   catch(e) {}
-                   listbox.removeChild(listitem);
-                   listbox.selectedIndex = listbox.currentIndex;
-                   saveStyle();
-               }
+               removeMultipleImages();
            }
+        }
+
+        function removeMultipleImages() {
+           var listbox = FdDom.get("image");
+           var listitems = listbox.selectedItems;
+
+           for(var i = listitems.length-1; i >= 0; i--) {
+               var uri = FdURL.getNsiURL(listitems[i].getAttribute("label"));
+               var file = FdTheme.getDirectory("current");
+               file.append(decodeURI(uri.fileName));
+               try {
+                   file.remove(false);
+               }
+               catch(e) {}
+               listbox.removeChild(listitems[i]);
+               saveStyle();
+           }
+           listbox.selectedIndex = listbox.currentIndex;
         }
 
         function createImageURLs() {

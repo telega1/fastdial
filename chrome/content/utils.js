@@ -190,8 +190,13 @@ var FdUtils = {
                 .getService(Components.interfaces.nsIBrowserSearchService);
         return name ? searchService.getEngineByName(name)
                     : searchService.currentEngine;
+    },
+
+    encode: function(str) {
+        return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
     }
 }
+
 var FdBundle = {
     bundle: Components.classes["@mozilla.org/intl/stringbundle;1"]
             .getService(Components.interfaces.nsIStringBundleService)
