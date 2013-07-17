@@ -142,7 +142,7 @@
                         <label value="&image;:"/>
                         <checkbox id="center" oncommand="saveStyle();"/>
                     </hbox>
-                    <listbox id="image" seltype="multiple" flex="1"/>
+                    <listbox id="image" seltype="multiple" rows="7" flex="1"/>
                     <hbox>
                         <button label="&add;" oncommand="browseMultipleImages();"/>
                         <button label="&remove;" oncommand="removeMultipleImages();"/>
