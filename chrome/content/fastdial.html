@@ -318,7 +318,7 @@ function setPage(aPage) {
 function showRandomBackground() {
     var rules = document.styleSheets[1].cssRules;
     for(var i = 0; i < rules.length; i++) {
-        if (rules[i].selectorText.match(/body/)) {
+        if (rules[i].selectorText.match(/body/i)) {
             var style = rules[i].style;
 
             for(var j = 0; j < style.length; j++) {
@@ -332,8 +332,10 @@ function showRandomBackground() {
                         var url = pieces[k].match(/url\(\"(.*)\"\)/i);
                         if (url) urls.push(pieces[k]);
                     }
-                    var rnd = Math.floor(Math.random() * urls.length);
-                    style.setProperty(name, urls[rnd]);
+                    if (urls.length) {
+                        var rnd = Math.floor(Math.random() * urls.length);
+                        style.setProperty(name, urls[rnd]);
+                    }
                 }
             }
         }
