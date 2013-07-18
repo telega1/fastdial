@@ -42,7 +42,7 @@
                         <row align="center">
                             <label value="&size;:"/>
                             <hbox align="center">
-                                <textbox id="thumbWidth" type="number"
+                                <textbox id="thumbWidth" type="number" min="100"
                                          increment="100" onchange="updateThumbHeight(); saveOptions();"/>
                                 <label value="x"/>
                                 <textbox id="thumbHeight" readonly="true"/>
