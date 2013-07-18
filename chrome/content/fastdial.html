@@ -123,6 +123,8 @@ function onResize() {
     // Center #layout
     var layoutTop = (window.innerHeight - height * options.height - search.offsetHeight) / 2;
     var layoutLeft = (window.innerWidth - width * options.width) / 2;
+    if (layoutTop < 0) layoutTop = 0;
+    if (layoutLeft < 0) layoutLeft = 0;
 
     FdDom.get("size").innerHTML = 
             (options.hideEmpty ? ".empty { visibility: hidden; }" : "") +
