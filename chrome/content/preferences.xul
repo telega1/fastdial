@@ -499,7 +499,8 @@
 
         function importThemes() {
             var files = FdFile.chooseFile("multiple", ["*.zip"]);
-            if (!files.length) return;
+            if (!files) return;
+
             for (var i in files) {
                 FdTheme.import(files[i]);
             }
@@ -863,7 +864,7 @@
 
         function browseMultipleImages() {
             var files = FdFile.chooseFile("multiple", ["images"]);
-            if (!files.length) return;
+            if (!files) return;
 
             var listbox = FdDom.get("image");
             var dir = FdTheme.getDirectory("current");
