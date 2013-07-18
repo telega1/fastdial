@@ -3,7 +3,6 @@ body {
     font-family: Tahoma;
     font-size: 11px;
     text-align: center;
-    height: 100%;
 }
 
 table, table td {
@@ -16,10 +15,6 @@ a {
     outline: none;
     text-decoration: none;
     color: lightgray;
-}
-
-#layout {
-    position: absolute;
 }
 
 #search {
@@ -39,7 +34,7 @@ a {
     padding: 2px;
     background: transparent;
     border: 1px solid lightgray;
-    margin-bottom: 10px;
+    margin-top: 2px;
 }
 
 .box {
