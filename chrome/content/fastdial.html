@@ -125,6 +125,7 @@ function onResize() {
     var layoutLeft = (window.innerWidth - width * options.width) / 2;
 
     FdDom.get("size").innerHTML = 
+            (options.hideEmpty ? ".empty { visibility: hidden; }" : "") +
             "#layout {" + 
             "top: " + layoutTop + ";" +
             "left: " + layoutLeft + ";" +

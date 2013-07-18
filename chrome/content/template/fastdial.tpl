@@ -20,10 +20,8 @@
                     <% if (i % this.options.width == 0) { %> <tr> <% } %>
                     <td>
                         <% var thumbnail = this.thumbnails[i]; %>
-                        <div id="<%= i %>" class="box"
-                             title="<%= thumbnail && thumbnail.getTooltip() || "" %>"
-
-                            <%= !thumbnail && options.hideEmpty ? "style=\"visibility: hidden;\"" : "" %>>
+                        <div id="<%= i %>" class="box <%= !thumbnail ? "empty" : "" %>"
+                                       title="<%= thumbnail && thumbnail.getTooltip() || "" %>">
                             <div class="thumbnail">
                                 <% if (!thumbnail) { %>
                                     <div class="title"></div>

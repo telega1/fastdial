@@ -651,6 +651,9 @@
         function initThumbnailStyle() {
             var doc = content.document;
             var box = doc.getElementById(0);
+            var isEmpty = FdDom.is(box, "empty");
+            FdDom.removeClass(box, "empty");
+
             var thumbnail = FdDom.child(box, "thumbnail");
             var title = FdDom.child(thumbnail, "title");
             var names = ["thumbnail", "hover"];
@@ -674,6 +677,9 @@
                 var visibility = FdDom.css(title, "visibility");
                 FdDom.get(name + ".title").checked = visibility != "hidden";
                 FdDom.removeClass(thumbnail, "hover");
+            }
+            if (isEmpty) {
+              FdDom.addClass(box, "empty");
             }
         }
 
@@ -723,16 +729,20 @@
                 "opacity"          : FdDom.get("hover.opacity").value / 10
             }
             style[".title"] = {
-                "visibility"       : FdDom.get("thumbnail.title").checked ? "visible" : "hidden",
                 "color"            : getColor("thumbnail.title.color"),
                 "background-color" : getColor("thumbnail.title.background"),
                 "border-top"       : "1px solid " + getColor("thumbnail.title.border")
             }
+            if (!FdDom.get("thumbnail.title").checked) {
+                style[".title"].visibility = "hidden";
+            }
             style["div.thumbnail:hover .title, .hover .title"] = {
-                "visibility"       : FdDom.get("hover.title").checked ? "visible" : "hidden",
                 "color"            : getColor("hover.title.color"),
                 "background-color" : getColor("hover.title.background"),
                 "border-top"       : "1px solid " + getColor("hover.title.border")
+            }
+            if (!FdDom.get("hover.title").checked) {
+                style["div.thumbnail:hover .title, .hover .title"].visibility = "hidden";
             }
             var data = FdURL.readURL("chrome://fastdial/content/template/style.tpl");
             var template = new JsTemplate.Template(data);
