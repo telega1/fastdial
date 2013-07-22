@@ -93,8 +93,7 @@ function FdThumbnail(properties) {
         function onIconLoad(iconURL) {
             var box = FdDom.get(properties.thumbIndex);
             if (box) {
-                var title = FdDom.child(box, "title");
-                var span = FdDom.child(title, "span");
+                var span = FdDom.child(box, "span");
                 var icon = document.createElement("img");
                 icon.setAttribute("src", iconURL);
                 FdDom.prepend(span, icon);
