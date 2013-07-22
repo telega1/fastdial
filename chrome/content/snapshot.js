@@ -57,7 +57,6 @@ var FdLoader = new function() {
             item.onReady(browser);
             processQueue();
         }
-        FdURL.removeFromCache(item.url);
         browser.setAttribute("src", item.url);
     }
 };
@@ -136,7 +135,6 @@ function FdSnapshot(thumbnail) {
                     FdCache.save(thumbnail.getSnapshotURL(), image);
                     browser.close();
                     var imageURL = thumbnail.getImageURL();
-                    FdURL.removeFromCache(imageURL);
                     Fd.updateView();
                     if (!thumbnail.properties.isFolder) {
                         var folderURL = FdStorage.getFolderURL(thumbnail.properties.folderId);

@@ -245,15 +245,15 @@ var FdURL = {
         return data;
     },
 
-    removeFromCache: function(url) {
-        var imgICache = Components.classes["@mozilla.org/image/cache;1"]
-                .getService(Components.interfaces.imgICache);
+    removeFromCache: function(doc, url) {
+        var tools = Components.classes["@mozilla.org/image/tools;1"]
+                                  .getService(Components.interfaces.imgITools);
+        var cache = tools.getImgCacheForDocument(doc);
+        var uri = FdURL.getNsiURI(url);
         try {
-            var uri = FdURL.getNsiURI(url);
-            imgICache.removeEntry(uri);
+            cache.removeEntry(uri);
         }
-        catch(e) {
-        }
+        catch(e) {}
     }
 }
 var FdCache = {

@@ -79,6 +79,7 @@ function FdThumbnail(properties) {
     };
     this.refresh = function() {
         if (!this.properties.isBack) {
+            FdURL.removeFromCache(document, this.getImageURL());
             FdCache.remove(this.getSnapshotURL());
             wnd.Fd.updateView();
         }
