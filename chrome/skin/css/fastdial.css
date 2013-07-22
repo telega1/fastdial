@@ -99,6 +99,13 @@ div.thumbnail:hover .title, .hover .title {
     background: #e8e8e8;
 }
 
+.title img {
+    width: 16px;
+    height: 16px;
+    margin-bottom: -2px;
+    margin-right: 2px;
+}
+
 .buttons {
     position: absolute;
     top: 0px;

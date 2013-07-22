@@ -66,6 +66,7 @@ function FdSnapshot(thumbnail) {
     function loadSite() {
         FdLoader.load(thumbnail.getURL(), function(browser) {
             var doc = browser.contentDocument;
+            FdBookmark.setFavicon(thumbnail.properties.url, getFavicon(doc));
             if (!thumbnail.properties.title) {
                 thumbnail.properties.title = doc.title;
                 thumbnail.save();
@@ -76,6 +77,19 @@ function FdSnapshot(thumbnail) {
             }
             else saveImage(browser, false);
         });
+    }
+
+    function getFavicon(doc) {
+        var links = doc.getElementsByTagName("link");
+        for (var i = 0; i < links.length; i++) {
+            var link = links[i];
+            if (/icon/i.test(link.rel)) return link.href;
+        }
+        if (!FdURL.isLocal(doc.location)) {
+            var uri = FdURL.getNsiURL(doc.location);
+            return uri.prePath + "/favicon.ico";
+        }
+        return null;
     }
 
     function loadLogo() {

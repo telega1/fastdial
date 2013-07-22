@@ -43,7 +43,7 @@
                                     </a>
                                     <div class="title">
                                         <div>
-                                            <%= thumbnail.properties.title || "" %>
+                                            <span><%= thumbnail.properties.title || "" %></span>
                                         </div>
                                     </div>
                                 <% } %>

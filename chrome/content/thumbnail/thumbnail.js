@@ -1,4 +1,6 @@
 function FdThumbnail(properties) {
+    const ICON_FOLDER = "chrome://fastdial/skin/icons/folder.png";
+
     this.properties = properties;
     this.getTooltip = function() {
         if (!this.properties.refresh) {
@@ -86,7 +88,22 @@ function FdThumbnail(properties) {
             openDialog("chrome://fastdial/content/thumbnail/properties.xul", "properties",
                     "chrome,centerscreen,toolbar", this.properties);
         }
-    }
+    };
+    this.getFavicon = function() {
+        function onIconLoad(iconURL) {
+            var box = FdDom.get(properties.thumbIndex);
+            if (box) {
+                var title = FdDom.child(box, "title");
+                var span = FdDom.child(title, "span");
+                var icon = document.createElement("img");
+                icon.setAttribute("src", iconURL);
+                FdDom.prepend(span, icon);
+            }
+        }
+        this.properties.isFolder 
+            ? onIconLoad(ICON_FOLDER) 
+            : FdBookmark.getFavicon(this.getURL(), onIconLoad);
+    };
 }
 FdThumbnail.RATIO = 0.75;
 FdThumbnail.MIN_WIDTH = 100;

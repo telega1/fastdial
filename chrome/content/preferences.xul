@@ -287,6 +287,14 @@
                                           class="no-label" oncommand="saveStyle();"/>
                             </row>
                             <row align="center">
+                                <label value="&favicon;:"/>
+                                <checkbox id="thumbnail.favicon"
+                                          class="no-label" oncommand="saveStyle();"/>
+                                <spacer/>
+                                <checkbox id="hover.favicon"
+                                          class="no-label" oncommand="saveStyle();"/>
+                            </row>
+                            <row align="center">
                                 <label value="&text;:"/>
                                 <textbox id="thumbnail.title.color" class="color"
                                          onchange="updateColor(this);"/>
@@ -657,6 +665,9 @@
 
             var thumbnail = FdDom.child(box, "thumbnail");
             var title = FdDom.child(thumbnail, "title");
+            var favicon = doc.createElement("img");
+            title.appendChild(favicon);
+
             var names = ["thumbnail", "hover"];
             for (var i in names) {
                 var name = names[i];
@@ -677,8 +688,10 @@
                 setColor(name + ".title.border", titleBorder);
                 var visibility = FdDom.css(title, "visibility");
                 FdDom.get(name + ".title").checked = visibility != "hidden";
+                FdDom.get(name + ".favicon").checked = FdDom.css(favicon, "display") != "none";
                 FdDom.removeClass(thumbnail, "hover");
             }
+            FdDom.remove(favicon);
             if (isEmpty) {
               FdDom.addClass(box, "empty");
             }
@@ -704,6 +717,7 @@
                 "background-image"    : createImageURLs(),
                 "background-repeat"   : center ? "no-repeat" : "repeat",
                 "background-position" : center ? "center center" : "top left",
+                "background-size"     : center ? "cover" : "auto",
                 "font-family"         : "\"" + FdDom.get("font-family").label + "\"",
                 "font-size"           : FdDom.get("font-size").value,
                 "background-color"    : FdDom.get("background").value
@@ -744,6 +758,12 @@
             }
             if (!FdDom.get("hover.title").checked) {
                 style["div.thumbnail:hover .title, .hover .title"].visibility = "hidden";
+            }
+            style[".title img"] = {
+                "display" : FdDom.get("thumbnail.favicon").checked ? "inline" : "none"
+            }
+            style["div.thumbnail:hover .title img, .hover .title img"] = {
+                "display" : FdDom.get("hover.favicon").checked ? "inline" : "none"
             }
             var data = FdURL.readURL("chrome://fastdial/content/template/style.tpl");
             var template = new JsTemplate.Template(data);

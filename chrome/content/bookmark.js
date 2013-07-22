@@ -1,13 +1,15 @@
 var FdBookmark = new function() {
     var historyService =
             Components.classes["@mozilla.org/browser/nav-history-service;1"]
-                    .getService(Components.interfaces.nsINavHistoryService);
+                               .getService(Components.interfaces.nsINavHistoryService);
     var bookmarksService =
             Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"]
-                    .getService(Components.interfaces.nsINavBookmarksService);
+                                .getService(Components.interfaces.nsINavBookmarksService);
     var annotationService =
             Components.classes["@mozilla.org/browser/annotation-service;1"]
-                    .getService(Components.interfaces.nsIAnnotationService);
+                                 .getService(Components.interfaces.nsIAnnotationService);
+    var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
+                                          .getService(Components.interfaces.mozIAsyncFavicons);
 
     this.DESCRIPTION = "bookmarkProperties/description";
     this.BOOKMARKS_MENU = bookmarksService.bookmarksMenuFolder;
@@ -213,5 +215,16 @@ var FdBookmark = new function() {
     };
     this.getAnnotatedIds = function(name) {
         return annotationService.getItemsWithAnnotation(name, {});
+    };
+    this.getFavicon = function(url, onLoad) {
+        var uri = FdURL.getNsiURL(url);
+        faviconService.getFaviconURLForPage(uri, function(uri) {
+            if (uri) onLoad(uri.spec);
+        });
+    };
+    this.setFavicon = function(url, favicon) {
+       var uri = FdURL.getNsiURL(url);
+       var faviconURI = FdURL.getNsiURL(favicon);
+       faviconService.setAndFetchFaviconForPage(uri, faviconURI, false, null);
     };
 }

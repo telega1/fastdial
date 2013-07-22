@@ -1,4 +1,4 @@
-<!ENTITY add "Добавить">
+﻿<!ENTITY add "Добавить">
 <!ENTITY folder "Папка">
 <!ENTITY bookmark "Закладка">
 <!ENTITY sort "Сортировка">
@@ -69,3 +69,4 @@
 <!ENTITY searchThemes "Искать темы на UserLogos.org">
 <!ENTITY homeFolder "Домашняя папка">
 <!ENTITY select "Выбрать">
+<!ENTITY favicon "Иконка">

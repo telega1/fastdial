@@ -60,6 +60,10 @@ function initThumbnails() {
         thumbnails: thumbnails
     });
     document.body.innerHTML = html;
+
+    for (var i in thumbnails) {
+        thumbnails[i].getFavicon();
+    }
     onResize();
 }
 
