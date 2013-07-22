@@ -1,4 +1,4 @@
-<!ENTITY add "Hinzufügen">
+﻿<!ENTITY add "Hinzufügen">
 <!ENTITY folder "Ordner">
 <!ENTITY bookmark "Lesezeichen">
 <!ENTITY sort "Sortieren">
@@ -69,3 +69,4 @@
 <!ENTITY searchThemes "Themen auf UserLogos.org suchen">
 <!ENTITY homeFolder "Startseiten-Ordner">
 <!ENTITY select "Auswählen">
+<!ENTITY favicon "Favoriten-Symbol">
