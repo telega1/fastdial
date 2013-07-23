@@ -47,7 +47,7 @@ var FdDom = {
     },
 
     removeClass: function(element, aClass) {
-        var regexp = FdDom.regexp(aClass);
+        var regexp = FdDom.regexp("\s?" + aClass);
         element.className = element.className.replace(regexp, "");
     },
 
