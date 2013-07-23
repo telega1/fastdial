@@ -95,8 +95,6 @@ function getThumbIndex(index) {
     return !sort && page * perPage + (showBack() ? -1 : 0) + parseInt(index);
 }
 function onResize() {
-    var bodyPadding = parseInt(FdDom.css(document.body, "padding-top"));
-    var grid = FdDom.get("grid");
     var search = FdDom.get("search");
     var box = FdDom.get(0);
     var thumbnail = FdDom.child(box, "thumbnail");
@@ -107,12 +105,11 @@ function onResize() {
     var width = options.thumbWidth;
     var height = FdThumbnail.getHeight(width);
     if (!options.fixed) {
-        width = (window.innerWidth - bodyPadding * 2) / options.width -
+        width = window.innerWidth / options.width -
                 thumbnailMargin * 2 - thumbnailBorder * 2;
 
-        height = (window.innerHeight - bodyPadding * 2 - search.offsetHeight) /
-                options.height - thumbnailMargin * 2 - thumbnailBorder
-* 2 - title.offsetHeight;
+        height = (window.innerHeight - search.offsetHeight) /
+                options.height - thumbnailMargin * 2 - thumbnailBorder * 2 - title.offsetHeight;
 
         if (height < FdThumbnail.getHeight(width)) {
             width = FdThumbnail.getWidth(height);
@@ -121,12 +118,12 @@ function onResize() {
     width = Math.max(width, FdThumbnail.MIN_WIDTH);
     height = FdThumbnail.getHeight(width);
 
-    width += thumbnailMargin * 2 + thumbnailBorder * 2;
-    height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
+    var boxWidth = width + thumbnailMargin * 2 + thumbnailBorder * 2;
+    var boxHeight = height + thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
 
     // Center #layout
-    var layoutTop = (window.innerHeight - height * options.height - search.offsetHeight) / 2;
-    var layoutLeft = (window.innerWidth - width * options.width) / 2;
+    var layoutTop = (window.innerHeight - boxHeight * options.height - search.offsetHeight) / 2;
+    var layoutLeft = (window.innerWidth - boxWidth * options.width) / 2;
     if (layoutTop < 0) layoutTop = 0;
     if (layoutLeft < 0) layoutLeft = 0;
 
@@ -137,6 +134,10 @@ function onResize() {
             "margin-left: " + layoutLeft + ";" +
             "}" +
             ".box {" +
+            "width: " + boxWidth + ";" +
+            "height: " + boxHeight + ";" +
+            "}" +
+            ".image {" +
             "width: " + width + ";" +
             "height: " + height + ";" +
             "}";

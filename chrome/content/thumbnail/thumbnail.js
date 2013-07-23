@@ -108,8 +108,8 @@ function FdThumbnail(properties) {
 FdThumbnail.RATIO = 0.75;
 FdThumbnail.MIN_WIDTH = 100;
 FdThumbnail.getHeight = function(width) {
-    return Math.floor(width * FdThumbnail.RATIO);
+    return Math.round(width * FdThumbnail.RATIO);
 };
 FdThumbnail.getWidth = function(height) {
-    return Math.floor(height / FdThumbnail.RATIO);
+    return Math.round(height / FdThumbnail.RATIO);
 };
