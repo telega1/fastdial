@@ -173,7 +173,8 @@
                         var result = {};
                         openDialog("chrome://fastdial/content/folder.xul",
                                               "", "chrome, centerscreen, modal", result);
-                        if (result.folderId) {
+                        if (result.folderId && 
+                                       result.folderId != thumbnail.properties.id) {
                             thumbnail.properties.folderId = result.folderId;
                             thumbnail.properties.index = -1;
                             delete thumbnail.properties.thumbIndex;
