@@ -72,8 +72,6 @@ function FdThumbnail(properties) {
         FdCache.remove(url, "preview");
         FdCache.remove(url);
         FdStorage.removeItem(this.properties.id);
-        var folderURL = FdStorage.getFolderURL(this.properties.folderId);
-        FdCache.remove(folderURL);
         wnd.Fd.updateView();
         return true;
     };
@@ -108,8 +106,8 @@ function FdThumbnail(properties) {
 FdThumbnail.RATIO = 0.75;
 FdThumbnail.MIN_WIDTH = 100;
 FdThumbnail.getHeight = function(width) {
-    return Math.round(width * FdThumbnail.RATIO);
+    return Math.floor(width * FdThumbnail.RATIO);
 };
 FdThumbnail.getWidth = function(height) {
-    return Math.round(height / FdThumbnail.RATIO);
+    return Math.floor(height / FdThumbnail.RATIO);
 };

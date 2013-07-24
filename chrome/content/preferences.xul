@@ -872,7 +872,7 @@
         }
 
         function selectHomeFolder() {
-            var result = [];
+            var result = {};
             openDialog("chrome://fastdial/content/folder.xul",
                                    "", "chrome, centerscreen, modal", result);
             if (result.folderId) {

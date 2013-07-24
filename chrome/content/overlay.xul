@@ -27,6 +27,7 @@
             <menuitem id="fd-open-all" label="&openAll;"/>
             <menuitem id="fd-refresh" label="&refresh;"/>
             <menuitem id="fd-refresh-all" label="&refreshAll;"/>
+            <menuitem id="fd-move" label="&move;&#x2026;"/>
             <menuitem id="fd-remove" label="&remove;"/>
             <menuseparator id="fd-separator2"/>
             <menuitem id="fd-properties" label="&properties;"/>
@@ -151,6 +152,7 @@
                 FdDom.get("fd-open-all").hidden = !thumbnail ||
                         !thumbnail.properties.isFolder || thumbnail.properties.isBack;
                 FdDom.get("fd-refresh").hidden = !thumbnail || thumbnail.properties.isBack;
+                FdDom.get("fd-move").hidden = !thumbnail || thumbnail.properties.isBack;
                 FdDom.get("fd-remove").hidden = isReadOnly;
                 FdDom.get("fd-separator2").hidden = isReadOnly;
                 FdDom.get("fd-properties").hidden = isReadOnly;
@@ -161,19 +163,31 @@
                 var thumbnail = Fd.thumbnail;
                 var wnd = content.wrappedJSObject;
                 switch (command) {
-                    case "fd-open-all"   :
+                    case "fd-open-all":
                         thumbnail.openAll();
                         break;
-                    case "fd-refresh"    :
+                    case "fd-refresh":
                         thumbnail.refresh();
                         break;
-                    case "fd-remove"     :
+                    case "fd-move":
+                        var result = {};
+                        openDialog("chrome://fastdial/content/folder.xul",
+                                              "", "chrome, centerscreen, modal", result);
+                        if (result.folderId) {
+                            thumbnail.properties.folderId = result.folderId;
+                            thumbnail.properties.index = -1;
+                            delete thumbnail.properties.thumbIndex;
+                            thumbnail.save();
+                            Fd.updateView();
+                        }
+                        break;
+                    case "fd-remove":
                         thumbnail.remove(true);
                         break;
                     case "fd-preferences":
                         Fd.openPreferences();
                         break;
-                    case "fd-properties" :
+                    case "fd-properties":
                         thumbnail.openProperties();
                         break;
                     case "fd-add-menu":

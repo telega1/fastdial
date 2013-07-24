@@ -136,10 +136,6 @@ function FdSnapshot(thumbnail) {
                     browser.close();
                     var imageURL = thumbnail.getImageURL();
                     Fd.updateView();
-                    if (!thumbnail.properties.isFolder) {
-                        var folderURL = FdStorage.getFolderURL(thumbnail.properties.folderId);
-                        FdCache.remove(folderURL);
-                    }
                 },
                 timeout);
     }

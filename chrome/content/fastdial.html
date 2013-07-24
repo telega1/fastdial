@@ -197,8 +197,6 @@ function onDragDrop(e) {
                 source.properties.index = -1;
                 delete source.properties.thumbIndex;
                 source.save();
-                var targetURL = FdStorage.getFolderURL(target.properties.id);
-                FdCache.remove(targetURL);
             }
             else {
                 [source.properties.index, target.properties.index] =
@@ -218,8 +216,6 @@ function onDragDrop(e) {
             if (sort) source.properties.index = -1;
             source.save();
         }
-        var folderURL = FdStorage.getFolderURL(folder.id);
-        FdCache.remove(folderURL);
         wnd.Fd.updateView();
     }
 }
