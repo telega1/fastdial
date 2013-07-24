@@ -173,11 +173,10 @@ function showPreview(thumb) {
     if (FdDrag.inProgress()) return;
     FdDrag.disable();
     var snapshot = thumb.getSnapshotURL();
-    var image = FdCache.getCachedURL(snapshot, "preview");
     var doc = "<div id='preview'>" + 
               "<div class='overlay'>" +
               "<div class='container'>" +
-              "<img src='" + image + "'/>" +
+              "<img src='" + FdCache.getCachedURL(snapshot, "preview") + "'/>" +
               "</div></div></div>";
     document.body.appendChild(FdDom.parse(doc));
 }
