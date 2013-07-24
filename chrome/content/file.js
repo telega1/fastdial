@@ -246,11 +246,11 @@ var FdURL = {
     },
 
     removeFromCache: function(doc, url) {
-        var tools = Components.classes["@mozilla.org/image/tools;1"]
-                                  .getService(Components.interfaces.imgITools);
-        var cache = tools.getImgCacheForDocument(doc);
         var uri = FdURL.getNsiURI(url);
         try {
+            var tools = Components.classes["@mozilla.org/image/tools;1"]
+                                  .getService(Components.interfaces.imgITools);
+            var cache = tools.getImgCacheForDocument(doc);
             cache.removeEntry(uri);
         }
         catch(e) {}

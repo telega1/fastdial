@@ -8,8 +8,6 @@ var FdBookmark = new function() {
     var annotationService =
             Components.classes["@mozilla.org/browser/annotation-service;1"]
                                  .getService(Components.interfaces.nsIAnnotationService);
-    var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
-                                          .getService(Components.interfaces.mozIAsyncFavicons);
 
     this.DESCRIPTION = "bookmarkProperties/description";
     this.BOOKMARKS_MENU = bookmarksService.bookmarksMenuFolder;
@@ -218,13 +216,23 @@ var FdBookmark = new function() {
     };
     this.getFavicon = function(url, onLoad) {
         var uri = FdURL.getNsiURL(url);
-        faviconService.getFaviconURLForPage(uri, function(uri) {
-            if (uri) onLoad(uri.spec);
-        });
+        try {
+            var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
+                                              .getService(Components.interfaces.mozIAsyncFavicons);
+            faviconService.getFaviconURLForPage(uri, function(uri) {
+                if (uri) onLoad(uri.spec);
+            });
+        }
+        catch(e) {}
     };
     this.setFavicon = function(url, favicon) {
        var uri = FdURL.getNsiURL(url);
        var faviconURI = FdURL.getNsiURL(favicon);
-       faviconService.setAndFetchFaviconForPage(uri, faviconURI, false, null);
+       try {
+           var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
+                                              .getService(Components.interfaces.mozIAsyncFavicons);
+           faviconService.setAndFetchFaviconForPage(uri, faviconURI, false, null);
+       }
+       catch(e) {}
     };
 }
