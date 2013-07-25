@@ -71,7 +71,7 @@
             },
 
             initialize: function() {
-                if (gInitialPages) {
+                if (window.gInitialPages) {
                   gInitialPages.push(FdInfo.URI);
                 }
                 FdLegacy.migrate();

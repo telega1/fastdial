@@ -2,12 +2,6 @@ var FdInfo = {
     URI: "chrome://fastdial/content/fastdial.html",
     NAME: "Fast Dial",
     ID: "fastdial",
-
-    getVersion: "3.5.1",
-
-    matchURI: function(uri) {
-        return new RegExp(FdInfo.URI).test(uri);
-    }
 }
 var FdUtils = {
     pad: function(number) {
