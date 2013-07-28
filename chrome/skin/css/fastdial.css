@@ -34,7 +34,11 @@ a {
     padding: 2px;
     background: transparent;
     border: 1px solid lightgray;
-    margin-top: 2px;
+    margin-top: 8px;
+}
+
+#grid {
+  margin: 4px;
 }
 
 .box {
@@ -108,7 +112,7 @@ div.thumbnail:hover .title, .hover .title {
 .buttons {
     position: absolute;
     top: 0px;
-    right: 0px;
+    right: 10px;
     height: 21px;
     z-index: 1;
     opacity: 0;
@@ -163,7 +167,7 @@ div.refresh:hover {
 }
 
 #preview .overlay {
-    background: black;
+    background: white;
 }
 
 #preview .container {
