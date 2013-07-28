@@ -266,6 +266,24 @@
                                          type="number" max="10" onchange="saveStyle();"/>
                                 <spacer/>
                             </row>
+                            <row align="center">
+                                <label value="&round;:"/>
+                                <textbox id="thumbnail.round"
+                                         type="number" onchange="saveStyle();"/>
+                                <spacer/>
+                                <textbox id="hover.round"
+                                         type="number" onchange="saveStyle();"/>
+                                <spacer/>
+                            </row>
+                            <row align="center">
+                                <label value="&shadow;:"/>
+                                <textbox id="thumbnail.shadow"
+                                         type="number" onchange="saveStyle();"/>
+                                <spacer/>
+                                <textbox id="hover.shadow"
+                                         type="number" onchange="saveStyle();"/>
+                                <spacer/>
+                            </row>
                         </rows>
                     </grid>
                 </tabpanel>
@@ -659,12 +677,19 @@
 
         function initThumbnailStyle() {
             var doc = content.document;
-            var box = doc.getElementById(0);
-            var isEmpty = FdDom.is(box, "empty");
-            FdDom.removeClass(box, "empty");
+            var grid = doc.getElementById("grid");
+            var box = doc.createElement("div");
+            box.className = "box";
+            grid.appendChild(box);
 
-            var thumbnail = FdDom.child(box, "thumbnail");
-            var title = FdDom.child(thumbnail, "title");
+            var thumbnail = doc.createElement("div");
+            thumbnail.className = "thumbnail";
+            thumbnail.style.transition = "none";
+            box.appendChild(thumbnail);
+
+            var title = doc.createElement("div");
+            title.className = "title";
+            thumbnail.appendChild(title);
             var favicon = doc.createElement("img");
             title.appendChild(favicon);
 
@@ -680,6 +705,11 @@
                 FdDom.get(name + ".margin").value = parseInt(margin);
                 var opacity = FdDom.css(thumbnail, "opacity");
                 FdDom.get(name + ".opacity").value = opacity * 10;
+                var round = FdDom.css(thumbnail, "border-top-right-radius");
+                FdDom.get(name + ".round").value = parseInt(round);
+                var shadow = FdDom.css(thumbnail, "box-shadow");
+                FdDom.get(name + ".shadow").value = parseInt(shadow.match(/\d+px/));
+
                 var titleColor = FdDom.css(title, "color");
                 setColor(name + ".title.color", titleColor);
                 var titleBackground = FdDom.css(title, "background-color");
@@ -691,10 +721,7 @@
                 FdDom.get(name + ".favicon").checked = FdDom.css(favicon, "display") != "none";
                 FdDom.removeClass(thumbnail, "hover");
             }
-            FdDom.remove(favicon);
-            if (isEmpty) {
-              FdDom.addClass(box, "empty");
-            }
+            FdDom.remove(box);
         }
 
         function saveStyle() {
@@ -719,7 +746,7 @@
                 "background-position" : center ? "center center" : "top left",
                 "background-size"     : center ? "cover" : "auto",
                 "font-family"         : "\"" + FdDom.get("font-family").label + "\"",
-                "font-size"           : FdDom.get("font-size").value,
+                "font-size"           : FdDom.get("font-size").value + "px",
                 "background-color"    : FdDom.get("background").value
             }
             style[".back"] = {
@@ -731,17 +758,28 @@
                 "background-color" : getColor("search.background"),
                 "border"           : "1px solid " + getColor("search.border")
             }
+            var thumbShadow = FdDom.get("thumbnail.shadow").value;
             style[".thumbnail"] = {
                 "background-color" : getColor("thumbnail.background"),
                 "border"           : "1px solid " + getColor("thumbnail.border"),
-                "margin"           : FdDom.get("thumbnail.margin").value,
-                "opacity"          : FdDom.get("thumbnail.opacity").value / 10
+                "margin"           : FdDom.get("thumbnail.margin").value + "px",
+                "opacity"          : FdDom.get("thumbnail.opacity").value / 10,
+                "border-radius"    : FdDom.get("thumbnail.round").value + "px",
+                "box-shadow"       : parseInt(thumbShadow) ? thumbShadow + "px " +
+                                                   thumbShadow + "px 5px #888888" : "none",
+
+                "transition"       : "background-color 2s, border 2s, "+
+                                     "opacity 2s, border-radius 2s, box-shadow 2s"
             }
+            var hoverShadow = FdDom.get("hover.shadow").value;
             style["div.thumbnail:hover, .hover"] = {
                 "background-color" : getColor("hover.background"),
                 "border"           : "1px solid " + getColor("hover.border"),
-                "margin"           : FdDom.get("hover.margin").value,
-                "opacity"          : FdDom.get("hover.opacity").value / 10
+                "margin"           : FdDom.get("hover.margin").value + "px",
+                "opacity"          : FdDom.get("hover.opacity").value / 10,
+                "border-radius"    : FdDom.get("hover.round").value + "px",
+                "box-shadow"       : parseInt(hoverShadow) ? hoverShadow + "px " +
+                                                   hoverShadow + "px 5px #888888" : "none"
             }
             style[".title"] = {
                 "color"            : getColor("thumbnail.title.color"),

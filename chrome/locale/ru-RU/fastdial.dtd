@@ -71,3 +71,5 @@
 <!ENTITY select "Выбрать">
 <!ENTITY favicon "Иконка">
 <!ENTITY move "Переместить">
+<!ENTITY round "Закругление">
+<!ENTITY shadow "Тень">
