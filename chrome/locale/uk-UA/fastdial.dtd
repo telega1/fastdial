@@ -1,0 +1,75 @@
+<!ENTITY add "Додати">
+<!ENTITY folder "Папка">
+<!ENTITY bookmark "Закладка">
+<!ENTITY sort "Сортування">
+<!ENTITY none "Немає">
+<!ENTITY auto "Авто">
+<!ENTITY visits "Відвідування">
+<!ENTITY preferences "Налаштування">
+<!ENTITY help "Довідка">
+<!ENTITY open "Відкрити">
+<!ENTITY openAll "Відкрити всі">
+<!ENTITY refresh "Оновити">
+<!ENTITY remove "Видалити">
+<!ENTITY properties "Властивості">
+<!ENTITY url "Адреса">
+<!ENTITY title "Заголовок">
+<!ENTITY description "Опис">
+<!ENTITY logo "Лого">
+<!ENTITY favicon "Іконка">
+<!ENTITY shortcutKey "Гаряча клавіша">
+<!ENTITY restartIsNeeded "(необхідний перезапуск)">
+<!ENTITY refreshEvery "Оновлювати кожні">
+<!ENTITY minutes "хвилин">
+<!ENTITY refreshAll "Оновити всі">
+<!ENTITY preview "Перегляд">
+<!ENTITY background "Фон">
+<!ENTITY theme "Тема">
+<!ENTITY export "Експорт">
+<!ENTITY import "Імпорт">
+<!ENTITY rename "Перейменувати">
+<!ENTITY makeHome "Зробити домашньою">
+<!ENTITY addToFastDial "Додати в Fast Dial">
+<!ENTITY general "Загальні">
+<!ENTITY advanced "Додатково">
+<!ENTITY appearance "Зовнішній вигляд">
+<!ENTITY defaults "Стандартно">
+<!ENTITY thumbnails "Зображення">
+<!ENTITY quantity "Кількість">
+<!ENTITY size "Розмір">
+<!ENTITY fixed "Фіксувати">
+<!ENTITY hideEmptyBoxes "Заховати пусті рамки">
+<!ENTITY hideSearch "Заховати поле пошуку">
+<!ENTITY hideBackLinks "Заховати посилання Назад">
+<!ENTITY openLinksIn "Відкривати посилання в">
+<!ENTITY currentTab "поточній вкладці">
+<!ENTITY newTab "новій вкладці">
+<!ENTITY backgroundTab "фоновій вкладці">
+<!ENTITY connectionSpeed "Швидкість зєднання">
+<!ENTITY fast "Швидка">
+<!ENTITY medium "Середня">
+<!ENTITY slow "Повільна">
+<!ENTITY showInBlankTabs "Показувати Fast Dial в порожніх вкладках">
+<!ENTITY page "Сторінка">
+<!ENTITY font "Шрифт">
+<!ENTITY image "Зображення">
+<!ENTITY back "Назад">
+<!ENTITY background "Фон">
+<!ENTITY search "Пошук">
+<!ENTITY thumbnail "Зображення">
+<!ENTITY normal "Звичайне">
+<!ENTITY active "Активне">
+<!ENTITY text "Текст">
+<!ENTITY border "Рамка">
+<!ENTITY margin "Відступ">
+<!ENTITY opacity "Прозорість">
+<!ENTITY visibility "Видимість">
+<!ENTITY close "Закрити">
+<!ENTITY searchLogos "Шукати лого на UserLogos.org">
+<!ENTITY searchThemes "Шукати теми на UserLogos.org">
+<!ENTITY homeFolder "Домашня папка">
+<!ENTITY select "Вибрати">
+<!ENTITY favicon "Іконка">
+<!ENTITY move "Перемістити">
+<!ENTITY round "Округлення">
+<!ENTITY shadow "Тінь">
