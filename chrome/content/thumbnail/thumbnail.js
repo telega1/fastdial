@@ -77,8 +77,10 @@ function FdThumbnail(properties) {
     };
     this.refresh = function() {
         if (!this.properties.isBack) {
-            FdURL.removeFromCache(document, this.getImageURL());
-            FdCache.remove(this.getSnapshotURL());
+            var snapshot = this.getSnapshotURL();
+            FdURL.removeFromCache(document, FdCache.getCachedURL(snapshot, "preview"));
+            FdURL.removeFromCache(document, FdCache.getCachedURL(snapshot));
+            FdCache.remove(snapshot);
             wnd.Fd.updateView();
         }
     };
