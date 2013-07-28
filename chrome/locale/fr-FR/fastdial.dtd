@@ -1,0 +1,74 @@
+<!ENTITY add "Ajouter">
+<!ENTITY folder "Dossier">
+<!ENTITY bookmark "Marque-page">
+<!ENTITY sort "Trier">
+<!ENTITY none "Aucun">
+<!ENTITY auto "Auto">
+<!ENTITY visits "Visites">
+<!ENTITY preferences "Préférences">
+<!ENTITY help "Aide">
+<!ENTITY open "Ouvrir">
+<!ENTITY openAll "Tout ouvrir">
+<!ENTITY refresh "Actualiser">
+<!ENTITY remove "Supprimer">
+<!ENTITY properties "Propriétés">
+<!ENTITY url "URL ">
+<!ENTITY title "Titre ">
+<!ENTITY description "Description ">
+<!ENTITY logo "Logo ">
+<!ENTITY favicon "Favicon">
+<!ENTITY shortcutKey "Touche de raccourci ">
+<!ENTITY restartIsNeeded "(Redémarrage nécessaire)">
+<!ENTITY refreshEvery "Tout actualiser ">
+<!ENTITY minutes "minutes">
+<!ENTITY refreshAll "Tout actualiser">
+<!ENTITY preview "Prévisualiser">
+<!ENTITY background "Arrière plan ">
+<!ENTITY theme "Thème">
+<!ENTITY export "Exporter">
+<!ENTITY import "Importer">
+<!ENTITY rename "Renommer">
+<!ENTITY makeHome "Faire page accueil">
+<!ENTITY addToFastDial "Ajouter à Fast Dial">
+<!ENTITY general "Général">
+<!ENTITY advanced "Avancé">
+<!ENTITY appearance "Apparence">
+<!ENTITY defaults "Par défaut">
+<!ENTITY quantity "Nombre de cases ">
+<!ENTITY thumbnails "Miniatures">
+<!ENTITY size "Taille ">
+<!ENTITY fixed "Fixe">
+<!ENTITY hideEmptyBoxes "Cacher les cases vides">
+<!ENTITY hideSearch "Masquer la barre de recherche">
+<!ENTITY hideBackLinks "Masquer les liens de retour ">
+<!ENTITY openLinksIn "Ouvrir les liens dans ">
+<!ENTITY currentTab "onglet actuel">
+<!ENTITY newTab "nouvel onglet">
+<!ENTITY backgroundTab "onglet en arrière-plan">
+<!ENTITY connectionSpeed "Vitesse de connexion ">
+<!ENTITY fast "Rapide">
+<!ENTITY medium "Moyenne">
+<!ENTITY slow "Lente">
+<!ENTITY showInBlankTabs "Afficher Fast Dial dans des onglets vierges">
+<!ENTITY page "Page">
+<!ENTITY font "Police ">
+<!ENTITY image "Image ">
+<!ENTITY back "Retour ">
+<!ENTITY background "Arrière-plan ">
+<!ENTITY search "Zone(s) de recherche ">
+<!ENTITY thumbnail "Vignette">
+<!ENTITY normal "Normal">
+<!ENTITY active "Actif">
+<!ENTITY text "Texte ">
+<!ENTITY border "Bordure ">
+<!ENTITY margin "Marge ">
+<!ENTITY opacity "Opacité ">
+<!ENTITY visibility "Visibilité">
+<!ENTITY close "Fermer">
+<!ENTITY searchLogos "Rechercher des logos sur UserLogos.org">
+<!ENTITY searchThemes "Rechercher des thèmes sur UserLogos.org">
+<!ENTITY homeFolder "Dossier d'accueil ">
+<!ENTITY select "Sélectionner">
+<!ENTITY move "Déplacer">
+<!ENTITY round "Arrondis">
+<!ENTITY shadow "Ombre">
