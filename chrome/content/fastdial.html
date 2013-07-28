@@ -61,9 +61,7 @@ function initThumbnails() {
     });
     document.body.innerHTML = html;
 
-    for (var i in thumbnails) {
-        thumbnails[i].getFavicon();
-    }
+    for (var i in thumbnails) getFavicon(i);
     onResize();
 }
 
@@ -346,6 +344,25 @@ function showRandomBackground() {
                 }
             }
         }
+    }
+}
+
+function getFavicon(index) {
+    const ICON_FOLDER = "chrome://fastdial/skin/icons/folder.png";
+    var thumb = thumbnails[index];
+
+    thumb.properties.isFolder 
+        ? onIconLoad(ICON_FOLDER) 
+        : FdBookmark.getFavicon(thumb.getURL(), onIconLoad);
+
+    function onIconLoad(iconURL) {
+       var box = FdDom.get(index);
+       if (box) {
+           var span = FdDom.child(box, "span");
+           var icon = document.createElement("img");
+           icon.setAttribute("src", iconURL);
+           FdDom.prepend(span, icon);
+       }
     }
 }
 </script>
