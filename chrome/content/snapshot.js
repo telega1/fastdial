@@ -127,11 +127,13 @@ function FdSnapshot(thumbnail) {
         }
         setTimeout(function() {
                     if (thumbnail.properties.preview) {
-                        var preview = FdSnapshot.createImage(browser.contentWindow);
+                        var preview = FdSnapshot.createImage(
+                                           browser.contentWindow, browser.width, isLogo);
                         FdCache.save(thumbnail.getSnapshotURL(),
                                 preview, "preview");
                     }
-                    var image = FdSnapshot.createImage(browser.contentWindow, options.thumbWidth, isLogo);
+                    var image = FdSnapshot.createImage(
+                                       browser.contentWindow, options.thumbWidth, isLogo);
                     FdCache.save(thumbnail.getSnapshotURL(), image);
                     browser.close();
                     var imageURL = thumbnail.getImageURL();
@@ -150,7 +152,6 @@ FdSnapshot.createImage = function(wnd, imageWidth, isLogo) {
     var doc = wnd.document;
     var width = doc.documentElement.offsetWidth;
     var height = FdThumbnail.getHeight(width);
-    imageWidth = imageWidth || width;
     var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
     canvas.width = imageWidth;
     canvas.height = FdThumbnail.getHeight(canvas.width);
