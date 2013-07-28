@@ -73,9 +73,8 @@ var FdDom = {
             var doc = element.ownerDocument;
             var style = doc.defaultView.getComputedStyle(element, "");
             return style.getPropertyValue(name);
-        } catch(e) {
-            alert(element + "|" + name);
         }
+        catch(e) {}
     },
 
     position: function(element) {
