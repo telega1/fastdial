@@ -10,6 +10,7 @@
             ondialogextra2="defaults();"
             persist="screenX screenY"
             title="&preferences;"
+            style="height: 36em;"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul ">

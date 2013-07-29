@@ -7,6 +7,7 @@
             ondialogaccept="return onAccept();"
             persist="screenX screenY"
             title="&properties;"
+            style="height: 24em;"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
     <prefpane id="general" label="&general;">
@@ -248,13 +249,6 @@
         function updateRefreshAll() {
             FdDom.get("refreshAll").checked = !FdDom.get("logo").value;
             FdDom.get("refreshAll").disabled = FdDom.get("logo").value;
-        }
-
-        function searchLogo() {
-            var url = FdURL.getNsiURL(properties.url);
-            var searchUrl = "http://userlogos.org/logos/top-rated?filter0=" +
-                    (properties.isFolder ? "folder" : url.host);
-            FdUtils.openLink(searchUrl, "tab");
         }
         ]]>
   </script>
