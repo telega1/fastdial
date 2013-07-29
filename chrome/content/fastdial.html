@@ -157,7 +157,8 @@ var previewTimeout;
 
 function onMouseDown(e) {
     if (!FdDom.is(e.target, "image")) return;
-    FdDrag.draggable(e.target);
+    if (!sort) FdDrag.draggable(e.target);
+
     var box = FdDom.parent(e.target, "box");
     source = thumbnails[box.id];
     if (e.button == 0 && source.properties.preview) {
@@ -201,10 +202,11 @@ function onDragDrop(e) {
             }
             else {
                 [source.properties.index, target.properties.index] =
-                        [target.properties.index, source.properties.index];
+                [target.properties.index, source.properties.index];
+
                 [source.properties.thumbIndex, target.properties.thumbIndex] =
-                        sort ? [source.properties.index, target.properties.index]
-                                : [target.properties.thumbIndex, source.properties.thumbIndex];
+                [target.properties.thumbIndex, source.properties.thumbIndex];
+
                 if (source.properties.index < target.properties.index) {
                     [source, target] = [target, source];
                 }
@@ -214,7 +216,6 @@ function onDragDrop(e) {
         }
         else {
             source.properties.thumbIndex = getThumbIndex(i);
-            if (sort) source.properties.index = -1;
             source.save();
         }
         wnd.Fd.updateView();
