@@ -83,6 +83,9 @@ var FdDrag = new function() {
             FdDom.remove(object);
             object = null;
         }
+        source.removeEventListener("mousedown", onMouseDown, false);
+        document.removeEventListener("mousemove", onMouseMove, false);
+        document.removeEventListener("mouseup", onMouseUp, false);
         source = null;
     }
 }
