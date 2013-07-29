@@ -135,8 +135,8 @@
                             <button id="remove" label="&remove;" oncommand="removeThemes();"/>
                         </vbox>
                     </hbox>
-                    <label href="http://userlogos.org/fdthemes" class="text-link"
-                           tooltiptext="http://userlogos.org/fdthemes" value="&searchThemes;"/>
+                    <label href="http://www.userlogos.org/fdthemes/top-rated" class="text-link"
+                           tooltiptext="http://www.userlogos.org/fdthemes/top-rated" value="&searchThemes;"/>
                 </tabpanel>
                 <tabpanel orient="vertical">
                     <hbox align="center">

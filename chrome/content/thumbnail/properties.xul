@@ -77,8 +77,8 @@
                 </row>
                 <row>
                     <spacer/>
-                    <label href="http://userlogos.org/logos" class="text-link"
-                           tooltiptext="http://userlogos.org/logos" value="&searchLogos;"/>
+                    <label href="http://www.userlogos.org/logos/top-rated" class="text-link"
+                           tooltiptext="http://www.userlogos.org/logos/top-rated" value="&searchLogos;"/>
                 </row>
             </rows>
         </grid>
