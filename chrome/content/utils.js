@@ -12,7 +12,7 @@ var FdUtils = {
         if (millis) {
             var date = new Date(millis);
             return FdUtils.pad(date.getHours()) + ":" +
-                    FdUtils.pad(date.getMinutes());
+                   FdUtils.pad(date.getMinutes());
         } else {
             return "";
         }
@@ -70,16 +70,6 @@ var FdUtils = {
         var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                 .getService(Components.interfaces.nsIWindowMediator);
         return wm.getMostRecentWindow("navigator:browser");
-    },
-
-    getDocumentTab: function(doc) {
-        var tabs = gBrowser.tabContainer.childNodes;
-        for (var i = 0; i < tabs.length; i++) {
-            if (tabs[i].linkedBrowser.contentDocument == doc) {
-                return tabs[i];
-            }
-        }
-        return null;
     },
 
     selectItem: function(menulistId, value) {
@@ -147,7 +137,7 @@ var FdUtils = {
             array.push(string.charCodeAt(i));
         }
         var hash = Components.classes["@mozilla.org/security/hash;1"]
-                .createInstance(Components.interfaces.nsICryptoHash);
+                              .createInstance(Components.interfaces.nsICryptoHash);
         hash.init(hash.MD5);
         hash.update(array, array.length);
         var binary = hash.finish(false);
@@ -158,7 +148,7 @@ var FdUtils = {
             var ones = c % 16;
             var tens = c >> 4;
             result += String.fromCharCode(tens + (tens > 9 ? 87 : 48)) +
-                    String.fromCharCode(ones + (ones > 9 ? 87 : 48));
+                      String.fromCharCode(ones + (ones > 9 ? 87 : 48));
         }
         return result;
     },
@@ -199,7 +189,7 @@ var FdBundle = {
     getString: function(name, params) {
         try {
             return params ? FdBundle.bundle.formatStringFromName(name, params, params.length)
-                    : FdBundle.bundle.GetStringFromName(name);
+                          : FdBundle.bundle.GetStringFromName(name);
         } catch(e) {
             return null;
         }
