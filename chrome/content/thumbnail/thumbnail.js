@@ -29,9 +29,6 @@ function FdThumbnail(properties) {
         return wnd.FdLoader.isLoading(this.properties.logo) ||
                 wnd.FdLoader.isLoading(this.getURL());
     };
-    this.isReadOnly = function() {
-        return this.properties.isBack || this.properties.id == -1;
-    };
     this.save = function() {
         FdStorage.saveItem(this.properties);
     };
@@ -56,7 +53,7 @@ function FdThumbnail(properties) {
     }
 
     this.remove = function(confirm) {
-        if (this.isReadOnly() ||
+        if (this.properties.isBack ||
                 confirm && !confirmRemove.call(this)) return false;
 
         if (this.properties.isFolder) {
@@ -84,7 +81,7 @@ function FdThumbnail(properties) {
         }
     };
     this.openProperties = function() {
-        if (!this.isReadOnly()) {
+        if (!this.properties.isBack) {
             openDialog("chrome://fastdial/content/thumbnail/properties.xul", "properties",
                     "chrome,centerscreen,toolbar", this.properties);
         }

@@ -147,12 +147,11 @@
             showContextMenu: function(e, thumbnail) {
                 Fd.thumbnail = thumbnail;
                 var wnd = content.wrappedJSObject;
-                var isReadOnly = !thumbnail || thumbnail.isReadOnly();
+                var isReadOnly = !thumbnail || thumbnail.properties.isBack;
                 FdDom.get("fd-add-menu").hidden = FdBookmark.isDynamic(wnd.folder);
-                FdDom.get("fd-open-all").hidden = !thumbnail ||
-                        !thumbnail.properties.isFolder || thumbnail.properties.isBack;
-                FdDom.get("fd-refresh").hidden = !thumbnail || thumbnail.properties.isBack;
-                FdDom.get("fd-move").hidden = !thumbnail || thumbnail.properties.isBack;
+                FdDom.get("fd-open-all").hidden = isReadOnly || !thumbnail.properties.isFolder;
+                FdDom.get("fd-refresh").hidden = isReadOnly;
+                FdDom.get("fd-move").hidden = isReadOnly;
                 FdDom.get("fd-remove").hidden = isReadOnly;
                 FdDom.get("fd-separator2").hidden = isReadOnly;
                 FdDom.get("fd-properties").hidden = isReadOnly;
