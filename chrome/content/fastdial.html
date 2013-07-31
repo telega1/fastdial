@@ -119,13 +119,13 @@ function onResize() {
     width = Math.max(width, FdThumbnail.MIN_WIDTH);
     height = FdThumbnail.getHeight(width);
 
-    var boxWidth = width + thumbnailMargin * 2 + thumbnailBorder * 2;
-    var boxHeight = height + thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
+    width += thumbnailMargin * 2 + thumbnailBorder * 2;
+    height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
 
     // Center #layout
     var layoutTop = (window.innerHeight - gridMargin * 2 -
-                     boxHeight * options.height - search.offsetHeight) / 2;
-    var layoutLeft = (window.innerWidth - gridMargin * 2 - boxWidth * options.width) / 2;
+                     height * options.height - search.offsetHeight) / 2;
+    var layoutLeft = (window.innerWidth - gridMargin * 2 - width * options.width) / 2;
     if (layoutTop < 0) layoutTop = 0;
     if (layoutLeft < 0) layoutLeft = 0;
 
@@ -136,10 +136,6 @@ function onResize() {
             "margin-left: " + layoutLeft + ";" +
             "}" +
             ".box {" +
-            "width: " + boxWidth + ";" +
-            "height: " + boxHeight + ";" +
-            "}" +
-            ".image {" +
             "width: " + width + ";" +
             "height: " + height + ";" +
             "}";
