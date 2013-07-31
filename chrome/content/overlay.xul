@@ -318,11 +318,9 @@
         var OriginalBrowserOpenTab = BrowserOpenTab;
 
         window.BrowserOpenTab = function() {
-           if (FdPrefs.getBool("enable")) {
-               FdUtils.openLink(FdInfo.URI, "tab");
-           } else {
-               OriginalBrowserOpenTab();
-           }
+           FdPrefs.getBool("enable")
+               ? FdUtils.openLink(FdInfo.URI, "tab")
+               : OriginalBrowserOpenTab();
         }
 
         addEventListener("load",
