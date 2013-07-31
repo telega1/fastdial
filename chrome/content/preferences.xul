@@ -13,7 +13,7 @@
             style="height: 36em;"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul ">
+            xsi:schemaLocation="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
     <prefpane id="general" label="&general;" helpTopic="true">
         <tabpanels>
@@ -768,9 +768,7 @@
                 "border-radius"    : FdDom.get("thumbnail.round").value + "px",
                 "box-shadow"       : parseInt(thumbShadow) ? thumbShadow + "px " +
                                                    thumbShadow + "px 5px #888888" : "none",
-
-                "transition"       : "background-color 2s, border 2s, "+
-                                     "opacity 2s, border-radius 2s, box-shadow 2s"
+                "transition"       : "box-shadow 2s"
             }
             var hoverShadow = FdDom.get("hover.shadow").value;
             style["div.thumbnail:hover, .hover"] = {
