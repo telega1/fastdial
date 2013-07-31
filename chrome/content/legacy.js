@@ -1,7 +1,7 @@
 var FdLegacy = new function() {
     this.migrate = function() {
         var previousVersion = FdPrefs.getString("version");
-        var version = "4.9";
+        var version = "4.10";
         FdPrefs.setString("version", version);
 
         if (!previousVersion) addToolbarButton();
