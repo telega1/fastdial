@@ -313,14 +313,15 @@
                     if (w.initThumbnails) w.initThumbnails();
                 });
             },
+
+            BrowserOpenTab: null,
         }
 
-        var OriginalBrowserOpenTab = BrowserOpenTab;
-
+        Fd.BrowserOpenTab = window.BrowserOpenTab;
         window.BrowserOpenTab = function() {
-           FdPrefs.getBool("enable")
-               ? FdUtils.openLink(FdInfo.URI, "tab")
-               : OriginalBrowserOpenTab();
+            FdPrefs.getBool("enable")
+                ? FdUtils.openLink(FdInfo.URI, "tab")
+                : Fd.BrowserOpenTab();
         }
 
         addEventListener("load",
