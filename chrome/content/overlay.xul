@@ -71,9 +71,6 @@
             },
 
             initialize: function() {
-                if (window.gInitialPages) {
-                  gInitialPages.push(FdInfo.URI);
-                }
                 FdLegacy.migrate();
                 Fd.initShortcutKeys();
                 Fd.autoRefresh();
@@ -315,6 +312,10 @@
             },
 
             BrowserOpenTab: null,
+        }
+
+        if (window.gInitialPages) {
+            gInitialPages.push(FdInfo.URI);
         }
 
         Fd.BrowserOpenTab = window.BrowserOpenTab;
