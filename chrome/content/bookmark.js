@@ -219,8 +219,11 @@ var FdBookmark = new function() {
         try {
             var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
                                               .getService(Components.interfaces.mozIAsyncFavicons);
-            faviconService.getFaviconURLForPage(uri, function(uri) {
-                if (uri) onLoad(uri.spec);
+            faviconService.getFaviconDataForPage(uri, { onComplete:
+                function(aURI, aDataLen, aData, aMimeType) {
+                    if (aURI) onLoad("data:" + aMimeType + ";base64," +
+                                        btoa(String.fromCharCode.apply(null, aData)));
+                }
             });
         }
         catch(e) {}
@@ -231,7 +234,7 @@ var FdBookmark = new function() {
        try {
            var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
                                               .getService(Components.interfaces.mozIAsyncFavicons);
-           faviconService.setAndFetchFaviconForPage(uri, faviconURI, false, null);
+           faviconService.setAndFetchFaviconForPage(uri, faviconURI, false);
        }
        catch(e) {}
     };
