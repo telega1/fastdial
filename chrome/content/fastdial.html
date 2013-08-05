@@ -25,7 +25,6 @@ var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
 var params = FdUtils.getQueryParams(document.location);
 var wnd = FdUtils.getBrowserWindow();
-wnd.gURLBar.select();
 
 var folder, home = FdStorage.getHome();
 if (!params.folder || params.folder == home.id) folder = home;
