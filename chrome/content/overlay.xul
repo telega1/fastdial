@@ -311,18 +311,20 @@
                 });
             },
 
-            BrowserOpenTab: null,
+            addTab: null,
         }
 
         if (window.gInitialPages) {
             gInitialPages.push(FdInfo.URI);
         }
 
-        Fd.BrowserOpenTab = window.BrowserOpenTab;
-        window.BrowserOpenTab = function() {
-            FdPrefs.getBool("enable")
-                ? FdUtils.openLink(FdInfo.URI, "tab")
-                : Fd.BrowserOpenTab();
+        Fd.addTab = gBrowser.addTab;
+
+        gBrowser.addTab = function() {
+            if (arguments[0] == "about:newtab" ||
+                arguments[0] == "about:blank" &&
+                FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
+            return Fd.addTab.apply(gBrowser, arguments);
         }
 
         addEventListener("load",
