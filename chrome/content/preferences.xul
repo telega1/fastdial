@@ -768,7 +768,6 @@
                 "border-radius"    : FdDom.get("thumbnail.round").value + "px",
                 "box-shadow"       : parseInt(thumbShadow) ? thumbShadow + "px " +
                                                    thumbShadow + "px 5px #888888" : "none",
-                "transition"       : "box-shadow 2s"
             }
             var hoverShadow = FdDom.get("hover.shadow").value;
             style["div.thumbnail:hover, .hover"] = {
