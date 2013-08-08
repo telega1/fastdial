@@ -234,7 +234,7 @@ var FdBookmark = new function() {
        try {
            var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
                                               .getService(Components.interfaces.mozIAsyncFavicons);
-           faviconService.setAndFetchFaviconForPage(uri, faviconURI, false);
+           faviconService.setAndFetchFaviconForPage(uri, faviconURI, false, null);
        }
        catch(e) {}
     };
