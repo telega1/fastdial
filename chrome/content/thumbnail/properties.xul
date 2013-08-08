@@ -224,8 +224,10 @@
                 wnd.FdLoader.stop(thumbnail.properties.logo);
                 wnd.FdLoader.stop(thumbnail.getURL());
                 var snapshot = thumbnail.getSnapshotURL();
-                FdCache.remove(snapshot, "preview");
-                FdCache.remove(snapshot);
+                if (snapshot) {
+                    FdCache.remove(snapshot, "preview");
+                    FdCache.remove(snapshot);
+                }
             }
             FdUtils.merge(properties, props);
             thumbnail.save();

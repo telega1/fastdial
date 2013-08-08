@@ -63,10 +63,10 @@ function FdThumbnail(properties) {
             thumbnail.remove(false);
           }
         }
-        var url = this.getSnapshotURL();
-        wnd.FdLoader.stop(url);
-        FdCache.remove(url, "preview");
-        FdCache.remove(url);
+        var snapshot = this.getSnapshotURL();
+        wnd.FdLoader.stop(snapshot);
+        FdCache.remove(snapshot, "preview");
+        FdCache.remove(snapshot);
         FdStorage.removeItem(this.properties.id);
         wnd.Fd.updateView();
         return true;
@@ -74,8 +74,7 @@ function FdThumbnail(properties) {
     this.refresh = function() {
         if (!this.properties.isBack) {
             var snapshot = this.getSnapshotURL();
-            FdURL.removeFromCache(document, FdCache.getCachedURL(snapshot, "preview"));
-            FdURL.removeFromCache(document, FdCache.getCachedURL(snapshot));
+            FdCache.remove(snapshot, "preview");
             FdCache.remove(snapshot);
             wnd.Fd.updateView();
         }

@@ -310,9 +310,13 @@ var FdCache = {
         var file = FdCache.getCachedFile(url, folder);
         try {
             file.remove(false);
+            var cached = FdCache.getCachedURL(url, folder);
+            FdUtils.forEachTab(function(wnd) {
+                FdURL.removeFromCache(
+                           wnd.document, cached);
+            });
         }
-        catch(e) {
-        }
+        catch(e) {}
     }
 }
 var FdTheme = {
