@@ -358,7 +358,7 @@ function getFavicon(index) {
            var span = FdDom.child(box, "span");
            var icon = document.createElement("img");
            icon.setAttribute("src", iconURL);
-           FdDom.prepend(span, icon);
+           FdDom.prepend(span.parentNode, icon);
        }
     }
 }

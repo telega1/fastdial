@@ -107,8 +107,7 @@ div.thumbnail:hover .title, .hover .title {
 .title img {
     width: 16px;
     height: 16px;
-    margin-bottom: -2px;
-    margin-right: 2px;
+    vertical-align: bottom;
 }
 
 .buttons {
