@@ -62,6 +62,7 @@ var FdLoader = new function() {
 };
 function FdSnapshot(thumbnail) {
     thumbnail.properties.logo && thumbnail.properties.title ? loadLogo() : loadSite();
+
     function loadSite() {
         FdLoader.load(thumbnail.getURL(), function(browser) {
             var doc = browser.contentDocument;
@@ -93,23 +94,6 @@ function FdSnapshot(thumbnail) {
 
     function loadLogo() {
         FdLoader.load(thumbnail.properties.logo, function(browser) {
-            var doc = browser.contentDocument;
-            var img = doc.body.firstChild;
-            if (FdThumbnail.getWidth(img.height) < img.width) {
-                doc.body.style.width = img.width;
-                doc.body.style.height = FdThumbnail.getHeight(img.width);
-            }
-            else {
-                doc.body.style.width = FdThumbnail.getWidth(img.height);
-                doc.body.style.height = img.height;
-            }
-            doc.documentElement.style.width = doc.body.style.width;
-            doc.documentElement.style.height = doc.body.style.height;
-            doc.body.style.margin = 0;
-            doc.body.style.display = "table-cell";
-            doc.body.style.textAlign = "center";
-            doc.body.style.verticalAlign = "middle";
-            doc.body.style.background = "rgba(0,0,0,0)";
             saveImage(browser, true);
         });
     }
