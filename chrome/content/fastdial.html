@@ -262,7 +262,7 @@ function onClick(e) {
     else if (FdDom.is(e.target, "image")) {
         window.focus();
         e.preventDefault();
-        FdUtils.openLink(thumbnail.getURL(), options.openIn || e);
+        return thumbnail.open(options.openIn || e);
     }
     return null;
 }

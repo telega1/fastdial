@@ -10,6 +10,7 @@ var FdBookmark = new function() {
                                  .getService(Components.interfaces.nsIAnnotationService);
 
     this.DESCRIPTION = "bookmarkProperties/description";
+    this.LOAD_IN_SIDEBAR = "bookmarkProperties/loadInSidebar";
     this.BOOKMARKS_MENU = bookmarksService.bookmarksMenuFolder;
     var queryOptions = Components.interfaces.nsINavHistoryQueryOptions;
     this.SORT_TITLE = queryOptions.SORT_BY_TITLE_ASCENDING;
@@ -101,7 +102,7 @@ var FdBookmark = new function() {
         container.containerOpen = true;
         for (var i = 0; i < container.childCount; i++) {
             var item = container.getChild(i);
-                       if (item.type != item.RESULT_TYPE_SEPARATOR) {
+            if (item.type != item.RESULT_TYPE_SEPARATOR) {
                 bookmarks.push({
                     id:       item.itemId,
                     folderId: item.parent.itemId,
@@ -111,7 +112,8 @@ var FdBookmark = new function() {
                     url:      item.uri,
                     title:    item.title,
                     index:    item.bookmarkIndex,
-                                        description: this.getAnnotation(item.itemId, this.DESCRIPTION)
+                    description: this.getAnnotation(item.itemId, this.DESCRIPTION),
+                    loadInSidebar: this.getAnnotation(item.itemId, this.LOAD_IN_SIDEBAR)
                 });
             }
         }
@@ -148,8 +150,9 @@ var FdBookmark = new function() {
             index:    bookmarksService.getItemIndex(id),
             folderId: bookmarksService.getFolderIdForItem(id),
             isFolder: this.isQuery(url) ||
-                    bookmarksService.getItemType(id) == bookmarksService.TYPE_FOLDER,
-                        description: this.getAnnotation(id, this.DESCRIPTION)
+                      bookmarksService.getItemType(id) == bookmarksService.TYPE_FOLDER,
+            description: this.getAnnotation(id, this.DESCRIPTION),
+            loadInSidebar: this.getAnnotation(id, this.LOAD_IN_SIDEBAR)
         };
         return bookmark;
     };

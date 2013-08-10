@@ -24,8 +24,8 @@ var FdStorage = new function() {
     function saveProperties(item) {
         if (item.id == -1) return;
         var annotation = FdUtils.clone(item);
-        var exclude = ["id", "folderId", "isFolder", "url", "title",
-            "index", "description", "shortcutKey", "refresh"];
+        var exclude = ["id", "folderId", "isFolder", "url", "title", "index",
+                       "description", "shortcutKey", "refresh", "loadInSidebar"];
         for (var i in exclude) {
             delete annotation[exclude[i]];
         }

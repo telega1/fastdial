@@ -32,11 +32,20 @@ function FdThumbnail(properties) {
     this.save = function() {
         FdStorage.saveItem(this.properties);
     };
+    this.open = function(where) {
+        this.properties.loadInSidebar
+            ? wnd.openWebPanel(this.properties.title, this.properties.url)
+            : FdUtils.openLink(this.getURL(), where);
+    };
     this.openAll = function() {
         var children = FdStorage.getItems(this.properties.id);
         for (var i in children) {
-            if (!children[i].isFolder) {
-                FdUtils.openLink(children[i].url, "tabshifted");
+            var child = children[i];
+            if (child.loadInSidebar) {
+                wnd.openWebPanel(child.title, child.url);
+            }
+            else if (!child.isFolder) {
+                FdUtils.openLink(child.url, "tabshifted");
             }
         }
     };
