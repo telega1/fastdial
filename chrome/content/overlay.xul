@@ -113,7 +113,7 @@
                 var item = FdStorage.getItem(id);
                 item.loadInSidebar
                     ? openWebPanel(item.title, item.url)
-                    : FdUtils.openLink(FdStorage.getURL(item));
+                    : FdUtils.openLink(FdStorage.getURL(item), "tab");
             },
 
             autoRefresh: function() {
