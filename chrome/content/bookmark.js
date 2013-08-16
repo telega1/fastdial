@@ -217,20 +217,6 @@ var FdBookmark = new function() {
     this.getAnnotatedIds = function(name) {
         return annotationService.getItemsWithAnnotation(name, {});
     };
-    this.getFavicon = function(url, onLoad) {
-        var uri = FdURL.getNsiURL(url);
-        try {
-            var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
-                                              .getService(Components.interfaces.mozIAsyncFavicons);
-            faviconService.getFaviconDataForPage(uri, { onComplete:
-                function(aURI, aDataLen, aData, aMimeType) {
-                    if (aURI) onLoad("data:" + aMimeType + ";base64," +
-                                        btoa(String.fromCharCode.apply(null, aData)));
-                }
-            });
-        }
-        catch(e) {}
-    };
     this.setFavicon = function(url, favicon) {
        var uri = FdURL.getNsiURL(url);
        var faviconURI = FdURL.getNsiURL(favicon);

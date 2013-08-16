@@ -22,6 +22,11 @@ function FdThumbnail(properties) {
     this.getImageURL = function() {
         return FdCache.getCachedURL(this.getSnapshotURL());
     };
+    this.getFaviconURL = function() {
+        return this.properties.isFolder
+                 ? "chrome://fastdial/skin/icons/folder.png"
+                 : FdCache.getCachedURL(this.properties.url, "favicon");
+    };
     this.getImageFile = function() {
         return FdCache.getCachedFile(this.getSnapshotURL());
     };
@@ -74,6 +79,7 @@ function FdThumbnail(properties) {
         }
         var snapshot = this.getSnapshotURL();
         wnd.FdLoader.stop(snapshot);
+        FdCache.remove(this.properties.url, "favicon");
         FdCache.remove(snapshot, "preview");
         FdCache.remove(snapshot);
         FdStorage.removeItem(this.properties.id);
@@ -83,6 +89,7 @@ function FdThumbnail(properties) {
     this.refresh = function() {
         if (!this.properties.isBack) {
             var snapshot = this.getSnapshotURL();
+            FdCache.remove(this.properties.url, "favicon");
             FdCache.remove(snapshot, "preview");
             FdCache.remove(snapshot);
             wnd.Fd.updateView();

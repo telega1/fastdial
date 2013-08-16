@@ -216,6 +216,7 @@
                             var thumbnail = wnd.thumbnails[i];
                             if (thumbnail.isRefreshAll()) {
                                 var snapshot = thumbnail.getSnapshotURL();
+                                FdCache.remove(thumbnail.properties.url, "favicon");
                                 FdCache.remove(snapshot, "preview");
                                 FdCache.remove(snapshot);
                             }
