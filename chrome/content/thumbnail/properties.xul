@@ -225,7 +225,6 @@
                 wnd.FdLoader.stop(thumbnail.getURL());
                 var snapshot = thumbnail.getSnapshotURL();
                 if (snapshot) {
-                    FdCache.remove(thumbnail.properties.url, "favicon");
                     FdCache.remove(snapshot, "preview");
                     FdCache.remove(snapshot);
                 }

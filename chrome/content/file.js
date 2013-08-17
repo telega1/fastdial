@@ -303,7 +303,7 @@ var FdCache = {
 
     save: function(url, data, folder) {
         var file = FdCache.getCachedFile(url, folder);
-        FdFile.writeFile(file, data);
+        FdFile.writeFile(file, data || FdURL.readURL(url));
     },
 
     remove: function(url, folder) {

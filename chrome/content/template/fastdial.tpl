@@ -43,8 +43,7 @@
                                     </a>
                                     <div class="title">
                                         <div>
-                                            <img src="<%= thumbnail.getFaviconURL() %>">
-                                            <%= thumbnail.properties.title || "" %>
+                                            <span><%= thumbnail.properties.title || "" %></span>
                                         </div>
                                     </div>
                                 <% } %>

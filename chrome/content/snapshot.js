@@ -66,11 +66,7 @@ function FdSnapshot(thumbnail) {
     function loadSite() {
         FdLoader.load(thumbnail.getURL(), function(browser) {
             var doc = browser.contentDocument;
-            var favicon = getFavicon(doc);
-            if (favicon) {
-                FdBookmark.setFavicon(thumbnail.properties.url, favicon);
-                FdCache.save(thumbnail.properties.url, FdURL.readURL(favicon), "favicon");
-            }
+            FdBookmark.setFavicon(thumbnail.properties.url, getFavicon(doc));
             if (!thumbnail.properties.title) {
                 thumbnail.properties.title = doc.title;
                 thumbnail.save();
