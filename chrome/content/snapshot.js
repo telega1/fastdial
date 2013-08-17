@@ -87,7 +87,7 @@ function FdSnapshot(thumbnail) {
         var links = doc.getElementsByTagName("link");
         for (var i = 0; i < links.length; i++) {
             var link = links[i];
-            if (/icon/i.test(link.rel)) return link.href;
+            if (/^(shortcut )?icon$/i.test(link.rel)) return link.href;
         }
         if (!FdURL.isLocal(doc.location)) {
             var uri = FdURL.getNsiURL(doc.location);
