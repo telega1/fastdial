@@ -25,6 +25,7 @@ var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
 var params = FdUtils.getQueryParams(document.location);
 var wnd = FdUtils.getBrowserWindow();
+if (!params.folder) wnd.gURLBar.select()
 
 var folder, home = FdStorage.getHome();
 if (!params.folder || params.folder == home.id) folder = home;
@@ -33,8 +34,7 @@ else try {
     folder.parent = FdStorage.getItem(folder.folderId);
     folder.parent.isBack = true;
 }
-catch(e) {
-}
+catch(e) {}
 document.title = folder.title;
 
 window.addEventListener("resize", onResize, false);
