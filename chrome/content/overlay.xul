@@ -65,12 +65,26 @@
     <script>
     <![CDATA[
         var Fd = {
+            addTab: null,
+
             openPreferences: function() {
                 openDialog("chrome://fastdial/content/preferences.xul",
                                       "preferences", "chrome,centerscreen,toolbar");
             },
 
             initialize: function() {
+                if (window.gInitialPages) {
+                    gInitialPages.push(FdInfo.URI);
+                }
+                Fd.addTab = gBrowser.addTab;
+
+                gBrowser.addTab = function() {
+                    if (arguments[0] == "about:newtab" ||
+                        arguments[0] == "about:blank" &&
+                        FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
+                    return Fd.addTab.apply(gBrowser, arguments);
+                }
+
                 FdLegacy.migrate();
                 Fd.initShortcutKeys();
                 Fd.autoRefresh();
@@ -318,22 +332,7 @@
                 FdUtils.forEachTab(function(w) {
                     if (w.initThumbnails) w.initThumbnails();
                 });
-            },
-
-            addTab: null,
-        }
-
-        if (window.gInitialPages) {
-            gInitialPages.push(FdInfo.URI);
-        }
-
-        Fd.addTab = gBrowser.addTab;
-
-        gBrowser.addTab = function() {
-            if (arguments[0] == "about:newtab" ||
-                arguments[0] == "about:blank" &&
-                FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
-            return Fd.addTab.apply(gBrowser, arguments);
+            }
         }
 
         addEventListener("load",
