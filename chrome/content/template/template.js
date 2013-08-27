@@ -31,42 +31,45 @@ JsTemplate.Template = function JsTemplate(value) {
     this.compile()
 };
 Object.extend(JsTemplate.Template.prototype,
-        {
-            compile: function(object, locals) {
-                var parser = new JsTemplate.Parser();
-                this.func = parser.compile(this.value)
-            },
+{
+    compile: function(object, locals) {
+        var parser = new JsTemplate.Parser();
+        this.func = parser.compile(this.value)
+    },
 
-            run: function(locals) {
-                return this.func.call(locals);
-            }
-        });
+    run: function(locals) {
+        return this.func.call(locals);
+    }
+});
 JsTemplate.Parser = function TemplateParser(regex) {
     this.regex = regex || /<%=?([\s\S]*?)%>/g
 };
 Object.extend(JsTemplate.Parser.prototype,
-        {
-            compile: function(value) {
-                var start = 0;
-                var delimeter = '_%_';
-                var body = value.replace(this.regex,
-                        function (matchedString, group, offset, fullString) {
-                            var replace = delimeter + ";\n";
-                            if (matchedString.charAt(2) == "=")
-                                replace += "  __out += escapeHTML(" + group + ");\n";
-                            else
-                                replace += "  " + group + "\n";
-                            replace += "  __out += " + delimeter;
-                            return replace
-                        });
-                var functionBody = "function escapeHTML(str) { return String(str).replace(/&/g,\"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\");}\n" +
-                        "var __out = " + delimeter + body + delimeter + ";\n" +
-                        "return __out;\n";
-                // Convert ' to \' and then change the delimeter to '
-                functionBody = functionBody.replace(/'/g, "\\'").replace(/\r\n/g, "\\r\\n");
-                var regex = new RegExp(delimeter, 'g');
-                functionBody = functionBody.replace(regex, "'");
-                // Compile our function and return it
-                return new Function(functionBody)
-            }
-        });
+{
+    compile: function(value) {
+        var start = 0;
+        var delimeter = '_%_';
+        var body = value.replace(this.regex,
+                function (matchedString, group, offset, fullString) {
+                    var replace = delimeter + ";\n";
+                    if (matchedString.charAt(2) == "=")
+                        replace += "  __out += escapeHTML(" + group + ");\n";
+                    else
+                        replace += "  " + group + "\n";
+                    replace += "  __out += " + delimeter;
+                    return replace
+                });
+        var functionBody = "function escapeHTML(str) {" + 
+                "var replacements = { \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\" };" +
+                "return String(str).replace(/[&\"<>]/g, function (m) replacements[m]);" +
+                "}" +
+                "var __out = " + delimeter + body + delimeter + ";\n" +
+                "return __out;\n";
+        // Convert ' to \' and then change the delimeter to '
+        functionBody = functionBody.replace(/'/g, "\\'").replace(/\r\n/g, "\\r\\n");
+        var regex = new RegExp(delimeter, 'g');
+        functionBody = functionBody.replace(regex, "'");
+        // Compile our function and return it
+        return new Function(functionBody)
+    }
+});
