@@ -72,7 +72,7 @@
 
             addTab: null,
 
-            initGBrowser: function() {
+            hookAddTab: function() {
                 Fd.addTab = gBrowser.addTab;
 
                 gBrowser.addTab = function() {
@@ -84,7 +84,7 @@
             },
 
             initialize: function() {
-                setTimeout(Fd.initGBrowser, 100);
+                setTimeout(Fd.hookAddTab, 100);
                 if (window.gInitialPages) {
                     gInitialPages.push(FdInfo.URI);
                 }
