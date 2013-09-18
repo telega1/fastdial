@@ -82,7 +82,7 @@ var FdBookmark = new function() {
     };
     function getURL(id) {
         try {
-            return bookmarksService.getBookmarkURI(id).spec;
+            return decodeURI(bookmarksService.getBookmarkURI(id).spec);
         }
         catch(e) {
             return "place:folder=" + id;
@@ -107,9 +107,9 @@ var FdBookmark = new function() {
                     id:       item.itemId,
                     folderId: item.parent.itemId,
                     isFolder: item.type == item.RESULT_TYPE_FOLDER ||
-                            item.type == item.RESULT_TYPE_FOLDER_SHORTCUT ||
-                            this.isQuery(item.uri),
-                    url:      item.uri,
+                              item.type == item.RESULT_TYPE_FOLDER_SHORTCUT ||
+                              this.isQuery(item.uri),
+                    url:      decodeURI(item.uri),
                     title:    item.title,
                     index:    item.bookmarkIndex,
                     description: this.getAnnotation(item.itemId, this.DESCRIPTION),
