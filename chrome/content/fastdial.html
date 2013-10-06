@@ -152,6 +152,8 @@ var source;
 var previewTimeout;
 
 function onMouseDown(e) {
+    hidePreview();
+
     if (!FdDom.is(e.target, "image")) return;
     if (!sort) FdDrag.draggable(e.target);
 
@@ -165,7 +167,6 @@ function onMouseDown(e) {
 }
 function onMouseUp(e) {
     clearTimeout(previewTimeout);
-    hidePreview();
     FdDrag.enable();
 }
 function showPreview(thumb) {
