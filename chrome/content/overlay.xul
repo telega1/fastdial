@@ -144,6 +144,9 @@
                     if (!lastRefresh ||
                             lastRefresh + item.refresh * 60 * 1000 < currentTime) {
                         refreshing = true;
+
+                        FdCache.remove(url, "preview");
+                        FdCache.remove(url);
                         FdSnapshot.create(item);
                     }
                 }
