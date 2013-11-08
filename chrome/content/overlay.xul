@@ -144,9 +144,6 @@
                     if (!lastRefresh ||
                             lastRefresh + item.refresh * 60 * 1000 < currentTime) {
                         refreshing = true;
-
-                        FdCache.remove(url, "preview");
-                        FdCache.remove(url);
                         FdSnapshot.create(item);
                     }
                 }
@@ -234,11 +231,7 @@
                         var wnd = content.wrappedJSObject;
                         for (var i in wnd.thumbnails) {
                             var thumbnail = wnd.thumbnails[i];
-                            if (thumbnail.isRefreshAll()) {
-                                var snapshot = thumbnail.getSnapshotURL();
-                                FdCache.remove(snapshot, "preview");
-                                FdCache.remove(snapshot);
-                            }
+                            if (thumbnail.isRefreshAll()) FdSnapshot.create(thumbnail.properties);
                         }
                         Fd.updateView();
                         break;

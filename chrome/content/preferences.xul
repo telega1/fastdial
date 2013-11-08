@@ -746,7 +746,7 @@
                 "background-repeat"   : center ? "no-repeat" : "repeat",
                 "background-position" : center ? "center center" : "top left",
                 "background-size"     : center ? "cover" : "auto",
-                "font-family"         : "\"" + FdDom.get("font-family").label + "\"",
+                "font-family"         : "'" + FdDom.get("font-family").label + "'",
                 "font-size"           : FdDom.get("font-size").value + "px",
                 "background-color"    : FdDom.get("background").value
             }

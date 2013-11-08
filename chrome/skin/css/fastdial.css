@@ -1,5 +1,4 @@
 body {
-    margin: 0px;
     font-family: Tahoma;
     font-size: 11px;
     text-align: center;
@@ -57,7 +56,7 @@ a {
     overflow: hidden;
 }
 
-.body, .background {
+.body {
     position: absolute;
     left: 0px;
     right: 0px;
@@ -66,12 +65,12 @@ a {
     margin-bottom: 1px;
 }
 
-.background {
-    background: url(../images/throbber.gif) center no-repeat;
+.loading, .loading a {
+    cursor: wait;
 }
 
 .back {
-    background-image: url(../images/back.png);
+    background: url(../images/back.png) center no-repeat;
 }
 
 .image {

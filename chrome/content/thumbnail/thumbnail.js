@@ -69,7 +69,7 @@ function FdThumbnail(properties) {
           var children = FdStorage.getItems(this.properties.id);
           for(var i in children) {
             var thumbnail = new FdThumbnail(children[i]);
-            thumbnail.remove(false);
+            thumbnail.remove();
           }
         }
         var snapshot = this.getSnapshotURL();
@@ -82,9 +82,7 @@ function FdThumbnail(properties) {
     };
     this.refresh = function() {
         if (!this.properties.isBack) {
-            var snapshot = this.getSnapshotURL();
-            FdCache.remove(snapshot, "preview");
-            FdCache.remove(snapshot);
+            wnd.FdSnapshot.create(this.properties);
             wnd.Fd.updateView();
         }
     };

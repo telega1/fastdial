@@ -110,17 +110,18 @@ function FdSnapshot(thumbnail) {
             timeout += FdSnapshot.TIMEOUT_MEDIUM;
         }
         setTimeout(function() {
+                    var snapshot = thumbnail.getSnapshotURL();
                     if (thumbnail.properties.preview) {
                         var preview = FdSnapshot.createImage(
                                            browser.contentWindow, browser.width, isLogo);
-                        FdCache.save(thumbnail.getSnapshotURL(),
-                                preview, "preview");
+                        FdCache.remove(snapshot, "preview");
+                        FdCache.save(snapshot, preview, "preview");
                     }
                     var image = FdSnapshot.createImage(
                                        browser.contentWindow, options.thumbWidth, isLogo);
-                    FdCache.save(thumbnail.getSnapshotURL(), image);
+                    FdCache.remove(snapshot);
+                    FdCache.save(snapshot, image);
                     browser.close();
-                    var imageURL = thumbnail.getImageURL();
                     Fd.updateView();
                 },
                 timeout);
