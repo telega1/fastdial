@@ -145,9 +145,9 @@
             clear();
             FdDom.get("isFolder").selectedIndex = isFolder ? 1 : 0;
             FdDom.get("row-url").collapsed = isFolder;
-            FdDom.get("row-refresh").collapsed = isFolder;
             FdDom.get("logo").value = isFolder 
                 ? "chrome://fastdial/skin/images/folder.png" : "";
+            updateRefreshAll();
             updateFocus();
         }
 

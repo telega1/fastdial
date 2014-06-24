@@ -16,7 +16,7 @@ function FdThumbnail(properties) {
     };
     this.isRefreshAll = function() {
         return this.properties.refreshAll == undefined
-                ? !(this.properties.logo || this.properties.isFolder)
+                ? !this.properties.logo
                 : this.properties.refreshAll;
     };
     this.getImageURL = function() {
