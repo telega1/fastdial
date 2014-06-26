@@ -48,6 +48,7 @@ var FdLoader = new function() {
         browser.close = function() {
             delete browsers[item.url];
             browser.parentNode.removeChild(browser);
+            processQueue();
         };
         browser.timeout = setTimeout(onLoad, TIMEOUT_LOAD);
         browser.addEventListener("load", onLoad, true);
@@ -55,7 +56,6 @@ var FdLoader = new function() {
             clearTimeout(browser.timeout);
             browser.removeEventListener("load", onLoad, true);
             item.onReady(browser);
-            processQueue();
         }
         browser.setAttribute("src", item.url);
     }
