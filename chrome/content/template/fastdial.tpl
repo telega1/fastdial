@@ -20,9 +20,8 @@
                     <% if (i % this.options.width == 0) { %> <tr> <% } %>
                     <td>
                         <% var thumbnail = this.thumbnails[i]; %>
-                        <div id="<%= i %>" class="box <%= !thumbnail ? "empty" : "" %>
-                                                      <%= thumbnail && thumbnail.isLoading() ? "loading" : "" %>"
-                                       title="<%= thumbnail && thumbnail.getTooltip() || "" %>">
+                        <div id="<%= i %>" class="box <%= !thumbnail ? "empty" : "" %>"
+                                                title="<%= thumbnail && thumbnail.getTooltip() || "" %>">
                             <div class="thumbnail">
                                 <% if (!thumbnail) { %>
                                     <div class="title"></div>
@@ -33,9 +32,9 @@
                                         <div class="button properties"></div>
                                     </div>
                                     <a href="<%= thumbnail.getURL() %>">
-                                        <% if (thumbnail.properties.isBack) { %>
-                                            <div class="body back"></div>
-                                        <% } else { %>
+                                        <% var isBack = thumbnail.properties.isBack; %>
+                                        <% if (isBack || thumbnail.isLoading()) { %>
+                                            <div class="background <%= isBack ? "back" : ""  %>"></div>                                        <% } else { %>
                                             <div class="body">
                                                 <img class="image" src="<%= thumbnail.getImageURL() %>">
                                             </div>
