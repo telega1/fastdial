@@ -178,6 +178,15 @@ var FdUtils = {
 
     encode: function(str) {
         return encodeURIComponent(str).replace(/[!'()]/g, escape).replace(/\*/g, "%2A");
+    },
+
+    decode: function(str) {
+        try {
+            return decodeURI(str);
+        }
+        catch(e) {
+            return str;
+        }
     }
 }
 
