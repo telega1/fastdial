@@ -27,7 +27,8 @@
                 </row>
                 <row id="row-url" align="center">
                     <label value="&url;:"/>
-                    <menulist id="url" editable="true" oncommand="onSelectURL(this);">
+                    <menulist id="url" editable="true" oncommand="onSelectURL();"
+                              onchange="onChangeURL();">
                         <menupopup/>
                     </menulist>
                     <button class="browse" label="&#x2026;"
@@ -77,8 +78,7 @@
                 </row>
                 <row>
                     <spacer/>
-                    <label href="http://www.userlogos.org/logos/top-rated" class="text-link"
-                           tooltiptext="http://www.userlogos.org/logos/top-rated" value="&searchLogos;"/>
+                    <label id="search" class="text-link" value="&searchLogos;"/>
                 </row>
             </rows>
         </grid>
@@ -102,6 +102,7 @@
             setFolder(properties.isFolder);
             var url = thumbnail.getURL();
             FdDom.get("url").value = url || "";
+            onChangeURL();
             FdDom.get("title").value = properties.title || "";
             FdDom.get("description").value = properties.description || "";
             FdDom.get("logo").value = properties.logo || "";
@@ -185,6 +186,13 @@
             var menulist = FdDom.get("url");
             FdDom.get("title").value = menulist.selectedItem.label;
             menulist.value = menulist.selectedItem.value;
+            onChangeURL();
+        }
+
+        function onChangeURL() {
+            var menulist = FdDom.get("url");
+            var search = FdDom.get("search");
+            search.href = search.tooltipText = "http://userlogos.org/logos/top-rated?site-url=" + menulist.value;
         }
 
         function browseURL() {
