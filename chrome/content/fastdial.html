@@ -19,8 +19,6 @@
 <script src="thumbnail/thumbnail.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-showRandomBackground();
-
 var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
 var params = FdUtils.getQueryParams(document.location);
@@ -318,33 +316,6 @@ function setPage(aPage) {
     }
 }
 
-function showRandomBackground() {
-    var rules = document.styleSheets[1].cssRules;
-    for(var i = 0; i < rules.length; i++) {
-        if (rules[i].selectorText.match(/body/i)) {
-            var style = rules[i].style;
-
-            for(var j = 0; j < style.length; j++) {
-                var name = style.item(j);
-                if (name == "background-image") {
-                    var image = style.getPropertyValue(name);
-                    var pieces = image.split(/[, ]/);
-                    var urls = [];
-
-                    for(var k = pieces.length-1; k >= 0; k--) {
-                        var url = pieces[k].match(/url\(\"(.*)\"\)/i);
-                        if (url) urls.push(pieces[k]);
-                    }
-                    if (urls.length) {
-                        var rnd = Math.floor(Math.random() * urls.length);
-                        style.setProperty(name, urls[rnd], "");
-                    }
-                }
-            }
-        }
-    }
-}
-
 function getFavicon(index) {
     const ICON_FOLDER = "chrome://fastdial/skin/icons/folder.png";
     var thumb = thumbnails[index];
@@ -357,9 +328,12 @@ function getFavicon(index) {
        var box = FdDom.get(index);
        if (box) {
            var span = FdDom.child(box, "span");
-           var icon = document.createElement("img");
-           icon.setAttribute("src", iconURL);
-           FdDom.prepend(span.parentNode, icon);
+           var icon = FdDom.child(span, "img");
+           if (!icon) {
+               icon = document.createElement("img");
+               icon.setAttribute("src", iconURL);
+               FdDom.prepend(span.parentNode, icon);
+           }
        }
     }
 }

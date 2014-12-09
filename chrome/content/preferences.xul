@@ -139,21 +139,23 @@
                            tooltiptext="http://www.userlogos.org/fdthemes/top-rated" value="&searchThemes;"/>
                 </tabpanel>
                 <tabpanel orient="vertical">
-                    <hbox align="center">
-                        <label value="&image;:"/>
-                        <checkbox id="center" oncommand="saveStyle();"/>
-                    </hbox>
-                    <listbox id="image" seltype="multiple" rows="7" flex="1"/>
-                    <hbox>
-                        <button label="&add;" oncommand="browseMultipleImages();"/>
-                        <button label="&remove;" oncommand="removeMultipleImages();"/>
-                    </hbox>
                     <grid>
                         <columns>
                             <column/>
                             <column flex="1"/>
                         </columns>
                         <rows>
+                            <row align="center">
+                                <label value="&image;:"/>
+                                <hbox>
+                                    <checkbox id="center" oncommand="saveStyle();"/>
+                                    <textbox id="page" flex="1" onchange="setImage('page', this.value);"/>
+                                </hbox>
+                                <hbox>
+                                    <button class="browse" label="&#x2026;"
+                                            tabindex="-1" oncommand="browseImage('page');"/>
+                                </hbox>
+                            </row>
                             <row align="center">
                                 <label value="&font;:"/>
                                 <menulist id="font-family"
@@ -356,6 +358,7 @@
     <script>
     <![CDATA[
         const SCREENSHOT_SIZE = 400;
+        const THEME_BASE_URL = "chrome://fastdial-profile/content/themes/current/";
         var wnd = FdUtils.getBrowserWindow();
         var content = wnd.content.wrappedJSObject;
         var images = {};
@@ -604,21 +607,7 @@
         function initPageStyle() {
             initFontFamily();
             var doc = content.document;
-
-            var customStyle = doc.getElementById("customStyle").cloneNode(false);
-            doc.head.appendChild(customStyle);
-            var urls = 
-                getImageURLs(doc.body);
-            doc.head.removeChild(customStyle);
-
-            var listbox = FdDom.get("image");
-            FdDom.clear(listbox);
-            listbox.addEventListener("keypress", onListboxKey, false);
-            for(var i in urls) {
-                var listitem = document.createElement("listitem");
-                listitem.setAttribute("label", urls[i]);
-                listbox.appendChild(listitem);
-            }
+            FdDom.get("page").value = images["page"] = getImageURL(doc.body);
             var repeat = FdDom.css(doc.body, "background-repeat");
             FdDom.get("center").checked = repeat != "repeat";
             var back = doc.createElement("div");
@@ -640,7 +629,8 @@
             for (var i = 0; i < urls.length; i++) {
                 var url = urls[i].match(/url\(\"(.*)\"\)/i);
                 if (url) {
-                   result.push(url[1]);
+                   url = url[1].replace(THEME_BASE_URL, "");
+                   result.push(url);
                 }
             }
             return result;
@@ -648,8 +638,7 @@
 
         function getImageURL(element) {
             var urls = getImageURLs(element);
-            return urls.length 
-                       ? urls[0] : "";
+            return urls.length ? urls[0] : "";
         }
 
         function initFontFamily() {
@@ -742,7 +731,7 @@
             var style = [];
             var center = FdDom.get("center").checked;
             style["body"] = {
-                "background-image"    : createImageURLs(),
+                "background-image"    : createImageURL("page"),
                 "background-repeat"   : center ? "no-repeat" : "repeat",
                 "background-position" : center ? "center center" : "top left",
                 "background-size"     : center ? "cover" : "auto",
@@ -852,8 +841,7 @@
         function setImage(id, url) {
             if (images[id]) {
                 var file = FdTheme.getDirectory("current");
-                var uri = FdURL.getNsiURL(images[id]);
-                file.append(decodeURI(uri.fileName));
+                file.append(images[id]);
                 try {
                     file.remove(false);
                 }
@@ -866,8 +854,7 @@
                 file.append(decodeURI(uri.fileName));
                 try {
                     FdFile.writeFile(file, FdURL.readURL(url));
-                    FdDom.get(id).value = images[id] =
-                            "chrome://fastdial-profile/content/themes/current/" + uri.fileName;
+                    FdDom.get(id).value = images[id] =  uri.fileName;
                 }
                 catch(e) {}
             }
@@ -916,64 +903,6 @@
                 FdDom.get("folder").value = FdBookmark.getHome().title;
                 reloadView();
             }
-        }
-
-        function browseMultipleImages() {
-            var files = FdFile.chooseFile("multiple", ["images"]);
-            if (!files) return;
-
-            var listbox = FdDom.get("image");
-            var dir = FdTheme.getDirectory("current");
-
-            for(var i in files) {
-                try {
-                    files[i].copyTo(dir, files[i].leafName);
-                    var listitem = document.createElement("listitem");
-                    listitem.setAttribute("label",
-                        "chrome://fastdial-profile/content/themes/current/" +
-                                                      FdUtils.encode(files[i].leafName));
-                    listbox.appendChild(listitem);
-                }
-                catch(e) {}
-            }
-            saveStyle();
-        }
-
-        function onListboxKey(e) {
-           if (e.keyCode == e.DOM_VK_DELETE) {
-               removeMultipleImages();
-           }
-        }
-
-        function removeMultipleImages() {
-           var listbox = FdDom.get("image");
-           var listitems = listbox.selectedItems;
-
-           for(var i = listitems.length-1; i >= 0; i--) {
-               var uri = FdURL.getNsiURL(listitems[i].getAttribute("label"));
-               var file = FdTheme.getDirectory("current");
-               file.append(decodeURI(uri.fileName));
-               try {
-                   file.remove(false);
-               }
-               catch(e) {}
-               listbox.removeChild(listitems[i]);
-               saveStyle();
-           }
-           listbox.selectedIndex = listbox.currentIndex;
-        }
-
-        function createImageURLs() {
-            var result = "";
-            var listbox = FdDom.get("image");
-
-            for(var i = 0; i < listbox.itemCount; i++) {
-                var listitem = 
-                         listbox.getItemAtIndex(i);
-                if (result) result += ", ";
-                result += "url(" + listitem.getAttribute("label") + ")";
-            }
-            return result || "none";
         }
       ]]>
   </script>
