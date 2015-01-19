@@ -75,7 +75,7 @@
 
             hookAddTab: function() {
                 Fd.addTab = gBrowser.addTab;
-                Fd.isBlankPageURL = gBrowser.isBlankPageURL;
+                Fd.isBlankPageURL = window.isBlankPageURL;
 
                 gBrowser.addTab = function() {
                     if ((arguments[0] == "about:newtab" ||
@@ -83,9 +83,9 @@
                          FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
                     return Fd.addTab.apply(gBrowser, arguments);
                 }
-                gBrowser.isBlankPageURL = function() {
+                window.isBlankPageURL = function() {
                     return arguments[0] == FdInfo.URI ||
-                           Fd.isBlankPageURL.apply(gBrowser, arguments);
+                           Fd.isBlankPageURL.apply(window, arguments);
                 }
             },
 
