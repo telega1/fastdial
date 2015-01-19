@@ -71,15 +71,21 @@
             },
 
             addTab: null,
+            isBlankPageURL: null,
 
             hookAddTab: function() {
                 Fd.addTab = gBrowser.addTab;
+                Fd.isBlankPageURL = gBrowser.isBlankPageURL;
 
                 gBrowser.addTab = function() {
                     if ((arguments[0] == "about:newtab" ||
                          arguments[0] == "about:blank") &&
                          FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
                     return Fd.addTab.apply(gBrowser, arguments);
+                }
+                gBrowser.isBlankPageURL = function() {
+                    return arguments[0] == FdInfo.URI ||
+                           Fd.isBlankPageURL.apply(gBrowser, arguments);
                 }
             },
 
