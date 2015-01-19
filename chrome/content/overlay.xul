@@ -83,8 +83,10 @@
                          FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
                     return Fd.addTab.apply(gBrowser, arguments);
                 }
+                var regexp = new RegExp(FdInfo.URI);
+                
                 window.isBlankPageURL = function() {
-                    return arguments[0] == FdInfo.URI ||
+                    return regexp.test(arguments[0]) ||
                            Fd.isBlankPageURL.apply(window, arguments);
                 }
             },
