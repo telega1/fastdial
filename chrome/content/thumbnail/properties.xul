@@ -27,10 +27,8 @@
                 </row>
                 <row id="row-url" align="center">
                     <label value="&url;:"/>
-                    <menulist id="url" editable="true" oncommand="onSelectURL();"
-                              onchange="onChangeURL();">
-                        <menupopup/>
-                    </menulist>
+                    <textbox id="url" type="autocomplete" autocompletesearch="history"
+                             enablehistory="true" oninput="onChangeURL();"/>
                     <button class="browse" label="&#x2026;"
                             tabindex="-1" oncommand="browseURL();"/>
                 </row>
@@ -78,7 +76,7 @@
                 </row>
                 <row>
                     <spacer/>
-                    <label id="search" class="text-link" value="&searchLogos;"/>
+                    <label id="link" class="text-link" value="&searchLogos;"/>
                 </row>
             </rows>
         </grid>
@@ -98,11 +96,9 @@
 
         function initialize() {
             initDialog();
-            initTabURLs();
             setFolder(properties.isFolder);
             var url = thumbnail.getURL();
             FdDom.get("url").value = url || "";
-            onChangeURL();
             FdDom.get("title").value = properties.title || "";
             FdDom.get("description").value = properties.description || "";
             FdDom.get("logo").value = properties.logo || "";
@@ -112,6 +108,7 @@
             FdDom.get("refreshAll").disabled = properties.logo;
             FdDom.get("preview").checked = properties.preview;
             FdUtils.merge(properties, getProperties());
+            onChangeURL();
             updateFocus();
         }
 
@@ -174,25 +171,19 @@
             }
         }
 
-        function initTabURLs() {
-            var menulist = FdDom.get("url");
-            FdUtils.forEachTab(function(w) {
-                var doc = w.document;
-                menulist.appendItem(doc.title, doc.location, doc.location);
-            });
-        }
-
-        function onSelectURL() {
-            var menulist = FdDom.get("url");
-            FdDom.get("title").value = menulist.selectedItem.label;
-            menulist.value = menulist.selectedItem.value;
-            onChangeURL();
-        }
-
         function onChangeURL() {
-            var menulist = FdDom.get("url");
-            var search = FdDom.get("search");
-            search.href = search.tooltipText = "http://userlogos.org/logos/top-rated?site-url=" + menulist.value;
+            var search;
+            var isFolder = FdDom.get("isFolder").value;
+            if (isFolder) {
+                search = FdDom.get("title").value;
+            } else {
+                var url = FdDom.get("url");
+                var nsiURL = FdURL.getNsiURL(url.value);
+                search = nsiURL.host.replace(/^www\./, "");
+            }
+            var link = FdDom.get("link");
+            link.href = link.tooltipText = "http://userlogos.org/logos/top-rated?search=" +
+                                                                         encodeURIComponent(search);
         }
 
         function browseURL() {

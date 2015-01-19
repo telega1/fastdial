@@ -16,3 +16,7 @@ radio[pane="advanced"] {
 #restartIsNeeded {
     visibility: hidden;
 }
+
+#url {
+    height: 2em;
+}
