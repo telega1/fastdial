@@ -110,54 +110,6 @@ div.thumbnail:hover .title, .hover .title {
     vertical-align: bottom;
 }
 
-.buttons {
-    position: absolute;
-    top: 0px;
-    right: 10px;
-    height: 21px;
-    z-index: 1;
-    opacity: 0;
-}
-
-div.buttons:hover {
-    opacity: 1;
-}
-
-.button {
-    position: absolute;
-    width: 21px;
-    height: 21px;
-    background-image: url(../images/actionbuttons.png);
-    z-index: 1;
-}
-
-.remove {
-    right: 42;
-    background-position: 0px -21px;
-}
-
-div.remove:hover {
-    background-position: 0px 0px;
-}
-
-.properties {
-    right: 21;
-    background-position: -63px -21px;
-}
-
-div.properties:hover {
-    background-position: -63px 0px;
-}
-
-.refresh {
-    right: 0;
-    background-position: -21px -21px;
-}
-
-div.refresh:hover {
-    background-position: -21px 0px;
-}
-
 #preview .overlay, #preview .container {
     position: fixed;
     z-index: 10;

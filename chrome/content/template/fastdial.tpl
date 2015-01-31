@@ -26,11 +26,6 @@
                                 <% if (!thumbnail) { %>
                                     <div class="title"></div>
                                 <% } else { %>
-                                    <div class="buttons">
-                                        <div class="button remove"></div>
-                                        <div class="button refresh"></div>
-                                        <div class="button properties"></div>
-                                    </div>
                                     <a href="<%= thumbnail.getURL() %>">
                                         <% var isBack = thumbnail.properties.isBack; %>
                                         <% if (isBack || thumbnail.isLoading()) { %>
