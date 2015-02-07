@@ -196,17 +196,12 @@ function onDragDrop(e) {
                 source.save();
             }
             else {
-                [source.properties.index, target.properties.index] =
-                [target.properties.index, source.properties.index];
-
-                [source.properties.thumbIndex, target.properties.thumbIndex] =
-                [target.properties.thumbIndex, source.properties.thumbIndex];
-
-                if (source.properties.index < target.properties.index) {
-                    [source, target] = [target, source];
-                }
+                source.properties.thumbIndex = target.properties.thumbIndex;
                 source.save();
-                target.save();
+                for (var j = target.properties.thumbIndex; thumbnails[j] && thumbnails[j] != source; j++) {
+                    thumbnails[j].properties.thumbIndex++;
+                    thumbnails[j].save(); 
+                }
             }
         }
         else {
