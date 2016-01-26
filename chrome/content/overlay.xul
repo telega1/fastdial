@@ -32,25 +32,18 @@
             <menuseparator id="fd-separator2"/>
             <menuitem id="fd-properties" label="&properties;"/>
         </menupopup>
-        <menupopup id="fd-folders-menu"
-                   onclick="Fd.openFolder(event); this.hidePopup();"
-                   onpopupshowing="return Fd.initFoldersMenu(this, true);"/>
         <menupopup id="fd-search-menu"
                    onpopupshowing="Fd.initSearchMenu(this);"/>
     </window>
 
     <toolbarpalette id="BrowserToolbarPalette">
         <toolbarbutton id="fd-button" label="Fast Dial"
-                       class="toolbarbutton-1" onclick="Fd.onButtonClick(event);"/>
+                       class="toolbarbutton-1" oncommand="FdUtils.openLink(FdInfo.URI, event)"/>
     </toolbarpalette>
 
     <popup id="contentAreaContextMenu">
-        <menu id="fd-add-page-menu" label="&addToFastDial;" class="menu-iconic"
-              image="chrome://fastdial/skin/icons/fastdial.png" onclick="Fd.addPage(event);">
-            <menupopup onclick="this.hidePopup();"/>
-        </menu>
         <menuitem id="fd-add-page" label="&addToFastDial;" class="menuitem-iconic"
-                  image="chrome://fastdial/skin/icons/fastdial.png" onclick="Fd.addPage(event);"/>
+                  image="chrome://fastdial/skin/icons/fastdial.png" oncommand="Fd.addPage(event);"/>
     </popup>
 
     <script src="utils.js"/>
@@ -98,13 +91,6 @@
                 Fd.initShortcutKeys();
                 Fd.autoRefresh();
                 Fd.initSort();
-                FdDom.get("contentAreaContextMenu")
-                        .addEventListener("popupshowing", function(e) {
-                            var menu = FdDom.get("fd-add-page-menu");
-                            var menuitem = FdDom.get("fd-add-page");
-                            menuitem.hidden = Fd.initFoldersMenu(menu.firstChild);
-                            menu.hidden = !menuitem.hidden;
-                        }, false);
             },
 
             initShortcutKeys: function() {
@@ -244,40 +230,6 @@
                 }
             },
 
-            createFoldersMenu: function(folderId, menupopup, dynamic) {
-                var bookmarks = FdBookmark.getBookmarks(folderId);
-                for (var i in bookmarks) {
-                    var bookmark = bookmarks[i];
-                    if (!bookmark.isFolder || !dynamic &&
-                            FdBookmark.isDynamic(bookmark)) continue;
-                    var menuitem;
-                    var submenu = document.createElement("menupopup");
-                    submenu.setAttribute("onpopupshowing", "event.stopPropagation();");
-                    Fd.createFoldersMenu(bookmark.id, submenu);
-                    if (submenu.childNodes.length > 0) {
-                        menuitem = document.createElement("menu");
-                        menuitem.appendChild(submenu);
-                    }
-                    else menuitem = document.createElement("menuitem");
-                    menuitem.setAttribute("label", bookmark.title);
-                    menuitem.setAttribute("value", bookmark.id);
-                    menupopup.appendChild(menuitem);
-                }
-            },
-
-            initFoldersMenu: function(menupopup, dynamic) {
-                FdDom.clear(menupopup);
-                var home = FdBookmark.getHome();
-                Fd.createFoldersMenu(home.id, menupopup, dynamic);
-                return menupopup.childNodes.length > 0;
-            },
-
-            openFolder: function(e) {
-                var folderId = e.target.value;
-                var url = folderId ? FdStorage.getFolderURL(folderId) : FdInfo.URI;
-                FdUtils.openLink(url, e);
-            },
-
             initSearchMenu: function(menupopup) {
                 FdDom.clear(menupopup);
                 var engines = FdUtils.getSearchEngines();
@@ -305,17 +257,6 @@
                 }
                 FdPrefs.setObject("search", search);
                 Fd.updateView();
-            },
-
-            onButtonClick: function(e) {
-                if (e.button != 2) {
-                    FdUtils.openLink(FdInfo.URI, e);
-                }
-                else {
-                    var menu = FdDom.get("fd-folders-menu");
-                    menu.openPopup(e.target, "after_start", -1, -1);
-                    e.preventDefault();
-                }
             },
 
             addPage: function(e) {
