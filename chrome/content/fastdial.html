@@ -247,7 +247,8 @@ function onClick(e) {
         window.focus();
         e.preventDefault();
         var where = !thumbnail.properties.isFolder && options.openIn;
-        return thumbnail.open(where || e);    }
+        return thumbnail.open(where || e);
+    }
     return null;
 }
 const TIMEOUT_WHEEL = 250;
