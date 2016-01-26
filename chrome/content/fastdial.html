@@ -244,16 +244,7 @@ function onClick(e) {
         var thumbnail = new FdThumbnail(properties);
         return thumbnail.openProperties();
     }
-    if (FdDom.is(e.target, "refresh")) {
-        return thumbnail.refresh();
-    }
-    else if (FdDom.is(e.target, "remove")) {
-        return thumbnail.remove(true);
-    }
-    else if (FdDom.is(e.target, "properties")) {
-        return thumbnail.openProperties();
-    }
-    else if (FdDom.is(e.target, "image")) {
+    if (FdDom.is(e.target, "image")) {
         window.focus();
         e.preventDefault();
         var where = !thumbnail.properties.isFolder && options.openIn;
