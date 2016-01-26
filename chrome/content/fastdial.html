@@ -256,8 +256,8 @@ function onClick(e) {
     else if (FdDom.is(e.target, "image")) {
         window.focus();
         e.preventDefault();
-        return thumbnail.open(options.openIn || e);
-    }
+        var where = !thumbnail.properties.isFolder && options.openIn;
+        return thumbnail.open(where || e);    }
     return null;
 }
 const TIMEOUT_WHEEL = 250;
