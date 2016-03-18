@@ -61,7 +61,7 @@ Object.extend(JsTemplate.Parser.prototype,
                 });
         var functionBody = "function escapeHTML(str) {" + 
                 "var replacements = { \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\" };" +
-                "return String(str).replace(/[&\"<>]/g, function (m) replacements[m]);" +
+                "return String(str).replace(/[&\"<>]/g, function(m) { return replacements[m] });" +
                 "}" +
                 "var __out = " + delimeter + body + delimeter + ";\n" +
                 "return __out;\n";
