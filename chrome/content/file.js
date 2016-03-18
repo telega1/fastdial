@@ -231,7 +231,8 @@ var FdURL = {
     readURL: function(url) {
         var ioService = Components.classes["@mozilla.org/network/io-service;1"]
                 .getService(Components.interfaces.nsIIOService);
-        var channel = ioService.newChannel(url, null, null);
+        var channel = ioService.newChannel2 ? ioService.newChannel2(url, null, null, null, null, null, null, null)
+                                            : ioService.newChannel(url, null, null);
         var stream = channel.open();
         var binary = Components.classes["@mozilla.org/binaryinputstream;1"]
                 .createInstance(Components.interfaces.nsIBinaryInputStream);
