@@ -197,7 +197,9 @@ function onDragDrop(e) {
             else {
                 source.properties.thumbIndex = target.properties.thumbIndex;
                 source.save();
-                for (var j = target.properties.thumbIndex; thumbnails[j] && thumbnails[j] != source; j++) {
+                for (var j = target.properties.thumbIndex; thumbnails[j] &&
+                             thumbnails[j].properties.id != source.properties.id; j++)
+                {
                     thumbnails[j].properties.thumbIndex++;
                     thumbnails[j].save(); 
                 }
