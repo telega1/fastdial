@@ -42,6 +42,13 @@ document.addEventListener("drop", onDragDrop, false);
 document.addEventListener("click", onClick, false);
 document.addEventListener("DOMMouseScroll", onMouseWheel, false);
 document.addEventListener("keyup", onKeyUp, false);
+document.addEventListener("unload", onUnload, false);
+
+var hiddenBox = wnd.document.getElementById("fd-hidden-box");
+hiddenBox.addEventListener("fastdial.update", initThumbnails, false);
+hiddenBox.addEventListener("fastdial.clearCache", onClearCache, false);
+hiddenBox.addEventListener("fastdial.reload", onReload, false);
+
 initThumbnails();
 
 function initThumbnails() {
@@ -318,5 +325,30 @@ function getFavicon(index) {
            }
        }
     }
+}
+
+function onUnload() {
+    window.removeEventListener("resize", onResize, false);
+    document.removeEventListener("contextmenu", onContextMenu, false);
+    document.removeEventListener("mousedown", onMouseDown, true);
+    document.removeEventListener("mouseup", onMouseUp, false);
+    document.removeEventListener("drop", onDragDrop, false);
+    document.removeEventListener("click", onClick, false);
+    document.removeEventListener("DOMMouseScroll", onMouseWheel, false);
+    document.removeEventListener("keyup", onKeyUp, false);
+    document.removeEventListener("unload", onUnload, false);
+
+    var hiddenBox = wnd.document.getElementById("fd-hidden-box");
+    hiddenBox.removeEventListener("fastdial.update", initThumbnails, false);
+    hiddenBox.removeEventListener("fastdial.clearCache", onClearCache, false);
+    hiddenBox.removeEventListener("fastdial.reload", onReload, false);
+}
+
+function onClearCache(e) {
+    fastdial.URL.removeFromCache(document, e.detail);
+}
+
+function onReload(e) {
+    window.location.reload();
 }
 </script>

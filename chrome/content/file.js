@@ -314,11 +314,10 @@ fastdial.Cache = {
         var file = this.getCachedFile(url, folder);
         try {
             file.remove(false);
-            var cached = this.getCachedURL(url, folder);
-            fastdial.Utils.forEachTab(function(wnd) {
-                fastdial.URL.removeFromCache(
-                           wnd.document, cached);
-            });
+            var wnd = fastdial.Utils.getBrowserWindow();
+            var hiddenBox = wnd.document.getElementById("fd-hidden-box");
+            var e = new CustomEvent("fastdial.clearCache", { "detail": this.getCachedURL(url, folder) });
+            hiddenBox.dispatchEvent(e);
         }
         catch(e) {}
     }

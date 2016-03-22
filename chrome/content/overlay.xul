@@ -4,7 +4,7 @@
 <overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     <window id="main-window">
         <hbox style="overflow:hidden; height: 0;">
-            <vbox id="hidden-box"/>
+            <vbox id="fd-hidden-box"/>
         </hbox>
         <menupopup id="fd-menu"
                    oncommand="fastdial.Overlay.onContextCommand(event, event.target.id);">
@@ -280,9 +280,9 @@
             },
 
             updateView: function() {
-                fastdial.Utils.forEachTab(function(w) {
-                    if (w.initThumbnails) w.initThumbnails();
-                });
+                var hiddenBox = fastdial.Dom.get("fd-hidden-box");
+                var e = new Event("fastdial.update");
+                hiddenBox.dispatchEvent(e);
             }
         }
 

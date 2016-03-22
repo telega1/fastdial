@@ -92,18 +92,6 @@ fastdial.Utils = {
         return enumerator.EnumerateAllFonts(count);
     },
 
-    forEachTab: function(onTab) {
-        var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                .getService(Components.interfaces.nsIWindowMediator);
-        var anEnum = wm.getEnumerator("navigator:browser");
-        while (anEnum.hasMoreElements()) {
-            var tabbrowser = anEnum.getNext().getBrowser();
-            for (var i = 0; i < tabbrowser.browsers.length; i++) {
-                onTab(tabbrowser.browsers[i].contentWindow.wrappedJSObject);
-            }
-        }
-    },
-
     openLink: function(url, where) {
         var wnd = this.getBrowserWindow();
         if (where instanceof Event) {

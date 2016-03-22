@@ -880,9 +880,9 @@
 
         function reloadView() {
             flushXULCache();
-            fastdial.Utils.forEachTab(function(w) {
-                if (w.initThumbnails) w.location.reload();
-            });
+            var hiddenBox = wnd.document.getElementById("fd-hidden-box");
+            var e = new Event("fastdial.reload");
+            hiddenBox.dispatchEvent(e);
         }
 
         function flushXULCache() {

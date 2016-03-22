@@ -44,7 +44,7 @@ fastdial.Loader = new function() {
         browser.width = 1024;
         browser.height = 768;
         browser.setAttribute("type", "content");
-        document.getElementById("hidden-box").appendChild(browser);
+        document.getElementById("fd-hidden-box").appendChild(browser);
         browser.close = function() {
             delete browsers[item.url];
             browser.parentNode.removeChild(browser);
