@@ -7,15 +7,15 @@
             <vbox id="hidden-box"/>
         </hbox>
         <menupopup id="fd-menu"
-                   oncommand="Fd.onContextCommand(event, event.target.id);">
+                   oncommand="fastdial.Overlay.onContextCommand(event, event.target.id);">
             <menu id="fd-add-menu" label="&add;">
-                <menupopup oncommand="Fd.onContextCommand(event, this.parentNode.id);">
+                <menupopup oncommand="fastdial.Overlay.onContextCommand(event, this.parentNode.id);">
                     <menuitem label="&bookmark;" value="bookmark"/>
                     <menuitem label="&folder;" value="folder"/>
                 </menupopup>
             </menu>
             <menu id="fd-sort-menu" label="&sort;">
-                <menupopup oncommand="Fd.onContextCommand(event, this.parentNode.id);">
+                <menupopup oncommand="fastdial.Overlay.onContextCommand(event, this.parentNode.id);">
                     <menuitem name="sort" type="radio" label="&none;"/>
                     <menuitem name="sort" type="radio" value="auto" label="&auto;"/>
                     <menuitem name="sort" type="radio" value="title" label="&title;"/>
@@ -29,21 +29,22 @@
             <menuitem id="fd-refresh-all" label="&refreshAll;"/>
             <menuitem id="fd-move" label="&move;&#x2026;"/>
             <menuitem id="fd-remove" label="&remove;"/>
+            <menuitem id="fd-preview" label="&preview;"/>
             <menuseparator id="fd-separator2"/>
             <menuitem id="fd-properties" label="&properties;"/>
         </menupopup>
         <menupopup id="fd-search-menu"
-                   onpopupshowing="Fd.initSearchMenu(this);"/>
+                   onpopupshowing="fastdial.Overlay.initSearchMenu(this);"/>
     </window>
 
     <toolbarpalette id="BrowserToolbarPalette">
         <toolbarbutton id="fd-button" label="Fast Dial"
-                       class="toolbarbutton-1" oncommand="FdUtils.openLink(FdInfo.URI, event)"/>
+                       class="toolbarbutton-1" oncommand="fastdial.Utils.openLink(fastdial.Info.URI, event)"/>
     </toolbarpalette>
 
     <popup id="contentAreaContextMenu">
         <menuitem id="fd-add-page" label="&addToFastDial;" class="menuitem-iconic"
-                  image="chrome://fastdial/skin/icons/fastdial.png" oncommand="Fd.addPage(event);"/>
+                  image="chrome://fastdial/skin/icons/fastdial.png" oncommand="fastdial.Overlay.addPage(event);"/>
     </popup>
 
     <script src="utils.js"/>
@@ -57,7 +58,7 @@
     <script src="legacy.js"/>
     <script>
     <![CDATA[
-        var Fd = {
+        fastdial.Overlay = {
             openPreferences: function() {
                 openDialog("chrome://fastdial/content/preferences.xul",
                                       "preferences", "chrome,centerscreen,toolbar");
@@ -67,42 +68,42 @@
             isBlankPageURL: null,
 
             hookAddTab: function() {
-                Fd.addTab = gBrowser.addTab;
-                Fd.isBlankPageURL = window.isBlankPageURL;
+                fastdial.Overlay.addTab = gBrowser.addTab;
+                fastdial.Overlay.isBlankPageURL = window.isBlankPageURL;
 
                 gBrowser.addTab = function() {
                     if ((arguments[0] == "about:newtab" ||
                          arguments[0] == "about:blank") &&
-                         FdPrefs.getBool("enable")) arguments[0] = FdInfo.URI;
-                    return Fd.addTab.apply(gBrowser, arguments);
+                         fastdial.Prefs.getBool("enable")) arguments[0] = fastdial.Info.URI;
+                    return fastdial.Overlay.addTab.apply(gBrowser, arguments);
                 }
                 window.isBlankPageURL = function() {
-                    return String.substr(arguments[0], 0, FdInfo.URI.length) == FdInfo.URI ||
-                           Fd.isBlankPageURL.apply(window, arguments);
+                    return String.substr(arguments[0], 0, fastdial.Info.URI.length) == fastdial.Info.URI ||
+                           fastdial.Overlay.isBlankPageURL.apply(window, arguments);
                 }
             },
 
             initialize: function() {
-                setTimeout(Fd.hookAddTab, 100);
+                setTimeout(fastdial.Overlay.hookAddTab, 100);
                 if (window.gInitialPages) {
-                    gInitialPages.push(FdInfo.URI);
+                    gInitialPages.push(fastdial.Info.URI);
                 }
-                FdLegacy.migrate();
-                Fd.initShortcutKeys();
-                Fd.autoRefresh();
-                Fd.initSort();
+                fastdial.Legacy.migrate();
+                fastdial.Overlay.initShortcutKeys();
+                fastdial.Overlay.autoRefresh();
+                fastdial.Overlay.initSort();
             },
 
             initShortcutKeys: function() {
-                var options = FdPrefs.getObject("options");
+                var options = fastdial.Prefs.getObject("options");
                 if (options.shortcutKey) {
-                    var home = FdStorage.getHome();
-                    Fd.createShortcutKey(options.shortcutKey, home.id);
+                    var home = fastdial.Storage.getHome();
+                    fastdial.Overlay.createShortcutKey(options.shortcutKey, home.id);
                 }
-                var items = FdStorage.getAnnotatedItems(FdStorage.SHORTCUT_KEY);
+                var items = fastdial.Storage.getAnnotatedItems(fastdial.Storage.SHORTCUT_KEY);
                 for (var i in items) {
                     var item = items[i];
-                    Fd.createShortcutKey(item.shortcutKey, item.id);
+                    fastdial.Overlay.createShortcutKey(item.shortcutKey, item.id);
                 }
             },
 
@@ -114,38 +115,38 @@
                 var key = document.createElement("key");
                 key.setAttribute("modifiers", modifiers);
                 key.setAttribute("key", shortcutKey.match(/.$/));
-                key.setAttribute("oncommand", "Fd.openItem(" + id + ");");
-                FdDom.prepend(FdDom.get("mainKeyset"), key);
+                key.setAttribute("oncommand", "fastdial.Overlay.openItem(" + id + ");");
+                fastdial.Dom.prepend(fastdial.Dom.get("mainKeyset"), key);
             },
 
             openItem: function(id) {
-                var item = FdStorage.getItem(id);
+                var item = fastdial.Storage.getItem(id);
                 item.loadInSidebar
                     ? openWebPanel(item.title, item.url)
-                    : FdUtils.openLink(FdStorage.getURL(item), "tab");
+                    : fastdial.Utils.openLink(fastdial.Storage.getURL(item), "tab");
             },
 
             autoRefresh: function() {
                 var currentTime = new Date().getTime();
-                var items = FdStorage.getAnnotatedItems(FdStorage.REFRESH);
+                var items = fastdial.Storage.getAnnotatedItems(fastdial.Storage.REFRESH);
                 var refreshing = false;
                 for (var i in items) {
                     var item = items[i];
-                    var url = FdStorage.getURL(item);
-                    var lastRefresh = FdCache.getCachedTime(url);
+                    var url = fastdial.Storage.getURL(item);
+                    var lastRefresh = fastdial.Cache.getCachedTime(url);
                     if (!lastRefresh ||
                             lastRefresh + item.refresh * 60 * 1000 < currentTime) {
                         refreshing = true;
-                        FdSnapshot.create(item);
+                        fastdial.Snapshot.create(item);
                     }
                 }
-                if (refreshing) Fd.updateView();
-                setTimeout(Fd.autoRefresh, 60 * 1000);
+                if (refreshing) fastdial.Overlay.updateView();
+                setTimeout(fastdial.Overlay.autoRefresh, 60 * 1000);
             },
 
             initSort: function() {
-                var menupopup = FdDom.get("fd-sort-menu").firstChild;
-                var sort = FdPrefs.getString("sort");
+                var menupopup = fastdial.Dom.get("fd-sort-menu").firstChild;
+                var sort = fastdial.Prefs.getString("sort");
                 for (var i = 0; i < menupopup.childNodes.length; i++) {
                     var menuitem = menupopup.childNodes[i];
                     if (menuitem.value == sort) {
@@ -157,21 +158,22 @@
             thumbnail: null,
 
             showContextMenu: function(e, thumbnail) {
-                Fd.thumbnail = thumbnail;
+                fastdial.Overlay.thumbnail = thumbnail;
                 var wnd = content.wrappedJSObject;
                 var isReadOnly = !thumbnail || thumbnail.properties.isBack;
-                FdDom.get("fd-add-menu").hidden = FdBookmark.isDynamic(wnd.folder);
-                FdDom.get("fd-open-all").hidden = isReadOnly || !thumbnail.properties.isFolder;
-                FdDom.get("fd-refresh").hidden = isReadOnly;
-                FdDom.get("fd-move").hidden = isReadOnly;
-                FdDom.get("fd-remove").hidden = isReadOnly;
-                FdDom.get("fd-separator2").hidden = isReadOnly;
-                FdDom.get("fd-properties").hidden = isReadOnly;
-                FdDom.get("fd-menu").openPopupAtScreen(e.screenX, e.screenY, true);
+                fastdial.Dom.get("fd-add-menu").hidden = fastdial.Bookmark.isDynamic(wnd.folder);
+                fastdial.Dom.get("fd-open-all").hidden = isReadOnly || !thumbnail.properties.isFolder;
+                fastdial.Dom.get("fd-refresh").hidden = isReadOnly;
+                fastdial.Dom.get("fd-move").hidden = isReadOnly;
+                fastdial.Dom.get("fd-remove").hidden = isReadOnly;
+                fastdial.Dom.get("fd-preview").hidden = isReadOnly || !thumbnail.properties.preview;
+                fastdial.Dom.get("fd-separator2").hidden = isReadOnly;
+                fastdial.Dom.get("fd-properties").hidden = isReadOnly;
+                fastdial.Dom.get("fd-menu").openPopupAtScreen(e.screenX, e.screenY, true);
             },
 
             onContextCommand: function(e, command) {
-                var thumbnail = Fd.thumbnail;
+                var thumbnail = fastdial.Overlay.thumbnail;
                 var wnd = content.wrappedJSObject;
                 switch (command) {
                     case "fd-open-all":
@@ -190,20 +192,23 @@
                             thumbnail.properties.index = -1;
                             delete thumbnail.properties.thumbIndex;
                             thumbnail.save();
-                            Fd.updateView();
+                            fastdial.Overlay.updateView();
                         }
                         break;
                     case "fd-remove":
                         thumbnail.remove(true);
                         break;
+                    case "fd-preview":
+                        thumbnail.openPreview(wnd.document);
+                        break;
                     case "fd-preferences":
-                        Fd.openPreferences();
+                        fastdial.Overlay.openPreferences();
                         break;
                     case "fd-properties":
                         thumbnail.openProperties();
                         break;
                     case "fd-add-menu":
-                        var box = FdDom.parent(document.popupNode, "box");
+                        var box = fastdial.Dom.parent(document.popupNode, "box");
                         var properties = {
                             folderId: wnd.folder.id,
                             isFolder: e.target.value == "folder",
@@ -212,27 +217,27 @@
                             thumbIndex: box && wnd.getThumbIndex(box.id),
                             index: -1,
                         }
-                        var thumbnail = new FdThumbnail(properties);
+                        var thumbnail = new fastdial.Thumbnail(properties);
                         thumbnail.openProperties();
                         break;
                     case "fd-sort-menu":
-                        FdPrefs.setString("sort", e.target.value);
+                        fastdial.Prefs.setString("sort", e.target.value);
                         wnd.initThumbnails();
                         break;
                     case "fd-refresh-all":
                         var wnd = content.wrappedJSObject;
                         for (var i in wnd.thumbnails) {
                             var thumbnail = wnd.thumbnails[i];
-                            if (thumbnail.isRefreshAll()) FdSnapshot.create(thumbnail.properties);
+                            if (thumbnail.isRefreshAll()) fastdial.Snapshot.create(thumbnail.properties);
                         }
-                        Fd.updateView();
+                        fastdial.Overlay.updateView();
                         break;
                 }
             },
 
             initSearchMenu: function(menupopup) {
-                FdDom.clear(menupopup);
-                var engines = FdUtils.getSearchEngines();
+                fastdial.Dom.clear(menupopup);
+                var engines = fastdial.Utils.getSearchEngines();
 
                 for (var i in engines) {
                     var menuitem = document.createElement("menuitem");
@@ -241,48 +246,48 @@
                     if (icon) {
                         menuitem.setAttribute("class", "menuitem-iconic");
                         menuitem.setAttribute("image", icon.spec);
-                        menuitem.setAttribute("onclick", "Fd.setSearchEngine(event);");
+                        menuitem.setAttribute("onclick", "fastdial.Overlay.setSearchEngine(event);");
                     }
                     menupopup.appendChild(menuitem);
                 }
             },
 
             setSearchEngine: function(event) {
-                var search = FdPrefs.getObject("search");
+                var search = fastdial.Prefs.getObject("search");
                 var wnd = content.wrappedJSObject;
                 var searchIcons = wnd.document.getElementsByClassName("search-icon");
 
                 for(var i = 0; i < searchIcons.length; i++) {
                     if (searchIcons[i] == wnd.currentSearch) search[i] = event.target.label;
                 }
-                FdPrefs.setObject("search", search);
-                Fd.updateView();
+                fastdial.Prefs.setObject("search", search);
+                fastdial.Overlay.updateView();
             },
 
             addPage: function(e) {
-                FdDom.get("contentAreaContextMenu").hidePopup();
-                FdDom.get("fd-menu").hidePopup();
+                fastdial.Dom.get("contentAreaContextMenu").hidePopup();
+                fastdial.Dom.get("fd-menu").hidePopup();
                 var folderId = e.target.getAttribute("value") ||
-                                                FdBookmark.getHome().id;
+                                                fastdial.Bookmark.getHome().id;
                 var bookmark = {
                     url: content.location.href,
                     title: content.document.title,
                     folderId: folderId,
                     index: -1
                 }
-                FdBookmark.saveBookmark(bookmark);
-                Fd.updateView();
+                fastdial.Bookmark.saveBookmark(bookmark);
+                fastdial.Overlay.updateView();
             },
 
             updateView: function() {
-                FdUtils.forEachTab(function(w) {
+                fastdial.Utils.forEachTab(function(w) {
                     if (w.initThumbnails) w.initThumbnails();
                 });
             }
         }
 
         addEventListener("load",
-                Fd.initialize, false);
+                fastdial.Overlay.initialize, false);
         ]]>
   </script>
 </overlay>

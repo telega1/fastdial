@@ -91,79 +91,79 @@
     <script>
     <![CDATA[
         var properties = window.arguments[0];
-        var thumbnail = new FdThumbnail(properties);
-        var wnd = FdUtils.getBrowserWindow();
+        var thumbnail = new fastdial.Thumbnail(properties);
+        var wnd = fastdial.Utils.getBrowserWindow();
 
         function initialize() {
             initDialog();
             setFolder(properties.isFolder);
             var url = thumbnail.getURL();
-            FdDom.get("url").value = url || "";
-            FdDom.get("title").value = properties.title || "";
-            FdDom.get("description").value = properties.description || "";
-            FdDom.get("logo").value = properties.logo || "";
-            FdDom.get("shortcutKey").value = properties.shortcutKey || "";
-            FdDom.get("refresh").value = properties.refresh || 0;
-            FdDom.get("refreshAll").checked = thumbnail.isRefreshAll();
-            FdDom.get("refreshAll").disabled = properties.logo;
-            FdDom.get("preview").checked = properties.preview;
-            FdUtils.merge(properties, getProperties());
+            fastdial.Dom.get("url").value = url || "";
+            fastdial.Dom.get("title").value = properties.title || "";
+            fastdial.Dom.get("description").value = properties.description || "";
+            fastdial.Dom.get("logo").value = properties.logo || "";
+            fastdial.Dom.get("shortcutKey").value = properties.shortcutKey || "";
+            fastdial.Dom.get("refresh").value = properties.refresh || 0;
+            fastdial.Dom.get("refreshAll").checked = thumbnail.isRefreshAll();
+            fastdial.Dom.get("refreshAll").disabled = properties.logo;
+            fastdial.Dom.get("preview").checked = properties.preview;
+            fastdial.Utils.merge(properties, getProperties());
             onChangeURL();
             updateFocus();
         }
 
         function getProperties() {
             var props = {};
-            props.isFolder = FdDom.get("isFolder").value;
-            var url = FdDom.get("url").value;
-            props.url = !url || FdURL.getScheme(url) ? url : "http://" + url + "/";
-            props.title = FdDom.get("title").value;
-            props.description = FdDom.get("description").value;
-            props.logo = FdDom.get("logo").value;
-            props.shortcutKey = FdDom.get("shortcutKey").value;
-            var refresh = FdDom.get("refresh").value;
+            props.isFolder = fastdial.Dom.get("isFolder").value;
+            var url = fastdial.Dom.get("url").value;
+            props.url = !url || fastdial.URL.getScheme(url) ? url : "http://" + url + "/";
+            props.title = fastdial.Dom.get("title").value;
+            props.description = fastdial.Dom.get("description").value;
+            props.logo = fastdial.Dom.get("logo").value;
+            props.shortcutKey = fastdial.Dom.get("shortcutKey").value;
+            var refresh = fastdial.Dom.get("refresh").value;
             props.refresh = Math.max(refresh, 0);
-            props.refreshAll = FdDom.get("refreshAll").checked;
-            props.preview = FdDom.get("preview").checked;
+            props.refreshAll = fastdial.Dom.get("refreshAll").checked;
+            props.preview = fastdial.Dom.get("preview").checked;
             return props;
         }
 
         function clear() {
-            FdDom.get("url").value = "";
-            FdDom.get("title").value = "";
-            FdDom.get("description").value = "";
-            FdDom.get("logo").value = "";
+            fastdial.Dom.get("url").value = "";
+            fastdial.Dom.get("title").value = "";
+            fastdial.Dom.get("description").value = "";
+            fastdial.Dom.get("logo").value = "";
             setShortcutKey("");
-            FdDom.get("refresh").value = 0;
-            FdDom.get("preview").checked = false;
+            fastdial.Dom.get("refresh").value = 0;
+            fastdial.Dom.get("preview").checked = false;
             updateRefreshAll();
         }
 
         function setFolder(isFolder) {
             clear();
-            FdDom.get("isFolder").selectedIndex = isFolder ? 1 : 0;
-            FdDom.get("row-url").collapsed = isFolder;
-            FdDom.get("logo").value = isFolder 
+            fastdial.Dom.get("isFolder").selectedIndex = isFolder ? 1 : 0;
+            fastdial.Dom.get("row-url").collapsed = isFolder;
+            fastdial.Dom.get("logo").value = isFolder 
                 ? "chrome://fastdial/skin/images/folder.png" : "";
             updateRefreshAll();
             updateFocus();
         }
 
         function updateFocus() {
-            var isFolder = FdDom.get("isFolder").value;
+            var isFolder = fastdial.Dom.get("isFolder").value;
             var id = isFolder ? "title" : "url";
-            FdDom.get(id).select();
+            fastdial.Dom.get(id).select();
         }
 
         function initDialog() {
-            var dialog = FdDom.get("fd-dialog-properties");
+            var dialog = fastdial.Dom.get("fd-dialog-properties");
             if (dialog.instantApply) {
                 var accept = dialog.getButton("accept");
                 accept.hidden = false;
                 accept.disabled = false;
                 var cancel = dialog.getButton("cancel");
                 cancel.hidden = false;
-                cancel.setAttribute("label", FdBundle.getString("cancel"));
+                cancel.setAttribute("label", fastdial.Bundle.getString("cancel"));
             }
             if (!properties.id) {
                 var general = dialog.preferencePanes[0];
@@ -173,31 +173,31 @@
 
         function onChangeURL() {
             var search;
-            var isFolder = FdDom.get("isFolder").value;
+            var isFolder = fastdial.Dom.get("isFolder").value;
             if (isFolder) {
-                search = FdDom.get("title").value;
+                search = fastdial.Dom.get("title").value;
             } else {
-                var url = FdDom.get("url");
-                var nsiURL = FdURL.getNsiURL(url.value);
+                var url = fastdial.Dom.get("url");
+                var nsiURL = fastdial.URL.getNsiURL(url.value);
                 search = nsiURL.host.replace(/^www\./, "");
             }
-            var link = FdDom.get("link");
+            var link = fastdial.Dom.get("link");
             link.href = link.tooltipText = "http://userlogos.org/logos/top-rated?search=" +
                                                                          encodeURIComponent(search);
         }
 
         function browseURL() {
-            var file = FdFile.chooseFile("open");
+            var file = fastdial.File.chooseFile("open");
             if (file) {
-                FdDom.get("url").value = FdFile.getFileURL(file);
+                fastdial.Dom.get("url").value = fastdial.File.getFileURL(file);
             }
         }
 
         function browseImage(id) {
-            var file = FdFile.chooseFile("open", ["images"]);
+            var file = fastdial.File.chooseFile("open", ["images"]);
             if (file) {
-                var url = FdFile.getFileURL(file);
-                FdDom.get(id).value = url;
+                var url = fastdial.File.getFileURL(file);
+                fastdial.Dom.get(id).value = url;
                 updateRefreshAll();
             }
         }
@@ -206,7 +206,7 @@
             var props = getProperties();
             if (properties.isFolder != props.isFolder) {
                 var children = properties.isFolder &&
-                        FdStorage.getItems(properties.id);
+                        fastdial.Storage.getItems(properties.id);
                 if (!thumbnail.remove(children && children.length)) return false;
                 delete properties.id;
             }
@@ -220,36 +220,36 @@
                             (!properties.isFolder && props.url != properties.url);
 
             if (isRefreshNeeded) {
-                wnd.FdLoader.stop(thumbnail.properties.logo);
-                wnd.FdLoader.stop(thumbnail.getURL());
+                wnd.fastdial.Loader.stop(thumbnail.properties.logo);
+                wnd.fastdial.Loader.stop(thumbnail.getURL());
                 var snapshot = thumbnail.getSnapshotURL();
                 if (snapshot) {
-                    FdCache.remove(snapshot, "preview");
-                    FdCache.remove(snapshot);
+                    fastdial.Cache.remove(snapshot, "preview");
+                    fastdial.Cache.remove(snapshot);
                 }
             }
-            FdUtils.merge(properties, props);
+            fastdial.Utils.merge(properties, props);
             thumbnail.save();
             if (isRefreshNeeded)
-                wnd.FdSnapshot.create(properties);
-            wnd.Fd.updateView();
+                wnd.fastdial.Snapshot.create(properties);
+            wnd.fastdial.Overlay.updateView();
         }
 
         function setShortcutKey(key) {
-            FdDom.get("shortcutKey").value = key || "";
-            FdDom.get("restartIsNeeded").style.visibility = key ? "visible" : "hidden";
+            fastdial.Dom.get("shortcutKey").value = key || "";
+            fastdial.Dom.get("restartIsNeeded").style.visibility = key ? "visible" : "hidden";
         }
 
         function onShortcutKey(e) {
             if (e.keyCode != e.DOM_VK_TAB) {
-                setShortcutKey(FdUtils.getShortcutKey(e));
+                setShortcutKey(fastdial.Utils.getShortcutKey(e));
                 e.preventDefault();
             }
         }
 
         function updateRefreshAll() {
-            FdDom.get("refreshAll").checked = !FdDom.get("logo").value;
-            FdDom.get("refreshAll").disabled = FdDom.get("logo").value;
+            fastdial.Dom.get("refreshAll").checked = !fastdial.Dom.get("logo").value;
+            fastdial.Dom.get("refreshAll").disabled = fastdial.Dom.get("logo").value;
         }
         ]]>
   </script>

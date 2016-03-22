@@ -1,4 +1,4 @@
-var FdDrag = new function() {
+fastdial.Drag = new function() {
     const MIN_DRAG = 10;
     var click, delta;
     var source, object;
@@ -80,7 +80,7 @@ var FdDrag = new function() {
 
     function stop() {
         if (object) {
-            FdDom.remove(object);
+            fastdial.Dom.remove(object);
             object = null;
         }
         if (source) {

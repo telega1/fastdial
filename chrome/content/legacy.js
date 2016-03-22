@@ -1,8 +1,8 @@
-var FdLegacy = new function() {
+fastdial.Legacy = new function() {
     this.migrate = function() {
-        var previousVersion = FdPrefs.getString("version");
+        var previousVersion = fastdial.Prefs.getString("version");
         var version = "4.12";
-        FdPrefs.setString("version", version);
+        fastdial.Prefs.setString("version", version);
 
         if (!previousVersion) addToolbarButton();
         if (version != previousVersion) initThemes();
@@ -31,10 +31,10 @@ var FdLegacy = new function() {
     }
 
     function initThemes() {
-        var dir = FdFile.getExtensionDirectory();
+        var dir = fastdial.File.getExtensionDirectory();
         dir.append("chrome");
         dir.append("skin");
         dir.append("themes");
-        FdFile.forEachFile(dir, FdTheme.import);
+        fastdial.File.forEachFile(dir, fastdial.Theme.import);
     }
 }

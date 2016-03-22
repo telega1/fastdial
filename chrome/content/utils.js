@@ -1,9 +1,12 @@
-var FdInfo = {
+var fastdial = {};
+
+fastdial.Info = {
     URI: "chrome://fastdial/content/fastdial.html",
     NAME: "Fast Dial",
     ID: "fastdial",
 }
-var FdUtils = {
+
+fastdial.Utils = {
     pad: function(number) {
         return (number < 10) ? "0" + number : number;
     },
@@ -11,8 +14,8 @@ var FdUtils = {
     time: function(millis) {
         if (millis) {
             var date = new Date(millis);
-            return FdUtils.pad(date.getHours()) + ":" +
-                   FdUtils.pad(date.getMinutes());
+            return this.pad(date.getHours()) + ":" +
+                   this.pad(date.getMinutes());
         } else {
             return "";
         }
@@ -29,7 +32,7 @@ var FdUtils = {
     },
 
     clone: function(object) {
-        return FdUtils.merge({}, object);
+        return this.merge({}, object);
     },
 
     merge: function(target) {
@@ -46,7 +49,7 @@ var FdUtils = {
                         target[i] = source[i];
                         break;
                     default:
-                        target[i] = FdUtils.merge(target[i], source[i]);
+                        target[i] = this.merge(target[i], source[i]);
                         break;
                 }
             }
@@ -57,13 +60,13 @@ var FdUtils = {
     confirm: function(message) {
         var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                 .getService(Components.interfaces.nsIPromptService);
-        return prompts.confirm(window, FdInfo.NAME, message);
+        return prompts.confirm(window, fastdial.Info.NAME, message);
     },
 
     prompt: function(message, value) {
         var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                 .getService(Components.interfaces.nsIPromptService);
-        return prompts.prompt(window, FdInfo.NAME, message, value, null, { value: false });
+        return prompts.prompt(window, fastdial.Info.NAME, message, value, null, { value: false });
     },
 
     getBrowserWindow: function() {
@@ -102,7 +105,7 @@ var FdUtils = {
     },
 
     openLink: function(url, where) {
-        var wnd = FdUtils.getBrowserWindow();
+        var wnd = this.getBrowserWindow();
         if (where instanceof Event) {
             where = wnd.whereToOpenLink(where);
         }
@@ -190,15 +193,15 @@ var FdUtils = {
     }
 }
 
-var FdBundle = {
+fastdial.Bundle = {
     bundle: Components.classes["@mozilla.org/intl/stringbundle;1"]
             .getService(Components.interfaces.nsIStringBundleService)
             .createBundle("chrome://fastdial/locale/fastdial.properties"),
 
     getString: function(name, params) {
         try {
-            return params ? FdBundle.bundle.formatStringFromName(name, params, params.length)
-                          : FdBundle.bundle.GetStringFromName(name);
+            return params ? this.bundle.formatStringFromName(name, params, params.length)
+                          : this.bundle.GetStringFromName(name);
         } catch(e) {
             return null;
         }

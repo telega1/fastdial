@@ -1,4 +1,6 @@
-var FdBookmark = new function() {
+fastdial.Bookmark = new function() {
+    var self = this;
+
     var historyService =
             Components.classes["@mozilla.org/browser/nav-history-service;1"]
                                .getService(Components.interfaces.nsINavHistoryService);
@@ -18,30 +20,29 @@ var FdBookmark = new function() {
     this.HOME = "fastdial/home";
 
     this.getHome = function() {
-        var ids = FdBookmark.getAnnotatedIds(FdBookmark.HOME);
+        var ids = this.getAnnotatedIds(this.HOME);
         if (ids.length) {
-            return FdBookmark.getBookmark(ids[0]);
+            return this.getBookmark(ids[0]);
         } else {
             var root = getRoot();
-            FdBookmark.setAnnotation(root.id,
-                                  FdBookmark.HOME, "true");
+            this.setAnnotation(root.id, this.HOME, "true");
             return root;
         }
     };
 
     this.setHome = function(id) {
-        var oldHome = FdBookmark.getHome();
-        FdBookmark.removeAnnotation(oldHome.id, FdBookmark.HOME);
-        FdBookmark.setAnnotation(id, FdBookmark.HOME, "true");
+        var oldHome = this.getHome();
+        this.removeAnnotation(oldHome.id, this.HOME);
+        this.setAnnotation(id, this.HOME, "true");
     }
 
     function getRoot() {
         var root;
         try {
-            var rootId = FdPrefs.getInt("root");
+            var rootId = fastdial.Prefs.getInt("root");
             if (rootId) {
-                root = FdBookmark.getBookmark(rootId);
-                FdPrefs.clear("root");
+                root = self.getBookmark(rootId);
+                fastdial.Prefs.clear("root");
             }
         } catch(e) {}
 
@@ -52,11 +53,11 @@ var FdBookmark = new function() {
     }
 
     function getLegacyRoot() {
-        var bookmarks = FdBookmark.getBookmarks(FdBookmark.BOOKMARKS_MENU);
+        var bookmarks = self.getBookmarks(self.BOOKMARKS_MENU);
         for (var i in bookmarks) {
             var bookmark = bookmarks[i];
             if (bookmark.isFolder &&
-                    bookmark.title == FdInfo.NAME) return bookmark;
+                    bookmark.title == fastdial.Info.NAME) return bookmark;
         }
     }
 
@@ -64,10 +65,10 @@ var FdBookmark = new function() {
         var root = {
             folderId: bookmarksService.bookmarksMenuFolder,
             isFolder: true,
-            title:    FdInfo.NAME,
+            title:    fastdial.Info.NAME,
             index:    0
         };
-        FdBookmark.saveBookmark(root);
+        self.saveBookmark(root);
         return root;
     }
 
@@ -82,7 +83,7 @@ var FdBookmark = new function() {
     };
     function getURL(id) {
         try {
-            return FdUtils.decode(bookmarksService.getBookmarkURI(id).spec);
+            return fastdial.Utils.decode(bookmarksService.getBookmarkURI(id).spec);
         }
         catch(e) {
             return "place:folder=" + id;
@@ -109,7 +110,7 @@ var FdBookmark = new function() {
                     isFolder: item.type == item.RESULT_TYPE_FOLDER ||
                               item.type == item.RESULT_TYPE_FOLDER_SHORTCUT ||
                               this.isQuery(item.uri),
-                    url:      FdUtils.decode(item.uri),
+                    url:      fastdial.Utils.decode(item.uri),
                     title:    item.title,
                     index:    item.bookmarkIndex,
                     description: this.getAnnotation(item.itemId, this.DESCRIPTION),
@@ -122,7 +123,7 @@ var FdBookmark = new function() {
     }
     function getSystemId(id) {
         try {
-            var annotation = FdBookmark.getAnnotation(id, "placesInternal/READ_ONLY");
+            var annotation = self.getAnnotation(id, "placesInternal/READ_ONLY");
             switch (annotation) {
                 case "AllBookmarks":
                     return bookmarksService.placesRoot;
@@ -166,19 +167,19 @@ var FdBookmark = new function() {
         }
     };
     function createBookmark(bookmark) {
-        if (bookmark.isFolder && !FdBookmark.isQuery(bookmark.url)) {
+        if (bookmark.isFolder && !self.isQuery(bookmark.url)) {
             return bookmarksService.createFolder(bookmark.folderId,
                     bookmark.title, bookmark.index);
         }
         else {
             return bookmarksService.insertBookmark(bookmark.folderId,
-                    FdURL.getNsiURI(bookmark.url), bookmark.index, bookmark.title);
+                    fastdial.URL.getNsiURI(bookmark.url), bookmark.index, bookmark.title);
         }
     }
 
     function updateBookmark(bookmark) {
         if (!bookmark.isFolder) {
-            var uri = FdURL.getNsiURI(bookmark.url);
+            var uri = fastdial.URL.getNsiURI(bookmark.url);
             bookmarksService.changeBookmarkURI(bookmark.id, uri);
         }
         bookmarksService.setItemTitle(bookmark.id, bookmark.title);
@@ -218,7 +219,7 @@ var FdBookmark = new function() {
         return annotationService.getItemsWithAnnotation(name, {});
     };
     this.getFavicon = function(url, onLoad) {
-        var uri = FdURL.getNsiURL(url);
+        var uri = fastdial.URL.getNsiURL(url);
         try {
             var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
                                               .getService(Components.interfaces.mozIAsyncFavicons);
@@ -232,8 +233,8 @@ var FdBookmark = new function() {
         catch(e) {}
     };
     this.setFavicon = function(url, favicon) {
-       var uri = FdURL.getNsiURL(url);
-       var faviconURI = FdURL.getNsiURL(favicon);
+       var uri = fastdial.URL.getNsiURL(url);
+       var faviconURI = fastdial.URL.getNsiURL(favicon);
        try {
            var faviconService = Components.classes["@mozilla.org/browser/favicon-service;1"]
                                               .getService(Components.interfaces.mozIAsyncFavicons);

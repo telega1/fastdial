@@ -1,4 +1,4 @@
-var FdLoader = new function() {
+fastdial.Loader = new function() {
     const MAX_BROWSERS = 3;
     const TIMEOUT_LOAD = 30000;
     var queue = [];
@@ -59,14 +59,15 @@ var FdLoader = new function() {
         }
         browser.setAttribute("src", item.url);
     }
-};
-function FdSnapshot(thumbnail) {
+}
+
+fastdial.Snapshot = function(thumbnail) {
     thumbnail.properties.logo && thumbnail.properties.title ? loadLogo() : loadSite();
 
     function loadSite() {
-        FdLoader.load(thumbnail.getURL(), function(browser) {
+        fastdial.Loader.load(thumbnail.getURL(), function(browser) {
             var doc = browser.contentDocument;
-            FdBookmark.setFavicon(thumbnail.properties.url, getFavicon(doc));
+            fastdial.Bookmark.setFavicon(thumbnail.properties.url, getFavicon(doc));
             if (!thumbnail.properties.title) {
                 thumbnail.properties.title = doc.title;
                 thumbnail.save();
@@ -85,61 +86,64 @@ function FdSnapshot(thumbnail) {
             var link = links[i];
             if (/^(shortcut )?icon$/i.test(link.rel)) return link.href;
         }
-        if (!FdURL.isLocal(doc.location)) {
-            var uri = FdURL.getNsiURL(doc.location);
+        if (!fastdial.URL.isLocal(doc.location)) {
+            var uri = fastdial.URL.getNsiURL(doc.location);
             return uri.prePath + "/favicon.ico";
         }
         return null;
     }
 
     function loadLogo() {
-        FdLoader.load(thumbnail.properties.logo, function(browser) {
+        fastdial.Loader.load(thumbnail.properties.logo, function(browser) {
             saveImage(browser, true);
         });
     }
 
     function saveImage(browser, isLogo) {
-        var options = FdPrefs.getObject("options");
+        var options = fastdial.Prefs.getObject("options");
         var timeout = parseInt(options.timeout);
         var url = browser.contentWindow.location.href;
-        if (!timeout || FdURL.isLocal(url)) {
-            timeout = FdSnapshot.TIMEOUT_ULTRAFAST;
+
+        if (!timeout || fastdial.URL.isLocal(url)) {
+            timeout = fastdial.Snapshot.TIMEOUT_ULTRAFAST;
         }
-        var slowSites = FdPrefs.getString("slowSites");
+        var slowSites = fastdial.Prefs.getString("slowSites");
         if (url.match(slowSites)) {
-            timeout += FdSnapshot.TIMEOUT_MEDIUM;
+            timeout += fastdial.Snapshot.TIMEOUT_MEDIUM;
         }
         setTimeout(function() {
                     var snapshot = thumbnail.getSnapshotURL();
                     if (thumbnail.properties.preview) {
-                        var preview = FdSnapshot.createImage(
-                                           browser.contentWindow, browser.width, isLogo);
-                        FdCache.remove(snapshot, "preview");
-                        FdCache.save(snapshot, preview, "preview");
+                        var preview = fastdial.Snapshot.createImage(browser.contentWindow, browser.width, isLogo);
+                        fastdial.Cache.remove(snapshot, "preview");
+                        fastdial.Cache.save(snapshot, preview, "preview");
                     }
-                    var image = FdSnapshot.createImage(
-                                       browser.contentWindow, options.thumbWidth, isLogo);
-                    FdCache.remove(snapshot);
-                    FdCache.save(snapshot, image);
+                    var image = fastdial.Snapshot.createImage(
+                                         browser.contentWindow, options.thumbWidth, isLogo);
+                    fastdial.Cache.remove(snapshot);
+                    fastdial.Cache.save(snapshot, image);
                     browser.close();
-                    Fd.updateView();
+                    fastdial.Overlay.updateView();
                 },
                 timeout);
     }
 }
-FdSnapshot.TIMEOUT_ULTRAFAST = 100;
-FdSnapshot.TIMEOUT_MEDIUM = 5000;
-FdSnapshot.create = function(properties) {
-    var thumbnail = new FdThumbnail(properties);
-    new FdSnapshot(thumbnail);
-};
-FdSnapshot.createImage = function(wnd, imageWidth, isLogo) {
+
+fastdial.Snapshot.TIMEOUT_ULTRAFAST = 100;
+fastdial.Snapshot.TIMEOUT_MEDIUM = 5000;
+    
+fastdial.Snapshot.create = function(properties) {
+    var thumbnail = new fastdial.Thumbnail(properties);
+    new fastdial.Snapshot(thumbnail);
+}
+
+fastdial.Snapshot.createImage = function(wnd, imageWidth, isLogo) {
     var doc = wnd.document;
     var width = doc.documentElement.offsetWidth;
-    var height = FdThumbnail.getHeight(width);
+    var height = fastdial.Thumbnail.getHeight(width);
     var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
     canvas.width = imageWidth;
-    canvas.height = FdThumbnail.getHeight(canvas.width);
+    canvas.height = fastdial.Thumbnail.getHeight(canvas.width);
     var context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.save();
@@ -153,4 +157,4 @@ FdSnapshot.createImage = function(wnd, imageWidth, isLogo) {
     context.restore();
     var dataURL = canvas.toDataURL("image/png");
     return atob(dataURL.replace(/^data:image\/png;base64,/, ""));
-};
+}

@@ -3,7 +3,7 @@
         <td>
             <div id="search">
                 <% for(var i in this.search) { %>
-                    <% var engine = FdUtils.getSearchEngine(this.search[i]); %>
+                    <% var engine = fastdial.Utils.getSearchEngine(this.search[i]); %>
                     <% if (engine) { %>
                         <% var icon = engine.iconURI ? engine.iconURI.spec : "chrome://fastdial/skin/icons/fastdial.png"; %>
                         <img class="search-icon" src="<%= icon %>">

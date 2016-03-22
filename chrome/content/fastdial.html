@@ -21,14 +21,14 @@
 <script type="text/javascript">
 var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
-var params = FdUtils.getQueryParams(document.location);
-var wnd = FdUtils.getBrowserWindow();
+var params = fastdial.Utils.getQueryParams(document.location);
+var wnd = fastdial.Utils.getBrowserWindow();
 
-var folder, home = FdStorage.getHome();
+var folder, home = fastdial.Storage.getHome();
 if (!params.folder || params.folder == home.id) folder = home;
 else try {
-    folder = FdStorage.getItem(params.folder);
-    folder.parent = FdStorage.getItem(folder.folderId);
+    folder = fastdial.Storage.getItem(params.folder);
+    folder.parent = fastdial.Storage.getItem(folder.folderId);
     folder.parent.isBack = true;
 }
 catch(e) {}
@@ -45,14 +45,14 @@ document.addEventListener("keyup", onKeyUp, false);
 initThumbnails();
 
 function initThumbnails() {
-    options = FdPrefs.getObject("options");
-    sort = FdPrefs.getString("sort");
+    options = fastdial.Prefs.getObject("options");
+    sort = fastdial.Prefs.getString("sort");
     thumbnails = getThumbnails();
 
-    var data = FdURL.readURL("chrome://fastdial/content/template/fastdial.tpl");
+    var data = fastdial.URL.readURL("chrome://fastdial/content/template/fastdial.tpl");
     var template = new JsTemplate.Template(data);
     var html = template.run({
-        search: FdPrefs.getObject("search"),
+        search: fastdial.Prefs.getObject("search"),
         options: options,
         thumbnails: thumbnails
     });
@@ -64,21 +64,21 @@ function initThumbnails() {
 
 function getThumbnails() {
     var thumbs = [];
-    var items = FdStorage.getItems(folder.id, sort);
+    var items = fastdial.Storage.getItems(folder.id, sort);
     perPage = (showBack() ? -1 : 0) + options.width * options.height;
     pageCount = Math.ceil(items.length / perPage);
     for (var i = 0; i < perPage; i++) {
         var properties = items[page * perPage + i];
         if (properties) {
-            var thumb = new FdThumbnail(properties);
+            var thumb = new fastdial.Thumbnail(properties);
             if (!thumb.isLoading() &&
                     !thumb.getImageFile().exists())
-                wnd.FdSnapshot.create(thumb.properties);
+                wnd.fastdial.Snapshot.create(thumb.properties);
             thumbs[i] = thumb;
         }
     }
     if (showBack()) {
-        var back = new FdThumbnail(folder.parent);
+        var back = new fastdial.Thumbnail(folder.parent);
         thumbs.unshift(back);
     }
     return thumbs;
@@ -90,18 +90,18 @@ function getThumbIndex(index) {
     return !sort && page * perPage + (showBack() ? -1 : 0) + parseInt(index);
 }
 function onResize() {
-    var grid = FdDom.get("grid");
-    var gridMargin = parseInt(FdDom.css(grid, "margin-left"));
+    var grid = fastdial.Dom.get("grid");
+    var gridMargin = parseInt(fastdial.Dom.css(grid, "margin-left"));
 
-    var search = FdDom.get("search");
-    var box = FdDom.get(0);
-    var thumbnail = FdDom.child(box, "thumbnail");
-    var thumbnailBorder = parseInt(FdDom.css(thumbnail, "border-top-width"));
-    var thumbnailMargin = parseInt(FdDom.css(thumbnail, "margin-left"));
+    var search = fastdial.Dom.get("search");
+    var box = fastdial.Dom.get(0);
+    var thumbnail = fastdial.Dom.child(box, "thumbnail");
+    var thumbnailBorder = parseInt(fastdial.Dom.css(thumbnail, "border-top-width"));
+    var thumbnailMargin = parseInt(fastdial.Dom.css(thumbnail, "margin-left"));
 
-    var title = FdDom.child(thumbnail, "title");
+    var title = fastdial.Dom.child(thumbnail, "title");
     var width = options.thumbWidth;
-    var height = FdThumbnail.getHeight(width);
+    var height = fastdial.Thumbnail.getHeight(width);
     if (!options.fixed) {
         width = (window.innerWidth - gridMargin * 2) / options.width -
                  thumbnailMargin * 2 - thumbnailBorder * 2;
@@ -109,12 +109,12 @@ function onResize() {
         height = (window.innerHeight - gridMargin * 2 - search.offsetHeight) /
                   options.height - thumbnailMargin * 2 - thumbnailBorder * 2 - title.offsetHeight;
 
-        if (height < FdThumbnail.getHeight(width)) {
-            width = FdThumbnail.getWidth(height);
+        if (height < fastdial.Thumbnail.getHeight(width)) {
+            width = fastdial.Thumbnail.getWidth(height);
         }
     }
-    width = Math.max(width, FdThumbnail.MIN_WIDTH);
-    height = FdThumbnail.getHeight(width);
+    width = Math.max(width, fastdial.Thumbnail.MIN_WIDTH);
+    height = fastdial.Thumbnail.getHeight(width);
 
     width += thumbnailMargin * 2 + thumbnailBorder * 2;
     height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
@@ -126,7 +126,7 @@ function onResize() {
     if (layoutTop < 0) layoutTop = 0;
     if (layoutLeft < 0) layoutLeft = 0;
 
-    FdDom.get("size").innerHTML = 
+    fastdial.Dom.get("size").innerHTML = 
             (options.hideEmpty ? ".empty { visibility: hidden; }" : "") +
             "#layout {" + 
             "margin-top: " + layoutTop + ";" +
@@ -139,10 +139,10 @@ function onResize() {
 }
 
 function onContextMenu(e) {
-    if (FdDom.is(e.target, "search-input")) return;
+    if (fastdial.Dom.is(e.target, "search-input")) return;
     wnd.document.popupNode = e.target;
-    var box = FdDom.parent(e.target, "box");
-    wnd.Fd.showContextMenu(e, box && thumbnails[box.id]);
+    var box = fastdial.Dom.parent(e.target, "box");
+    wnd.fastdial.Overlay.showContextMenu(e, box && thumbnails[box.id]);
     e.preventDefault();
 }
 var source;
@@ -151,10 +151,10 @@ var previewTimeout;
 function onMouseDown(e) {
     hidePreview();
 
-    if (!FdDom.is(e.target, "image")) return;
-    if (!sort) FdDrag.draggable(e.target);
+    if (!fastdial.Dom.is(e.target, "image")) return;
+    if (!sort) fastdial.Drag.draggable(e.target);
 
-    var box = FdDom.parent(e.target, "box");
+    var box = fastdial.Dom.parent(e.target, "box");
     source = thumbnails[box.id];
     if (e.button == 0 && source.properties.preview) {
         previewTimeout = setTimeout(function() {
@@ -164,28 +164,23 @@ function onMouseDown(e) {
 }
 function onMouseUp(e) {
     clearTimeout(previewTimeout);
-    FdDrag.enable();
+    fastdial.Drag.enable();
 }
 function showPreview(thumb) {
-    if (FdDrag.inProgress()) return;
-    FdDrag.disable();
-    var snapshot = thumb.getSnapshotURL();
-    var doc = "<div id='preview'>" + 
-              "<div class='overlay'>" +
-              "<div class='container'>" +
-              "<img src='" + FdCache.getCachedURL(snapshot, "preview") + "'/>" +
-              "</div></div></div>";
-    document.body.appendChild(FdDom.parse(doc));
+    if (fastdial.Drag.inProgress()) return;
+    fastdial.Drag.disable();
+    thumb.openPreview(document);
 }
 function hidePreview() {
-    var preview = FdDom.get("preview");
+    var preview = fastdial.Dom.get("preview");
     if (preview) {
-        FdDom.remove(preview);
+        fastdial.Dom.remove(preview);
     }
 }
 function onDragDrop(e) {
     for (var i = 0; i < options.width * options.height; i++) {
-        if (!isMouseOver(FdDom.get(i), e.pageX - document.body.scrollLeft, e.pageY - document.body.scrollTop)) continue;
+        if (!isMouseOver(fastdial.Dom.get(i), e.pageX - document.body.scrollLeft,
+                                              e.pageY - document.body.scrollTop)) continue;
         var target = thumbnails[i];
         if (target) {
             if (target.properties.isBack || e.ctrlKey && target.properties.isFolder) {
@@ -198,8 +193,7 @@ function onDragDrop(e) {
                 source.properties.thumbIndex = target.properties.thumbIndex;
                 source.save();
                 for (var j = target.properties.thumbIndex; thumbnails[j] &&
-                             thumbnails[j].properties.id != source.properties.id; j++)
-                {
+                     thumbnails[j].properties.id != source.properties.id; j++) {
                     thumbnails[j].properties.thumbIndex++;
                     thumbnails[j].save(); 
                 }
@@ -209,13 +203,13 @@ function onDragDrop(e) {
             source.properties.thumbIndex = getThumbIndex(i);
             source.save();
         }
-        wnd.Fd.updateView();
+        wnd.fastdial.Overlay.updateView();
     }
 }
 function isMouseOver(element, x, y) {
     x += document.body.scrollLeft;
     y += document.body.scrollTop;
-    var position = FdDom.position(element);
+    var position = fastdial.Dom.position(element);
     return x > position.left &&
             y > position.top &&
             x < position.left + element.offsetWidth &&
@@ -225,14 +219,14 @@ function isMouseOver(element, x, y) {
 var currentSearch;
 
 function onClick(e) {
-    if (FdDom.is(e.target, "search-icon")) {
+    if (fastdial.Dom.is(e.target, "search-icon")) {
         currentSearch = e.target;
         e.preventDefault();
-        var menupopup = wnd.FdDom.get("fd-search-menu");
-        var offset = -0.4 * parseFloat(FdDom.css(e.target, "font-size"));
+        var menupopup = wnd.fastdial.Dom.get("fd-search-menu");
+        var offset = -0.4 * parseFloat(fastdial.Dom.css(e.target, "font-size"));
         return menupopup.openPopup(e.target, "after_start", 0, offset, false, true);
     }
-    var box = FdDom.parent(e.target, "box");
+    var box = fastdial.Dom.parent(e.target, "box");
     if (!box || e.button != 0) return;
 
     var thumbnail = thumbnails[box.id];
@@ -242,10 +236,10 @@ function onClick(e) {
             thumbIndex: getThumbIndex(box.id),
             index: -1
         };
-        var thumbnail = new FdThumbnail(properties);
+        var thumbnail = new fastdial.Thumbnail(properties);
         return thumbnail.openProperties();
     }
-    if (FdDom.is(e.target, "image")) {
+    if (fastdial.Dom.is(e.target, "image")) {
         window.focus();
         e.preventDefault();
         var where = !thumbnail.properties.isFolder && options.openIn;
@@ -273,19 +267,19 @@ function onKeyUp(e) {
             if (!scrollMaxX) setPage(page + 1);
             break;
         case e.DOM_VK_ESCAPE:
-            if (FdDom.is(e.target, "search-input")) {
+            if (fastdial.Dom.is(e.target, "search-input")) {
                 e.target.value = null;
             }
             break;
         case e.DOM_VK_RETURN:
-            if (!FdDom.is(e.target, "search-input")) break;
+            if (!fastdial.Dom.is(e.target, "search-input")) break;
 
-            var search = FdPrefs.getObject("search");
+            var search = fastdial.Prefs.getObject("search");
             var searchInputs = document.getElementsByClassName("search-input");
 
             for(var i = 0; i < searchInputs.length; i++) {
                 if (searchInputs[i] == e.target) {
-                    var engine = FdUtils.getSearchEngine(search[i]);
+                    var engine = fastdial.Utils.getSearchEngine(search[i]);
                     var submission = engine.getSubmission(e.target.value, null);
                     document.location.assign(submission.uri.spec);
                 }
@@ -295,7 +289,7 @@ function onKeyUp(e) {
 }
 function setPage(aPage) {
     if (aPage >= pageCount) {
-      aPage = FdDrag.inProgress() ? pageCount : pageCount - 1;
+      aPage = fastdial.Drag.inProgress() ? pageCount : pageCount - 1;
     }
     if (aPage < 0) aPage = 0;
     if (page != aPage) {
@@ -310,17 +304,17 @@ function getFavicon(index) {
 
     thumb.properties.isFolder 
         ? onIconLoad(ICON_FOLDER) 
-        : FdBookmark.getFavicon(thumb.getURL(), onIconLoad);
+        : fastdial.Bookmark.getFavicon(thumb.getURL(), onIconLoad);
 
     function onIconLoad(iconURL) {
-       var box = FdDom.get(index);
+       var box = fastdial.Dom.get(index);
        if (box) {
-           var span = FdDom.child(box, "span");
-           var icon = FdDom.child(span, "img");
+           var span = fastdial.Dom.child(box, "span");
+           var icon = fastdial.Dom.child(span, "img");
            if (!icon) {
                icon = document.createElement("img");
                icon.setAttribute("src", iconURL);
-               FdDom.prepend(span.parentNode, icon);
+               fastdial.Dom.prepend(span.parentNode, icon);
            }
        }
     }

@@ -1,4 +1,4 @@
-var FdDom = {
+fastdial.Dom = {
     regexp: function(aClass) {
         return new RegExp("\\b" + aClass + "\\b");
     },
@@ -16,7 +16,7 @@ var FdDom = {
 
     is: function(element, classOrType) {
         return element.nodeName.toLowerCase() == classOrType ||
-                FdDom.regexp(classOrType).test(element.className);
+                      this.regexp(classOrType).test(element.className);
     },
 
     get: function(id) {
@@ -24,14 +24,15 @@ var FdDom = {
     },
 
     child: function(element, classOrType) {
-        return FdDom.forEach(element, function(element) {
-            return FdDom.is(element, classOrType);
+        var self = this;
+        return this.forEach(element, function(element) {
+            return self.is(element, classOrType);
         });
     },
 
     parent: function(element, classOrType) {
         while (element = element.parentNode) {
-            if (FdDom.is(element, classOrType)) return element;
+            if (this.is(element, classOrType)) return element;
         }
         return null;
     },
@@ -41,13 +42,13 @@ var FdDom = {
     },
 
     addClass: function(element, aClass) {
-        if (!FdDom.regexp(aClass).test(element.className)) {
+        if (!this.regexp(aClass).test(element.className)) {
             element.className += " " + aClass;
         }
     },
 
     removeClass: function(element, aClass) {
-        var regexp = FdDom.regexp("\s?" + aClass);
+        var regexp = this.regexp("\s?" + aClass);
         element.className = element.className.replace(regexp, "");
     },
 

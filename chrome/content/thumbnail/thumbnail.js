@@ -1,15 +1,15 @@
-function FdThumbnail(properties) {
+fastdial.Thumbnail = function(properties) {
     this.properties = properties;
 
     this.getTooltip = function() {
         if (!this.properties.refresh) {
             return this.properties.description;
         }
-        var time = FdCache.getCachedTime(this.getSnapshotURL());
-        return FdUtils.time(time);
+        var time = fastdial.Cache.getCachedTime(this.getSnapshotURL());
+        return fastdial.Utils.time(time);
     };
     this.getURL = function() {
-        return FdStorage.getURL(this.properties);
+        return fastdial.Storage.getURL(this.properties);
     };
     this.getSnapshotURL = function() {
         return this.properties.logo || this.getURL(this.properties);
@@ -20,45 +20,45 @@ function FdThumbnail(properties) {
                 : this.properties.refreshAll;
     };
     this.getImageURL = function() {
-        return FdCache.getCachedURL(this.getSnapshotURL());
+        return fastdial.Cache.getCachedURL(this.getSnapshotURL());
     };
     this.getImageFile = function() {
-        return FdCache.getCachedFile(this.getSnapshotURL());
+        return fastdial.Cache.getCachedFile(this.getSnapshotURL());
     };
     this.isLoading = function() {
-        return wnd.FdLoader.isLoading(this.properties.logo) ||
-                wnd.FdLoader.isLoading(this.getURL());
+        return wnd.fastdial.Loader.isLoading(this.properties.logo) ||
+                wnd.fastdial.Loader.isLoading(this.getURL());
     };
     this.save = function() {
-        FdStorage.saveItem(this.properties);
+        fastdial.Storage.saveItem(this.properties);
     };
     this.open = function(where) {
         this.properties.loadInSidebar
             ? wnd.openWebPanel(this.properties.title, this.properties.url)
-            : FdUtils.openLink(this.getURL(), where);
+            : fastdial.Utils.openLink(this.getURL(), where);
     };
     this.openAll = function() {
-        var children = FdStorage.getItems(this.properties.id);
+        var children = fastdial.Storage.getItems(this.properties.id);
         for (var i in children) {
             var child = children[i];
             if (child.loadInSidebar) {
                 wnd.openWebPanel(child.title, child.url);
             }
             else if (!child.isFolder) {
-                FdUtils.openLink(child.url, "tabshifted");
+                fastdial.Utils.openLink(child.url, "tabshifted");
             }
         }
     };
     function confirmRemove() {
         var title = this.properties.title;
-        var message = FdBundle.getString("remove", [title]);
+        var message = fastdial.Bundle.getString("remove", [title]);
         if (this.properties.isFolder) {
-            var children = FdStorage.getItems(this.properties.id);
+            var children = fastdial.Storage.getItems(this.properties.id);
             if (children.length) {
-                message = FdBundle.getString("removeNonEmptyFolder", [title]);
+                message = fastdial.Bundle.getString("removeNonEmptyFolder", [title]);
             }
         }
-        return FdUtils.confirm(message);
+        return fastdial.Utils.confirm(message);
     }
 
     this.remove = function(confirm) {
@@ -66,24 +66,33 @@ function FdThumbnail(properties) {
                 confirm && !confirmRemove.call(this)) return false;
 
         if (this.properties.isFolder) {
-          var children = FdStorage.getItems(this.properties.id);
+          var children = fastdial.Storage.getItems(this.properties.id);
           for(var i in children) {
-            var thumbnail = new FdThumbnail(children[i]);
+            var thumbnail = new this(children[i]);
             thumbnail.remove();
           }
         }
         var snapshot = this.getSnapshotURL();
-        wnd.FdLoader.stop(snapshot);
-        FdCache.remove(snapshot, "preview");
-        FdCache.remove(snapshot);
-        FdStorage.removeItem(this.properties.id);
-        wnd.Fd.updateView();
+        wnd.fastdial.Loader.stop(snapshot);
+        fastdial.Cache.remove(snapshot, "preview");
+        fastdial.Cache.remove(snapshot);
+        fastdial.Storage.removeItem(this.properties.id);
+        wnd.fastdial.Overlay.updateView();
         return true;
+    };
+
+    this.openPreview = function(doc) {
+        var previewDoc = "<div id='preview'>" + 
+                         "<div class='overlay'>" +
+                         "<div class='container'>" +
+                         "<img src='" + fastdial.Cache.getCachedURL(this.getSnapshotURL(), "preview") + "'/>" +
+                         "</div></div></div>";
+        doc.body.appendChild(fastdial.Dom.parse(previewDoc));
     };
     this.refresh = function() {
         if (!this.properties.isBack) {
-            wnd.FdSnapshot.create(this.properties);
-            wnd.Fd.updateView();
+            wnd.fastdial.Snapshot.create(this.properties);
+            wnd.fastdial.Overlay.updateView();
         }
     };
     this.openProperties = function() {
@@ -93,11 +102,13 @@ function FdThumbnail(properties) {
         }
     };
 }
-FdThumbnail.RATIO = 0.75;
-FdThumbnail.MIN_WIDTH = 100;
-FdThumbnail.getHeight = function(width) {
-    return Math.floor(width * FdThumbnail.RATIO);
-};
-FdThumbnail.getWidth = function(height) {
-    return Math.floor(height / FdThumbnail.RATIO);
-};
+
+fastdial.Thumbnail.RATIO = 0.75;
+fastdial.Thumbnail.MIN_WIDTH = 100;
+
+fastdial.Thumbnail.getHeight = function(width) {
+    return Math.floor(width * fastdial.Thumbnail.RATIO);
+}
+fastdial.Thumbnail.getWidth = function(height) {
+    return Math.floor(height / fastdial.Thumbnail.RATIO);
+}

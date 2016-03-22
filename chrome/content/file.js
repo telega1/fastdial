@@ -1,4 +1,4 @@
-var FdPrefs = new function() {
+fastdial.Prefs = new function() {
     const FASTDIAL = "extensions.fastdial.";
     var prefs = Components.classes["@mozilla.org/preferences-service;1"]
             .getService(Components.interfaces.nsIPrefBranch);
@@ -53,10 +53,10 @@ var FdPrefs = new function() {
         this.setGlobalInt(FASTDIAL + name, value);
     }
     this.getObject = function(name) {
-        return FdUtils.fromJSON(this.getString(name)) || {};
+        return fastdial.Utils.fromJSON(this.getString(name)) || {};
     }
     this.setObject = function(name, value) {
-        this.setString(name, FdUtils.toJSON(value));
+        this.setString(name, fastdial.Utils.toJSON(value));
     }
     this.clearGlobal = function(name) {
         try {
@@ -67,7 +67,8 @@ var FdPrefs = new function() {
         this.clearGlobal(FASTDIAL + name);
     }
 }
-var FdFile = {
+
+fastdial.File = {
     RDWR_CREATE_TRUNCATE: 0x04 | 0x08 | 0x20,
 
     getNsiFile: function(path) {
@@ -99,7 +100,7 @@ var FdFile = {
                 .get("ProfD", Components.interfaces.nsIFile);
         dir.append("fastdial");
         if (!dir.exists()) {
-            FdFile.createDirectory(dir);
+            this.createDirectory(dir);
         }
         return dir;
     },
@@ -112,7 +113,7 @@ var FdFile = {
     writeFile: function(file, data) {
         var out = Components.classes["@mozilla.org/network/file-output-stream;1"]
                 .createInstance(Components.interfaces.nsIFileOutputStream);
-        out.init(file, FdFile.RDWR_CREATE_TRUNCATE, 0x1b6, 0);
+        out.init(file, this.RDWR_CREATE_TRUNCATE, 0x1b6, 0);
         out.write(data, data.length);
         out.close();
     },
@@ -187,7 +188,7 @@ var FdFile = {
             zipReader.extract(entry, target);
         }
         // Remove "readonly" attribute
-        FdFile.forEachFile(dir, function(file) {
+        this.forEachFile(dir, function(file) {
           file.permissions = 438;
         });
     },
@@ -195,15 +196,16 @@ var FdFile = {
     zip: function(file, dir) {
         var zipWriter = Components.classes["@mozilla.org/zipwriter;1"]
                 .createInstance(Components.interfaces.nsIZipWriter);
-        zipWriter.open(file, FdFile.RDWR_CREATE_TRUNCATE);
-        FdFile.forEachFile(dir, function(f) {
+        zipWriter.open(file, this.RDWR_CREATE_TRUNCATE);
+        this.forEachFile(dir, function(f) {
             zipWriter.addEntryFile(f.leafName,
                     zipWriter.COMPRESSION_DEFAULT, f, false);
         });
         zipWriter.close();
     }
 }
-var FdURL = {
+
+fastdial.URL = {
     getNsiURL: function(url) {
         var nsiUrl = Components.classes["@mozilla.org/network/standard-url;1"]
                 .createInstance(Components.interfaces.nsIURL);
@@ -220,7 +222,7 @@ var FdURL = {
 
     getScheme: function(url) {
         if (url) {
-            return FdURL.getNsiURL(url).scheme;
+            return this.getNsiURL(url).scheme;
         }
     },
 
@@ -247,7 +249,7 @@ var FdURL = {
     },
 
     removeFromCache: function(doc, url) {
-        var uri = FdURL.getNsiURI(url);
+        var uri = this.getNsiURI(url);
         try {
             var tools = Components.classes["@mozilla.org/image/tools;1"]
                                   .getService(Components.interfaces.imgITools);
@@ -257,26 +259,27 @@ var FdURL = {
         catch(e) {}
     }
 }
-var FdCache = {
+
+fastdial.Cache = {
     getDirectory: function(folder) {
-        var dir = FdFile.getDataDirectory();
+        var dir = fastdial.File.getDataDirectory();
         dir.append("cache");
         if (folder) {
             dir.append(folder);
         }
         if (!dir.exists()) {
-            FdFile.createDirectory(dir);
+            fastdial.File.createDirectory(dir);
         }
         return dir;
     },
 
     getCachedName: function(url) {
-        if (url) return FdUtils.md5(url);
+        if (url) return fastdial.Utils.md5(url);
         return null;
     },
 
     getCachedURL: function(url, folder) {
-        var name = FdCache.getCachedName(url);
+        var name = this.getCachedName(url);
         if (!name) return null;
         var cacheUrl = "chrome://fastdial-profile/content/cache/";
         if (folder) cacheUrl += folder + "/";
@@ -286,16 +289,16 @@ var FdCache = {
     // Folder parameter is optional
 
     getCachedFile: function(url, folder) {
-        var name = FdCache.getCachedName(url);
+        var name = this.getCachedName(url);
         if (!name) return null;
-        var file = FdCache.getDirectory(folder);
+        var file = this.getDirectory(folder);
         file.append(name);
         return file;
     },
 
     getCachedTime: function(url, folder) {
         try {
-            var file = FdCache.getCachedFile(url, folder);
+            var file = this.getCachedFile(url, folder);
             return file.lastModifiedTime;
         }
         catch(e) {
@@ -303,39 +306,40 @@ var FdCache = {
     },
 
     save: function(url, data, folder) {
-        var file = FdCache.getCachedFile(url, folder);
-        FdFile.writeFile(file, data || FdURL.readURL(url));
+        var file = this.getCachedFile(url, folder);
+        fastdial.File.writeFile(file, data || fastdial.URL.readURL(url));
     },
 
     remove: function(url, folder) {
-        var file = FdCache.getCachedFile(url, folder);
+        var file = this.getCachedFile(url, folder);
         try {
             file.remove(false);
-            var cached = FdCache.getCachedURL(url, folder);
-            FdUtils.forEachTab(function(wnd) {
-                FdURL.removeFromCache(
+            var cached = this.getCachedURL(url, folder);
+            fastdial.Utils.forEachTab(function(wnd) {
+                fastdial.URL.removeFromCache(
                            wnd.document, cached);
             });
         }
         catch(e) {}
     }
 }
-var FdTheme = {
+
+fastdial.Theme = {
     getDirectory: function(name) {
-        var dir = FdFile.getDataDirectory();
+        var dir = fastdial.File.getDataDirectory();
         dir.append("themes");
         if (name) {
             dir.append(name);
         }
         if (!dir.exists()) {
-            FdFile.createDirectory(dir);
+            fastdial.File.createDirectory(dir);
         }
         return dir;
     },
 
     remove: function(name) {
         if (!name) return;
-        var dir = FdTheme.getDirectory(name);
+        var dir = this.getDirectory(name);
         try {
             dir.remove(true);
         }
@@ -344,18 +348,18 @@ var FdTheme = {
     },
 
     copy: function(source, target) {
-        FdTheme.remove(target);
+        this.remove(target);
         if (source) {
-            var dir = FdTheme.getDirectory(source);
+            var dir = this.getDirectory(source);
             dir.copyTo(dir.parent, target);
         }
     },
 
     getTitle: function(name) {
-        var file = FdTheme.getDirectory(name);
+        var file = this.getDirectory(name);
         file.append("style.css");
         try {
-            var content = FdFile.readFile(file);
+            var content = fastdial.File.readFile(file);
             var title = /@title (.*)/.exec(content);
             if (title) return title[1];
         }
@@ -365,12 +369,13 @@ var FdTheme = {
     },
 
     getInfos: function() {
+        var self = this;
         var infos = [];
-        var dir = FdTheme.getDirectory();
-        FdFile.forEachFile(dir, function(file) {
+        var dir = this.getDirectory();
+        fastdial.File.forEachFile(dir, function(file) {
             var name = file.leafName;
             if (name == "current") return;
-            var title = FdTheme.getTitle(name) || name.replace(/^~/, "");
+            var title = self.getTitle(name) || name.replace(/^~/, "");
             if (/^~/.test(name)) title = "*" + title;
             infos.push({
                 name: name,
@@ -383,15 +388,15 @@ var FdTheme = {
     },
 
     setStyle: function(style) {
-        var file = FdTheme.getDirectory("current");
+        var file = this.getDirectory("current");
         file.append("style.css");
-        FdFile.writeFile(file, style);
+        fastdial.File.writeFile(file, style);
     },
 
     import: function(file) {
         var name = file.leafName;
-        FdTheme.remove(name);
-        var theme = FdTheme.getDirectory(name);
-        FdFile.unzip(file, theme);
+        this.remove(name);
+        var theme = this.getDirectory(name);
+        fastdial.File.unzip(file, theme);
     }
 };
