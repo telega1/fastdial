@@ -172,14 +172,16 @@
         }
 
         function onChangeURL() {
-            var search;
+            var search = "";
             var isFolder = fastdial.Dom.get("isFolder").value;
             if (isFolder) {
                 search = fastdial.Dom.get("title").value;
             } else {
                 var url = fastdial.Dom.get("url");
-                var nsiURL = fastdial.URL.getNsiURL(url.value);
-                search = nsiURL.host.replace(/^www\./, "");
+                if (url.value) {
+                    var nsiURL = fastdial.URL.getNsiURL(url.value);
+                    search = nsiURL.host.replace(/^www\./, "");
+                }
             }
             var link = fastdial.Dom.get("link");
             link.href = link.tooltipText = "http://userlogos.org/logos/top-rated?search=" +
