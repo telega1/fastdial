@@ -394,8 +394,8 @@ fastdial.Theme = {
 
     import: function(file) {
         var name = file.leafName;
-        this.remove(name);
-        var theme = this.getDirectory(name);
+        fastdial.Theme.remove(name);
+        var theme = fastdial.Theme.getDirectory(name);
         fastdial.File.unzip(file, theme);
     }
 };
