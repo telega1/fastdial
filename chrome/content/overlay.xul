@@ -265,18 +265,19 @@
             },
 
             addPage: function(e) {
-                fastdial.Dom.get("contentAreaContextMenu").hidePopup();
-                fastdial.Dom.get("fd-menu").hidePopup();
-                var folderId = e.target.getAttribute("value") ||
-                                                fastdial.Bookmark.getHome().id;
-                var bookmark = {
-                    url: content.location.href,
-                    title: content.document.title,
-                    folderId: folderId,
-                    index: -1
+                var result = {};
+                openDialog("chrome://fastdial/content/folder.xul",
+                                            "", "chrome, centerscreen, modal", result);
+                if (result.folderId) {
+                    var bookmark = {
+                        url: content.location.href,
+                        title: content.document.title,
+                        folderId: result.folderId,
+                        index: -1
+                    }
+                    fastdial.Bookmark.saveBookmark(bookmark);
+                    fastdial.Overlay.updateView();
                 }
-                fastdial.Bookmark.saveBookmark(bookmark);
-                fastdial.Overlay.updateView();
             },
 
             updateView: function() {
