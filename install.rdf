@@ -5,7 +5,7 @@
     <Description about="urn:mozilla:install-manifest">
         <em:unpack>true</em:unpack>
         <em:id>fastdial@telega.phpnet.us</em:id>
-        <em:version>4.14.1</em:version>
+        <em:version>4.14.3</em:version>
         <em:type>2</em:type>
 
         <em:targetApplication>
