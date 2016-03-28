@@ -11,7 +11,7 @@
         ondialogaccept="return onAccept(event);"
         title="&folder;"
         onload="initialize();"
-        style="width: 24em; height: 18em;"
+        style="width: 48em; height: 36em;"
         persist="screenX screenY width height">
 
     <hbox flex="1">
