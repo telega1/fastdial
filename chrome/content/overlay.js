@@ -125,7 +125,7 @@ fastdial.Overlay = {
             case "fd-move":
                 var result = {};
                 openDialog("chrome://fastdial/content/folder.xul",
-                                      "", "chrome, centerscreen, modal", result);
+                                      "", "chrome, centerscreen, modal, resizable", result);
                 if (result.folderId && 
                                result.folderId != thumbnail.properties.id) {
                     thumbnail.properties.folderId = result.folderId;
@@ -207,7 +207,7 @@ fastdial.Overlay = {
     addPage: function(e) {
         var result = {};
         openDialog("chrome://fastdial/content/folder.xul",
-                                    "", "chrome, centerscreen, modal", result);
+                                    "", "chrome, centerscreen, modal, resizable", result);
         if (result.folderId) {
             var bookmark = {
                 url: content.location.href,

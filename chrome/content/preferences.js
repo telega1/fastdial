@@ -539,7 +539,7 @@ function openHelp() {
 function selectHomeFolder() {
     var result = {};
     openDialog("chrome://fastdial/content/folder.xul",
-                           "", "chrome, centerscreen, modal", result);
+                           "", "chrome, centerscreen, modal, resizable", result);
     if (result.folderId) {
         fastdial.Bookmark.setHome(result.folderId);
         fastdial.Dom.get("folder").value = fastdial.Bookmark.getHome().title;
