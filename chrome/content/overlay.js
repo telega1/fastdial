@@ -17,8 +17,9 @@ fastdial.Overlay = {
                  fastdial.Prefs.getBool("enable")) arguments[0] = fastdial.Info.URI;
             return fastdial.Overlay.addTab.apply(gBrowser, arguments);
         }
+        var regExp = new RegExp("^" + fastdial.Info.URI); 
         window.isBlankPageURL = function() {
-            return String.substr(arguments[0], 0, fastdial.Info.URI.length) == fastdial.Info.URI ||
+            return regExp.test(arguments[0]) ||
                    fastdial.Overlay.isBlankPageURL.apply(window, arguments);
         }
     },
