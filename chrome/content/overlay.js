@@ -187,7 +187,7 @@ fastdial.Overlay = {
             if (icon) {
                 menuitem.setAttribute("class", "menuitem-iconic");
                 menuitem.setAttribute("image", icon.spec);
-                menuitem.setAttribute("onclick", "fastdial.Overlay.setSearchEngine(event);");
+                menuitem.addEventListener("command", fastdial.Overlay.setSearchEngine, false);
             }
             menupopup.appendChild(menuitem);
         }
