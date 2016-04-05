@@ -6,7 +6,7 @@
 <?xul-overlay href="chrome://browser/content/places/placesOverlay.xul"?>
 <!DOCTYPE dialog SYSTEM "chrome://fastdial/locale/fastdial.dtd">
 
-<dialog id="folder"
+<dialog id="fd-dialog-folder"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="return onAccept(event);"
         title="&folder;"
