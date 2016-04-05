@@ -76,9 +76,7 @@ function getThumbIndex(index) {
     return !sort && page * perPage + (showBack() ? -1 : 0) + parseInt(index);
 }
 function onResize() {
-    var grid = fastdial.Dom.get("grid");
-    var gridMargin = parseInt(fastdial.Dom.css(grid, "margin-left"));
-
+    var bodyPadding = parseInt(fastdial.Dom.css(document.body, "padding-left"));
     var search = fastdial.Dom.get("search");
     var box = fastdial.Dom.get(0);
     var thumbnail = fastdial.Dom.child(box, "thumbnail");
@@ -89,10 +87,10 @@ function onResize() {
     var width = options.thumbWidth;
     var height = fastdial.Thumbnail.getHeight(width);
     if (!options.fixed) {
-        width = (window.innerWidth - gridMargin * 2) / options.width -
+        width = (window.innerWidth - bodyPadding * 2) / options.width -
                  thumbnailMargin * 2 - thumbnailBorder * 2;
 
-        height = (window.innerHeight - gridMargin * 2 - search.offsetHeight) /
+        height = (window.innerHeight - bodyPadding * 2 - search.offsetHeight) /
                   options.height - thumbnailMargin * 2 - thumbnailBorder * 2 - title.offsetHeight;
 
         if (height < fastdial.Thumbnail.getHeight(width)) {
@@ -106,15 +104,15 @@ function onResize() {
     height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
 
     // Center #layout
-    var layoutTop = (window.innerHeight - gridMargin * 2 -
+    var layoutTop = (window.innerHeight - bodyPadding * 2 -
                      height * options.height - search.offsetHeight) / 2;
-    var layoutLeft = (window.innerWidth - gridMargin * 2 - width * options.width) / 2;
+    var layoutLeft = (window.innerWidth - bodyPadding * 2 - width * options.width) / 2;
     if (layoutTop < 0) layoutTop = 0;
     if (layoutLeft < 0) layoutLeft = 0;
 
     fastdial.Dom.get("size").innerHTML = 
             (options.hideEmpty ? ".empty { visibility: hidden; }" : "") +
-            "#layout {" + 
+            "#grid {" + 
             "margin-top: " + layoutTop + ";" +
             "margin-left: " + layoutLeft + ";" +
             "}" +

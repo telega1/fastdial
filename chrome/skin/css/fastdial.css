@@ -1,5 +1,6 @@
 body {
     margin: 0px;
+    padding: 4px;
     font-family: Tahoma;
     font-size: 11px;
     text-align: center;
@@ -34,12 +35,8 @@ a {
     padding: 2px;
     background: transparent;
     border: 1px solid lightgray;
-    margin-top: 8px;
+    margin: 4px;
     width: 250px;
-}
-
-#grid {
-  margin: 4px;
 }
 
 .box {
