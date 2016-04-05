@@ -24,7 +24,7 @@ fastdial.Bookmark = new function() {
         if (ids.length) {
             return this.getBookmark(ids[0]);
         } else {
-            var root = getRoot();
+            var root = createRoot();
             this.setAnnotation(root.id, this.HOME, "true");
             return root;
         }
@@ -34,31 +34,6 @@ fastdial.Bookmark = new function() {
         var oldHome = this.getHome();
         this.removeAnnotation(oldHome.id, this.HOME);
         this.setAnnotation(id, this.HOME, "true");
-    }
-
-    function getRoot() {
-        var root;
-        try {
-            var rootId = fastdial.Prefs.getInt("root");
-            if (rootId) {
-                root = self.getBookmark(rootId);
-                fastdial.Prefs.clear("root");
-            }
-        } catch(e) {}
-
-        if (!root || !root.isFolder) {
-            root = getLegacyRoot() || createRoot();
-        }
-        return root;
-    }
-
-    function getLegacyRoot() {
-        var bookmarks = self.getBookmarks(self.BOOKMARKS_MENU);
-        for (var i in bookmarks) {
-            var bookmark = bookmarks[i];
-            if (bookmark.isFolder &&
-                    bookmark.title == fastdial.Info.NAME) return bookmark;
-        }
     }
 
     function createRoot() {
