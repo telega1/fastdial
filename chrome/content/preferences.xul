@@ -71,10 +71,6 @@
                     <checkbox id="hideBack" label="&hideBackLinks;"
                               oncommand="saveOptions();"/>
                 </hbox>
-                <hbox>
-                    <checkbox id="dragndrop"
-                              label="&dragndrop;" oncommand="saveOptions();"/>
-                </hbox>
                 <separator/>
                 <grid>
                     <rows>

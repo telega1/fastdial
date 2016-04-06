@@ -173,19 +173,11 @@ function onDragDrop(e) {
                 delete source.properties.thumbIndex;
                 source.save();
             }
-            else if (options.dragndrop) {
+            else {
                 [source.properties.thumbIndex, target.properties.thumbIndex] =
                 [target.properties.thumbIndex, source.properties.thumbIndex];
                 target.save();
                 source.save();
-            } else {
-                source.properties.thumbIndex = target.properties.thumbIndex;
-                source.save();
-                for (var j = target.properties.thumbIndex; thumbnails[j] &&
-                     thumbnails[j].properties.id != source.properties.id; j++) {
-                    thumbnails[j].properties.thumbIndex++;
-                    thumbnails[j].save(); 
-                }
             }
         }
         else {
