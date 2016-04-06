@@ -253,7 +253,7 @@ function onKeyUp(e) {
             if (!scrollMaxY) setPage(page - 1);
             break;
         case e.DOM_VK_PAGE_DOWN:
-            if (!scrollMaxX) setPage(page + 1);
+            if (!scrollMaxY) setPage(page + 1);
             break;
         case e.DOM_VK_ESCAPE:
             if (fastdial.Dom.is(e.target, "search-input")) {
