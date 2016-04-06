@@ -1,4 +1,4 @@
-<!ENTITY add "Ajouter">
+﻿<!ENTITY add "Ajouter">
 <!ENTITY folder "Dossier">
 <!ENTITY bookmark "Marque-page">
 <!ENTITY sort "Trier">
@@ -72,3 +72,4 @@
 <!ENTITY move "Déplacer">
 <!ENTITY round "Arrondis">
 <!ENTITY shadow "Ombre">
+<!ENTITY dragndrop "Old drag-n-drop">
