@@ -33,6 +33,7 @@ function initOptions() {
     updateThumbHeight();
     fastdial.Dom.get("hideEmpty").checked = options.hideEmpty;
     fastdial.Dom.get("hideBack").checked = options.hideBack;
+    fastdial.Dom.get("dragndrop").checked = options.dragndrop;
     fastdial.Utils.selectItem("openIn", options.openIn);
     fastdial.Dom.get("shortcutKey").value = options.shortcutKey || "";
     fastdial.Utils.selectItem("timeout", options.timeout);
@@ -47,6 +48,7 @@ function saveOptions() {
     options.fixed = fastdial.Dom.get("fixed").checked;
     options.hideEmpty = fastdial.Dom.get("hideEmpty").checked;
     options.hideBack = fastdial.Dom.get("hideBack").checked;
+    options.dragndrop = fastdial.Dom.get("dragndrop").checked;
     options.openIn = fastdial.Dom.get("openIn").value;
     options.shortcutKey = fastdial.Dom.get("shortcutKey").value;
     options.timeout = fastdial.Dom.get("timeout").value;

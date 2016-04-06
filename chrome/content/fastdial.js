@@ -173,7 +173,12 @@ function onDragDrop(e) {
                 delete source.properties.thumbIndex;
                 source.save();
             }
-            else {
+            else if (options.dragndrop) {
+                [source.properties.thumbIndex, target.properties.thumbIndex] =
+                [target.properties.thumbIndex, source.properties.thumbIndex];
+                target.save();
+                source.save();
+            } else {
                 source.properties.thumbIndex = target.properties.thumbIndex;
                 source.save();
                 for (var j = target.properties.thumbIndex; thumbnails[j] &&
