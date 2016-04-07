@@ -106,6 +106,7 @@ div.thumbnail:hover .title, .hover .title {
     width: 16px;
     height: 16px;
     vertical-align: bottom;
+    margin-right: 2px;
 }
 
 #preview .overlay, #preview .container {

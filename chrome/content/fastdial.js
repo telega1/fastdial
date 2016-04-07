@@ -30,20 +30,94 @@ hiddenBox.addEventListener("fastdial.reload", onReload, false);
 
 initThumbnails();
 
+function createDOM(search, options, thumbnails) {
+    fastdial.Dom.clear(document.body);
+
+    var div = document.createElement("div");
+    div.setAttribute("id", "search");
+    document.body.appendChild(div);
+
+    for(var i in search) { 
+        var engine = fastdial.Utils.getSearchEngine(this.search[i]);
+        if (engine) {
+            var icon = engine.iconURI ? engine.iconURI.spec : "chrome://fastdial/skin/icons/fastdial.png";
+            var img = document.createElement("img");
+            img.setAttribute("class", "search-icon");
+            img.setAttribute("src", icon);
+            div.appendChild(img);
+            var input = document.createElement("input");
+            input.setAttribute("class", "search-input");
+            input.setAttribute("type", "text");
+            div.appendChild(input);
+        }
+    }
+
+
+    var table = document.createElement("table");
+    table.setAttribute("id", "grid");
+    document.body.appendChild(table);
+
+    for(var i = 0; i < options.width * options.height; i++) {
+        var tr;
+        if (i % options.width == 0) {
+            tr = document.createElement("tr");
+            table.appendChild(tr);
+        }
+        var td = document.createElement("td");
+        tr.appendChild(td);
+
+        var thumbnail = thumbnails[i];
+
+        var div1 = document.createElement("div");
+        div1.setAttribute("id", i);
+        div1.setAttribute("class", "box " + (!thumbnail ? "empty" : ""));
+        div1.setAttribute("title", thumbnail && thumbnail.getTooltip() || "");
+        td.appendChild(div1);
+
+        var div2 = document.createElement("div");
+        div2.setAttribute("class", "thumbnail");
+        div1.appendChild(div2);
+
+        div3 = document.createElement("div");
+        div3.setAttribute("class", "title");
+        div2.appendChild(div3);
+
+        if (thumbnail) {
+            var a = document.createElement("a");
+            a.setAttribute("href", thumbnail.getURL());
+            div2.appendChild(a);
+
+            var isBack = thumbnail.properties.isBack;
+            var div4 = document.createElement("div");
+            div4.setAttribute("class", "background " + (isBack ? "back" : ""));
+            a.appendChild(div4);
+
+            if (!isBack && !thumbnail.isLoading()) {
+                var div5 = document.createElement("div");
+                div5.setAttribute("class", "body");
+                a.appendChild(div5);
+                var img1 = document.createElement("img");
+                img1.setAttribute("class", "image");
+                img1.setAttribute("src", thumbnail.getImageURL());
+                div5.appendChild(img1);
+            }
+            var div6 = document.createElement("div");
+            div3.appendChild(div6);
+            var span = document.createElement("span");
+            div6.appendChild(span);
+            var text = document.createTextNode(
+                              thumbnail.properties.title || "");
+            span.appendChild(text);
+        }
+    }
+}
+
 function initThumbnails() {
     options = fastdial.Prefs.getObject("options");
     sort = fastdial.Prefs.getString("sort");
     thumbnails = getThumbnails();
 
-    var data = fastdial.URL.readURL("chrome://fastdial/content/template/fastdial.tpl");
-    var template = new JsTemplate.Template(data);
-    var html = template.run({
-        search: fastdial.Prefs.getObject("search"),
-        options: options,
-        thumbnails: thumbnails
-    });
-    document.body.innerHTML = html;
-
+    createDOM(fastdial.Prefs.getObject("search"), options, thumbnails);
     for (var i in thumbnails) getFavicon(i);
     onResize();
 }
@@ -69,12 +143,15 @@ function getThumbnails() {
     }
     return thumbs;
 }
+
 function showBack() {
     return !options.hideBack && folder.parent;
 }
+
 function getThumbIndex(index) {
     return !sort && page * perPage + (showBack() ? -1 : 0) + parseInt(index);
 }
+
 function onResize() {
     var bodyPadding = parseInt(fastdial.Dom.css(document.body, "padding-left"));
     var search = fastdial.Dom.get("search");
@@ -103,23 +180,23 @@ function onResize() {
     width += thumbnailMargin * 2 + thumbnailBorder * 2;
     height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
 
-    // Center #layout
-    var layoutTop = (window.innerHeight - bodyPadding * 2 -
-                     height * options.height - search.offsetHeight) / 2;
-    var layoutLeft = (window.innerWidth - bodyPadding * 2 - width * options.width) / 2;
-    if (layoutTop < 0) layoutTop = 0;
-    if (layoutLeft < 0) layoutLeft = 0;
+    // Center #grid
+    var gridTop = (window.innerHeight - bodyPadding * 2 -
+                   height * options.height - search.offsetHeight) / 2;
+    var gridLeft = (window.innerWidth - bodyPadding * 2 - width * options.width) / 2;
+    if (gridTop < 0) gridTop = 0;
+    if (gridLeft < 0) gridLeft = 0;
 
-    fastdial.Dom.get("size").innerHTML = 
-            (options.hideEmpty ? ".empty { visibility: hidden; }" : "") +
-            "#grid {" + 
-            "margin-top: " + layoutTop + ";" +
-            "margin-left: " + layoutLeft + ";" +
-            "}" +
-            ".box {" +
-            "width: " + width + ";" +
-            "height: " + height + ";" +
-            "}";
+    var sheet = document.styleSheets[2];
+    for(var i = sheet.cssRules.length; i--; i >= 0) sheet.deleteRule(i);
+
+    if (options.hideEmpty) sheet.insertRule(".empty { visibility: hidden; }", 0);
+    sheet.insertRule("#grid {" +
+                     "margin-top: " + gridTop + ";" +
+                     "margin-left: " + gridLeft + ";" + "}", 0);
+    sheet.insertRule(".box {" +
+                     "width: " + width + ";" +
+                     "height: " + height + ";" + "}", 0);
 }
 
 function onContextMenu(e) {
@@ -129,6 +206,7 @@ function onContextMenu(e) {
     wnd.fastdial.Overlay.showContextMenu(e, box && thumbnails[box.id]);
     e.preventDefault();
 }
+
 var source;
 var previewTimeout;
 
@@ -146,21 +224,25 @@ function onMouseDown(e) {
         }, 500);
     }
 }
+
 function onMouseUp(e) {
     clearTimeout(previewTimeout);
     fastdial.Drag.enable();
 }
+
 function showPreview(thumb) {
     if (fastdial.Drag.inProgress()) return;
     fastdial.Drag.disable();
     thumb.openPreview(document);
 }
+
 function hidePreview() {
     var preview = fastdial.Dom.get("preview");
     if (preview) {
         fastdial.Dom.remove(preview);
     }
 }
+
 function onDragDrop(e) {
     for (var i = 0; i < options.width * options.height; i++) {
         if (!isMouseOver(fastdial.Dom.get(i), e.pageX - document.body.scrollLeft,
@@ -187,6 +269,7 @@ function onDragDrop(e) {
         wnd.fastdial.Overlay.updateView();
     }
 }
+
 function isMouseOver(element, x, y) {
     x += document.body.scrollLeft;
     y += document.body.scrollTop;
@@ -228,6 +311,7 @@ function onClick(e) {
     }
     return null;
 }
+
 const TIMEOUT_WHEEL = 250;
 var wheelTime = 0;
 
@@ -239,6 +323,7 @@ function onMouseWheel(e) {
         setPage(page + e.detail / Math.abs(e.detail));
     }
 }
+
 function onKeyUp(e) {
     switch (e.keyCode) {
         case e.DOM_VK_PAGE_UP:
@@ -268,6 +353,7 @@ function onKeyUp(e) {
             break;
     }
 }
+
 function setPage(aPage) {
     if (aPage >= pageCount) {
       aPage = fastdial.Drag.inProgress() ? pageCount : pageCount - 1;

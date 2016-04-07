@@ -432,9 +432,20 @@ function getStyle(title) {
     style["div.thumbnail:hover .title img, .hover .title img"] = {
         "display" : fastdial.Dom.get("hover.favicon").checked ? "inline" : "none"
     }
-    var data = fastdial.URL.readURL("chrome://fastdial/content/template/style.tpl");
-    var template = new JsTemplate.Template(data);
-    return template.run({ title: title, style: style });
+    return createText(title, style);
+}
+
+function createText(title, style) {
+  var result = "/**\r\n* @title " + (title || "") + "\r\n*/\r\n";
+  for(var selector in style) {
+    var props = style[selector];
+    result += selector + " {\r\n";
+    for(var name in props) {
+      result += "  " + name + ": " + props[name] + ";\r\n";
+    }
+    result += "}\r\n";
+  }
+  return result;
 }
 
 function createImageURL(id) {
