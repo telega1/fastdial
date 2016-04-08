@@ -114,14 +114,16 @@ function browseImage(id) {
 
 function onAccept() {
     var props = getProperties();
-    if (properties.isFolder != props.isFolder) {
+
+    if ((props.isFolder && !props.title) ||
+        (!props.isFolder && !props.url)) return;
+
+    if (properties.isFolder && !props.isFolder) {
         var children = properties.isFolder &&
                 fastdial.Storage.getItems(properties.id);
         if (!thumbnail.remove(children && children.length)) return false;
         delete properties.id;
     }
-    if ((props.isFolder && !props.title) ||
-        (!props.isFolder && !props.url)) return thumbnail.remove();
 
     var isRefreshNeeded =
             props.logo != properties.logo ||
