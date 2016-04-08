@@ -50,7 +50,9 @@ fastdial.Loader = new function() {
             browser.parentNode.removeChild(browser);
             processQueue();
         };
-        browser.timeout = setTimeout(onLoad, TIMEOUT_LOAD);
+        browser.timeout = setTimeout(function() {
+            onLoad();
+        }, TIMEOUT_LOAD);
         browser.addEventListener("load", onLoad, true);
         function onLoad() {
             clearTimeout(browser.timeout);
