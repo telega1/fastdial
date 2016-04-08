@@ -88,11 +88,12 @@ function createDOM(search, options, thumbnails) {
             div2.appendChild(a);
 
             var isBack = thumbnail.properties.isBack;
-            var div4 = document.createElement("div");
-            div4.setAttribute("class", "background " + (isBack ? "back" : ""));
-            a.appendChild(div4);
-
-            if (!isBack && !thumbnail.isLoading()) {
+            if (isBack || thumbnail.isLoading()) {
+                var div4 = document.createElement("div");
+                div4.setAttribute("class", "background " + (isBack ? "back" : ""));
+                a.appendChild(div4);
+            }
+            else {
                 var div5 = document.createElement("div");
                 div5.setAttribute("class", "body");
                 a.appendChild(div5);
@@ -188,8 +189,7 @@ function onResize() {
     if (gridLeft < 0) gridLeft = 0;
 
     var sheet = document.styleSheets[2];
-    for(var i = sheet.cssRules.length; i--; i >= 0) sheet.deleteRule(i);
-
+    while(sheet.cssRules.length > 0) sheet.deleteRule(0);
     if (options.hideEmpty) sheet.insertRule(".empty { visibility: hidden; }", 0);
     sheet.insertRule("#grid {" +
                      "margin-top: " + gridTop + ";" +
