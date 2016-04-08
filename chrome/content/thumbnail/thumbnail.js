@@ -68,7 +68,7 @@ fastdial.Thumbnail = function(properties) {
         if (this.properties.isFolder) {
           var children = fastdial.Storage.getItems(this.properties.id);
           for(var i in children) {
-            var thumbnail = new this(children[i]);
+            var thumbnail = new fastdial.Thumbnail(children[i]);
             thumbnail.remove();
           }
         }
