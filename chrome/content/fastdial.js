@@ -38,7 +38,7 @@ function createDOM(search, options, thumbnails) {
     document.body.appendChild(div);
 
     for(var i in search) { 
-        var engine = fastdial.Utils.getSearchEngine(this.search[i]);
+        var engine = fastdial.Utils.getSearchEngine(search[i]);
         if (engine) {
             var icon = engine.iconURI ? engine.iconURI.spec : "chrome://fastdial/skin/icons/fastdial.png";
             var img = document.createElement("img");
