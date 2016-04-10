@@ -51,8 +51,10 @@ table.suggestion > tr.selected, table.suggestion > tr:hover {
 }
 
 table.suggestion > tr > td {
+    cursor: default;
     width: 250px;
-    padding: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .box {
@@ -70,6 +72,7 @@ table.suggestion > tr > td {
     border-radius: 3px;
     overflow: hidden;
 }
+
 
 .body, .background {
     position: absolute;
