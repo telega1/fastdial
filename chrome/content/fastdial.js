@@ -1,5 +1,6 @@
 var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
+var searchUI = [];
 var params = fastdial.Utils.getQueryParams(document.location);
 var wnd = fastdial.Utils.getBrowserWindow();
 
@@ -20,7 +21,7 @@ document.addEventListener("mouseup", onMouseUp, false);
 document.addEventListener("drop", onDragDrop, false);
 document.addEventListener("click", onClick, false);
 document.addEventListener("DOMMouseScroll", onMouseWheel, false);
-document.addEventListener("keyup", onKeyUp, false);
+document.addEventListener("keypress", onKeyPress, false);
 document.addEventListener("unload", onUnload, false);
 
 var hiddenBox = wnd.document.getElementById("fd-hidden-box");
@@ -49,9 +50,11 @@ function createDOM(search, options, thumbnails) {
             input.setAttribute("class", "search-input");
             input.setAttribute("type", "text");
             div.appendChild(input);
+            if (fastdial.Prefs.getGlobalBool("browser.search.suggest.enabled")) {
+                searchUI[i] = new fastdial.SearchUI(input, engine);
+            }
         }
     }
-
 
     var table = document.createElement("table");
     table.setAttribute("id", "grid");
@@ -324,32 +327,13 @@ function onMouseWheel(e) {
     }
 }
 
-function onKeyUp(e) {
+function onKeyPress(e) {
     switch (e.keyCode) {
         case e.DOM_VK_PAGE_UP:
             if (!scrollMaxY) setPage(page - 1);
             break;
         case e.DOM_VK_PAGE_DOWN:
             if (!scrollMaxY) setPage(page + 1);
-            break;
-        case e.DOM_VK_ESCAPE:
-            if (fastdial.Dom.is(e.target, "search-input")) {
-                e.target.value = null;
-            }
-            break;
-        case e.DOM_VK_RETURN:
-            if (!fastdial.Dom.is(e.target, "search-input")) break;
-
-            var search = fastdial.Prefs.getObject("search");
-            var searchInputs = document.getElementsByClassName("search-input");
-
-            for(var i = 0; i < searchInputs.length; i++) {
-                if (searchInputs[i] == e.target) {
-                    var engine = fastdial.Utils.getSearchEngine(search[i]);
-                    var submission = engine.getSubmission(e.target.value, null);
-                    document.location.assign(submission.uri.spec);
-                }
-            }
             break;
     }
 }
@@ -395,7 +379,7 @@ function onUnload() {
     document.removeEventListener("drop", onDragDrop, false);
     document.removeEventListener("click", onClick, false);
     document.removeEventListener("DOMMouseScroll", onMouseWheel, false);
-    document.removeEventListener("keyup", onKeyUp, false);
+    document.removeEventListener("keypress", onKeyPress, false);
     document.removeEventListener("unload", onUnload, false);
 
     var hiddenBox = wnd.document.getElementById("fd-hidden-box");

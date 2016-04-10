@@ -39,6 +39,22 @@ a {
     width: 250px;
 }
 
+table.suggestion {
+    font-size: larger;
+    border: 1px solid lightgray;
+    background: white;
+    position: absolute;
+}
+
+table.suggestion > tr.selected, table.suggestion > tr:hover {
+    background: lightblue;
+}
+
+table.suggestion > tr > td {
+    width: 250px;
+    padding: 2px;
+}
+
 .box {
     position: relative;
 }
