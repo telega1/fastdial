@@ -1,5 +1,6 @@
 Components.utils.import("resource://gre/modules/SearchSuggestionController.jsm");
-fastdial.SearchUI = function(input, engine) {
+
+fastdial.SearchController = function(input, engine) {
     var index = -1;
     var table, typedValue = "";
 

@@ -1,6 +1,6 @@
 var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
-var searchUI = [];
+var searchControllers = [];
 var params = fastdial.Utils.getQueryParams(document.location);
 var wnd = fastdial.Utils.getBrowserWindow();
 
@@ -51,7 +51,7 @@ function createDOM(search, options, thumbnails) {
             input.setAttribute("type", "text");
             div.appendChild(input);
             if (fastdial.Prefs.getGlobalBool("browser.search.suggest.enabled")) {
-                searchUI[i] = new fastdial.SearchUI(input, engine);
+                searchControllers[i] = new fastdial.SearchController(input, engine);
             }
         }
     }
