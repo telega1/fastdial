@@ -25,7 +25,7 @@ fastdial.Overlay = {
     },
 
     initialize: function() {
-        setTimeout(fastdial.Overlay.hookAddTab, 100);
+        setTimeout(fastdial.Overlay.hookAddTab, fastdial.Prefs.getInt("startTimeout"));
         if (window.gInitialPages) {
             gInitialPages.push(fastdial.Info.URI);
         }
