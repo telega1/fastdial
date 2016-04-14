@@ -206,19 +206,15 @@ fastdial.Overlay = {
     },
 
     addPage: function(e) {
-        var result = {};
-        openDialog("chrome://fastdial/content/folder.xul",
-                                    "", "chrome, centerscreen, modal, resizable", result);
-        if (result.folderId) {
-            var bookmark = {
-                url: content.location.href,
-                title: content.document.title,
-                folderId: result.folderId,
-                index: -1
-            }
-            fastdial.Bookmark.saveBookmark(bookmark);
-            fastdial.Overlay.updateView();
+        var home = fastdial.Bookmark.getHome();
+        var bookmark = {
+            url: content.location.href,
+            title: content.document.title,
+            folderId: home.id,
+            index: -1
         }
+        fastdial.Bookmark.saveBookmark(bookmark);
+        fastdial.Overlay.updateView();
     },
 
     updateView: function() {
