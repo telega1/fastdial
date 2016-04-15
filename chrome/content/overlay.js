@@ -206,15 +206,26 @@ fastdial.Overlay = {
     },
 
     addPage: function(e) {
-        var home = fastdial.Bookmark.getHome();
-        var bookmark = {
-            url: content.location.href,
-            title: content.document.title,
-            folderId: home.id,
-            index: -1
+        var folderId;
+        if (fastdial.Prefs.getBool("askFolder")) {
+            var result = {};
+            openDialog("chrome://fastdial/content/folder.xul", "", "chrome, centerscreen, modal, resizable", result);
+            folderId = result.folderId;
         }
-        fastdial.Bookmark.saveBookmark(bookmark);
-        fastdial.Overlay.updateView();
+        else {
+            var home = fastdial.Bookmark.getHome();
+            folderId = home.id;
+        }
+        if (folderId) {
+            var bookmark = {
+                url: content.location.href,
+                title: content.document.title,
+                folderId: folderId,
+                index: -1
+            }
+            fastdial.Bookmark.saveBookmark(bookmark);
+            fastdial.Overlay.updateView();
+        }
     },
 
     updateView: function() {
