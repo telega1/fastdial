@@ -36,6 +36,7 @@ function initOptions() {
     fastdial.Utils.selectItem("openIn", options.openIn);
     fastdial.Dom.get("shortcutKey").value = options.shortcutKey || "";
     fastdial.Utils.selectItem("timeout", options.timeout);
+    fastdial.Utils.selectItem("askFolder", options.askFolder);
     fastdial.Dom.get("enable").checked = fastdial.Prefs.getBool("enable");
 }
 
@@ -50,6 +51,7 @@ function saveOptions() {
     options.openIn = fastdial.Dom.get("openIn").value;
     options.shortcutKey = fastdial.Dom.get("shortcutKey").value;
     options.timeout = fastdial.Dom.get("timeout").value;
+    options.askFolder = fastdial.Dom.get("askFolder").value;
     fastdial.Prefs.setObject("options", options);
     wnd.fastdial.Overlay.updateView();
 }

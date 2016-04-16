@@ -207,7 +207,8 @@ fastdial.Overlay = {
 
     addPage: function(e) {
         var folderId;
-        if (fastdial.Prefs.getBool("askFolder")) {
+        var options = fastdial.Prefs.getObject("options");
+        if (options.askFolder == "folders") {
             var result = {};
             openDialog("chrome://fastdial/content/folder.xul", "", "chrome, centerscreen, modal, resizable", result);
             folderId = result.folderId;
