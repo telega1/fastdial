@@ -112,11 +112,11 @@
                                     <menupopup>
                                         <menuitem label="&home;" value="home"/>
                                         <menuitem label="&folders;" value="folders"/>
+                                        <menuitem label="&none;" value="none"/>
                                     </menupopup>
                                 </menulist>
                             </hbox>
                         </row>
-
                     </rows>
                 </grid>
             </tabpanel>

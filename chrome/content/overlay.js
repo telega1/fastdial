@@ -33,6 +33,8 @@ fastdial.Overlay = {
         fastdial.Overlay.initShortcutKeys();
         fastdial.Overlay.autoRefresh();
         fastdial.Overlay.initSort();
+        var mainMenu = fastdial.Dom.get("contentAreaContextMenu");
+        mainMenu.addEventListener("popupshowing", fastdial.Overlay.onMainMenu, false);
     },
 
     initShortcutKeys: function() {
@@ -203,6 +205,11 @@ fastdial.Overlay = {
         }
         fastdial.Prefs.setObject("search", search);
         fastdial.Overlay.updateView();
+    },
+
+    onMainMenu: function(e) {
+        var options = fastdial.Prefs.getObject("options");
+        fastdial.Dom.get("fd-add-page").hidden = (options.askFolder == "none");
     },
 
     addPage: function(e) {
