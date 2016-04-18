@@ -155,8 +155,7 @@ fastdial.Overlay = {
                 var properties = {
                     folderId: wnd.folder.id,
                     isFolder: e.target.value == "folder",
-                    logo: e.target.value == "folder"
-                          && "chrome://fastdial/skin/images/folder.png",
+                    logo: e.target.value == "folder" && fastdial.Storage.FOLDER_LOGO,
                     thumbIndex: box && wnd.getThumbIndex(box.id),
                     index: -1,
                 }

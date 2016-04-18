@@ -32,6 +32,9 @@
       </vbox>
     </hbox>
 
+    <script src="utils.js"/>
+    <script src="bookmark.js"/>
+    <script src="storage.js"/>
     <script>
         <![CDATA[
             function initialize() {
@@ -48,8 +51,20 @@
 
             function newFolder() {
                 var tree = document.getElementById("foldersTree");
-                tree.focus();
-                goDoCommand("placesCmd_new:folder");
+                let ip = tree.insertionPoint;
+                let performed = PlacesUIUtils.showBookmarkDialog({ action: "add"
+                                       , type: "folder"
+                                       , defaultInsertionPoint: ip
+                                       , hiddenRows: [ "folderPicker" ]
+                                       }, window.top);
+                if (performed) {
+                    let id = PlacesUtils.bookmarks.getIdForItemAt(ip.itemId, ip.index);            
+                    tree.selectItems([id], false);
+
+                    var item = fastdial.Storage.getItem(id);
+                    item.logo = fastdial.Storage.FOLDER_LOGO;
+                    fastdial.Storage.saveItem(item);
+                }
             }
         ]]>
     </script>

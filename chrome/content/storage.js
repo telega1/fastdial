@@ -1,6 +1,8 @@
 fastdial.Storage = new function() {
     var self = this;
 
+    this.FOLDER_LOGO = "chrome://fastdial/skin/images/folder.png";
+    this.FOLDER_ICON = "chrome://fastdial/skin/icons/folder.png";
     this.SHORTCUT_KEY = "fastdial/shortcutKey";
     this.REFRESH = "fastdial/refresh";
 

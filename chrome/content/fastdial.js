@@ -350,11 +350,10 @@ function setPage(aPage) {
 }
 
 function getFavicon(index) {
-    const ICON_FOLDER = "chrome://fastdial/skin/icons/folder.png";
     var thumb = thumbnails[index];
 
     thumb.properties.isFolder 
-        ? onIconLoad(ICON_FOLDER) 
+        ? onIconLoad(fastdial.Storage.FOLDER_ICON) 
         : fastdial.Bookmark.getFavicon(thumb.getURL(), onIconLoad);
 
     function onIconLoad(iconURL) {
