@@ -50,9 +50,7 @@ function createDOM(search, options, thumbnails) {
             input.setAttribute("class", "search-input");
             input.setAttribute("type", "text");
             div.appendChild(input);
-            if (fastdial.Prefs.getGlobalBool("browser.search.suggest.enabled")) {
-                searchControllers[i] = new fastdial.SearchController(input, engine);
-            }
+            searchControllers[i] = new fastdial.SearchController(input, engine);
         }
     }
 
