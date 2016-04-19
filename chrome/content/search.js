@@ -1,10 +1,10 @@
-Components.utils.import("resource://gre/modules/SearchSuggestionController.jsm");
-
 fastdial.SearchController = function(input, engine) {
     var index = -1;
     var table, typedValue = "";
 
+    Components.utils.import("resource://gre/modules/SearchSuggestionController.jsm");
     var controller = new SearchSuggestionController(onSearchResult);
+
     input.addEventListener("input", onInput, false);
     input.addEventListener("keypress", onKeyPress, false);
 

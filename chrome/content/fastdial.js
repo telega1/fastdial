@@ -50,7 +50,10 @@ function createDOM(search, options, thumbnails) {
             input.setAttribute("class", "search-input");
             input.setAttribute("type", "text");
             div.appendChild(input);
-            searchControllers[i] = new fastdial.SearchController(input, engine);
+            try {
+                searchControllers[i] = new fastdial.SearchController(input, engine);
+            }
+            catch(e) {}
         }
     }
 
