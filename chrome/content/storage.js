@@ -97,18 +97,15 @@ fastdial.Storage = new function() {
         var data = []; 
         var children = fastdial.Storage.getItems(folder.id);
 
-        for(var i = children.length-1; i >= 0; i--) {
+        for(var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (!child.isFolder) {
-               delete child.id;
-               delete child.folderId;
-               delete child.isFolder;
-               delete child.index;
-               delete child.thumbIndex;
-               delete child.refresh;
-               delete child.preview;
-               data.push(child);
-            }
+            if (child.isFolder) continue;
+            data.push({
+                "title": child.title,
+                "url": child.url,
+                "description": child.description,
+                "logo": child.logo
+            });
        }
        var json = fastdial.Utils.toJSON(data);
        fastdial.File.writeFile(file, json);
@@ -119,19 +116,19 @@ fastdial.Storage = new function() {
 
         var json = fastdial.File.readFile(file);
         var children = fastdial.Utils.fromJSON(json);
+
         for(var i in children) {
             var child = children[i];
-            if (!child.isFolder) {
-                delete child.id;
-                delete child.isFolder;
-                delete child.thumbIndex;
-                delete child.refresh;
-                delete child.preview;
-                child.refreshAll = !child.logo;
-                child.folderId = folder.id;
-                child.index = -1;
-                fastdial.Storage.saveItem(child);
-            }
+            if (child.isFolder) continue;
+
+            fastdial.Storage.saveItem({
+                "title": child.title,
+                "url": child.url,
+                "description": child.description,
+                "logo": child.logo,
+                "folderId": folder.id,
+                "index": -1
+            });
         }
     }
 }
