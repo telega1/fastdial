@@ -97,7 +97,7 @@ fastdial.Storage = new function() {
         var data = []; 
         var children = fastdial.Storage.getItems(folder.id);
 
-        for(var i = 0; i < children.length; i++) {
+        for(var i in children) {
             var child = children[i];
             if (child.isFolder) continue;
             data.push({
