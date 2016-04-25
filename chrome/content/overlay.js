@@ -144,6 +144,13 @@ fastdial.Overlay = {
             case "fd-preview":
                 thumbnail.openPreview(wnd.document);
                 break;
+            case "fd-export":
+                fastdial.Storage.export(wnd.folder);
+                break;
+            case "fd-import":
+                fastdial.Storage.import(wnd.folder);
+                fastdial.Overlay.updateView();
+                break;
             case "fd-preferences":
                 fastdial.Overlay.openPreferences();
                 break;
@@ -164,7 +171,7 @@ fastdial.Overlay = {
                 break;
             case "fd-sort-menu":
                 fastdial.Prefs.setString("sort", e.target.value);
-                wnd.initThumbnails();
+                fastdial.Overlay.updateView();
                 break;
             case "fd-refresh-all":
                 var wnd = content.wrappedJSObject;

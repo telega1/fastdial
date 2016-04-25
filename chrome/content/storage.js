@@ -88,4 +88,50 @@ fastdial.Storage = new function() {
         }
         return items;
     };
+    this.export = function(folder) {
+        var file = fastdial.File.chooseFile("save", ["*.json"]);
+        if (!file) return;
+        if (!file.leafName.match(/\.json$/)) {
+            file.leafName += ".json";
+        }
+        var data = []; 
+        var children = fastdial.Storage.getItems(folder.id);
+
+        for(var i = children.length-1; i >= 0; i--) {
+            var child = children[i];
+            if (!child.isFolder) {
+               delete child.id;
+               delete child.folderId;
+               delete child.isFolder;
+               delete child.index;
+               delete child.thumbIndex;
+               delete child.refresh;
+               delete child.preview;
+               data.push(child);
+            }
+       }
+       var json = fastdial.Utils.toJSON(data);
+       fastdial.File.writeFile(file, json);
+    }
+    this.import = function(folder) {
+        var file = fastdial.File.chooseFile("open", ["*.json"]);
+        if (!file) return;
+
+        var json = fastdial.File.readFile(file);
+        var children = fastdial.Utils.fromJSON(json);
+        for(var i in children) {
+            var child = children[i];
+            if (!child.isFolder) {
+                delete child.id;
+                delete child.isFolder;
+                delete child.thumbIndex;
+                delete child.refresh;
+                delete child.preview;
+                child.refreshAll = !child.logo;
+                child.folderId = folder.id;
+                child.index = -1;
+                fastdial.Storage.saveItem(child);
+            }
+        }
+    }
 }

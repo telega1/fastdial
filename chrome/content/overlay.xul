@@ -30,6 +30,8 @@
             <menuitem id="fd-move" label="&move;&#x2026;"/>
             <menuitem id="fd-remove" label="&remove;"/>
             <menuitem id="fd-preview" label="&preview;"/>
+            <menuitem id="fd-export" label="&export;&#x2026;"/>
+            <menuitem id="fd-import" label="&import;&#x2026;"/>
             <menuseparator id="fd-separator2"/>
             <menuitem id="fd-properties" label="&properties;"/>
         </menupopup>

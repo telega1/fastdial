@@ -200,7 +200,7 @@ function exportTheme() {
                 setTimeout(function() {
                     var image = wnd.fastdial.Snapshot.createImage(
                                           browser.contentWindow, SCREENSHOT_SIZE);
-                    fastdial.File.writeFile(snapshot, image);
+                    fastdial.File.writeBinaryFile(snapshot, image);
                     browser.close();
                 }, wnd.fastdial.Snapshot.TIMEOUT_ULTRAFAST);
             });
@@ -508,7 +508,7 @@ function setImage(id, url) {
         var file = fastdial.Theme.getDirectory("current");
         file.append(decodeURI(uri.fileName));
         try {
-            fastdial.File.writeFile(file, fastdial.URL.readURL(url));
+            fastdial.File.writeBinaryFile(file, fastdial.URL.readURL(url));
             fastdial.Dom.get(id).value = images[id] =  uri.fileName;
         }
         catch(e) {}

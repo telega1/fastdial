@@ -114,6 +114,18 @@ fastdial.File = {
         var out = Components.classes["@mozilla.org/network/file-output-stream;1"]
                 .createInstance(Components.interfaces.nsIFileOutputStream);
         out.init(file, this.RDWR_CREATE_TRUNCATE, 0x1b6, 0);
+        var converter = Components.classes["@mozilla.org/intl/converter-output-stream;1"].
+                createInstance(Components.interfaces.nsIConverterOutputStream);
+        converter.init(out, "UTF-8", 0, 0);
+        converter.writeString(data);
+        converter.close()
+        out.close();
+    },
+
+    writeBinaryFile: function(file, data) {
+        var out = Components.classes["@mozilla.org/network/file-output-stream;1"]
+                .createInstance(Components.interfaces.nsIFileOutputStream);
+        out.init(file, this.RDWR_CREATE_TRUNCATE, 0x1b6, 0);
         out.write(data, data.length);
         out.close();
     },
@@ -125,7 +137,7 @@ fastdial.File = {
         var unichar = Components.classes["@mozilla.org/intl/converter-input-stream;1"]
                 .createInstance(Components.interfaces.nsIConverterInputStream);
         var data = {};
-        unichar.init(stream, "utf-8", stream.available(), 0xFFFD);
+        unichar.init(stream, "UTF-8", stream.available(), 0xFFFD);
         unichar.readString(stream.available(), data);
         unichar.close();
         stream.close();
@@ -307,7 +319,7 @@ fastdial.Cache = {
 
     save: function(url, data, folder) {
         var file = this.getCachedFile(url, folder);
-        fastdial.File.writeFile(file, data || fastdial.URL.readURL(url));
+        fastdial.File.writeBinaryFile(file, data || fastdial.URL.readURL(url));
     },
 
     remove: function(url, folder) {
