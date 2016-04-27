@@ -1,8 +1,10 @@
 fastdial.Loader = new function() {
     const MAX_BROWSERS = 3;
     const TIMEOUT_LOAD = 30000;
+
     var queue = [];
     var browsers = [];
+
     this.load = function(url, onReady) {
         var browser = browsers[url];
         if (browser) {
@@ -134,8 +136,6 @@ fastdial.Snapshot = function(thumbnail) {
 fastdial.Snapshot.TIMEOUT_ULTRAFAST = 100;
 fastdial.Snapshot.TIMEOUT_MEDIUM = 5000;
 
-fastdial.Snapshot.SCREENSHOT_SIZE = 400;
-    
 fastdial.Snapshot.create = function(properties) {
     var thumbnail = new fastdial.Thumbnail(properties);
     new fastdial.Snapshot(thumbnail);
@@ -166,8 +166,7 @@ fastdial.Snapshot.createImage = function(wnd, imageWidth, isLogo) {
 fastdial.Snapshot.createScreenshot = function(url, file) {
     fastdial.Loader.load(url, function(browser) {
         setTimeout(function() {
-            var image = fastdial.Snapshot.createImage(
-                       browser.contentWindow, fastdial.Snapshot.SCREENSHOT_SIZE);
+            var image = fastdial.Snapshot.createImage(browser.contentWindow, 1024);
             fastdial.File.writeBinaryFile(file, image);
             browser.close();
         }, fastdial.Snapshot.TIMEOUT_ULTRAFAST);
