@@ -106,9 +106,14 @@ fastdial.Storage = new function() {
                 "description": child.description,
                 "logo": child.logo
             });
-       }
-       var json = fastdial.Utils.toJSON(data);
-       fastdial.File.writeFile(file, json);
+        }
+        var json = fastdial.Utils.toJSON(data);
+        fastdial.File.writeFile(file, json);
+
+        var snapshot = file.clone();
+        snapshot.leafName = snapshot.leafName.replace(/\.json$/, ".png");
+        var wnd = fastdial.Utils.getBrowserWindow();
+        wnd.fastdial.Snapshot.createScreenshot(fastdial.Info.URI + "?folder=" + folder.id, snapshot);
     }
     this.import = function(folder) {
         var file = fastdial.File.chooseFile("open", ["*.json"]);

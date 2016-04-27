@@ -195,15 +195,7 @@ function exportTheme() {
            fastdial.Theme.getDirectory("current"));
     var snapshot = file.clone();
     snapshot.leafName = snapshot.leafName.replace(/\.zip$/, ".png");
-    wnd.fastdial.Loader.load(fastdial.Info.URI,
-            function(browser) {
-                setTimeout(function() {
-                    var image = wnd.fastdial.Snapshot.createImage(
-                                          browser.contentWindow, SCREENSHOT_SIZE);
-                    fastdial.File.writeBinaryFile(snapshot, image);
-                    browser.close();
-                }, wnd.fastdial.Snapshot.TIMEOUT_ULTRAFAST);
-            });
+    wnd.fastdial.Snapshot.createScreenshot(fastdial.Info.URI, snapshot);
 }
 
 function renameTheme() {

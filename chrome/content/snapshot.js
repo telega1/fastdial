@@ -133,6 +133,8 @@ fastdial.Snapshot = function(thumbnail) {
 
 fastdial.Snapshot.TIMEOUT_ULTRAFAST = 100;
 fastdial.Snapshot.TIMEOUT_MEDIUM = 5000;
+
+fastdial.Snapshot.SCREENSHOT_SIZE = 400;
     
 fastdial.Snapshot.create = function(properties) {
     var thumbnail = new fastdial.Thumbnail(properties);
@@ -159,4 +161,15 @@ fastdial.Snapshot.createImage = function(wnd, imageWidth, isLogo) {
     context.restore();
     var dataURL = canvas.toDataURL("image/png");
     return atob(dataURL.replace(/^data:image\/png;base64,/, ""));
+}
+
+fastdial.Snapshot.createScreenshot = function(url, file) {
+    fastdial.Loader.load(url, function(browser) {
+        setTimeout(function() {
+            var image = fastdial.Snapshot.createImage(
+                       browser.contentWindow, fastdial.Snapshot.SCREENSHOT_SIZE);
+            fastdial.File.writeBinaryFile(file, image);
+            browser.close();
+        }, fastdial.Snapshot.TIMEOUT_ULTRAFAST);
+    });
 }
