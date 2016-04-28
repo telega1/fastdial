@@ -5,7 +5,7 @@
     <Description about="urn:mozilla:install-manifest">
         <em:unpack>true</em:unpack>
         <em:id>fastdial@telega.phpnet.us</em:id>
-        <em:version>4.14.5</em:version>
+        <em:version>4.15</em:version>
         <em:type>2</em:type>
 
         <em:targetApplication>
@@ -18,7 +18,7 @@
 
         <em:name>Fast Dial</em:name>
         <em:creator>telega</em:creator>
-        <em:contributor>mafi0z</em:contributor>
+        <em:contributor>gumanov</em:contributor>
         <em:contributor>chiaroscuro</em:contributor>
         <em:contributor>Efreak15</em:contributor>        
         <em:contributor>rlebrette</em:contributor>
