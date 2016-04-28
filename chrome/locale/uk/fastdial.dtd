@@ -1,4 +1,4 @@
-﻿<!ENTITY add "Додати">
+<!ENTITY add "Додати">
 <!ENTITY folder "Папка">
 <!ENTITY bookmark "Закладка">
 <!ENTITY sort "Сортування">
@@ -34,8 +34,8 @@
 <!ENTITY advanced "Додатково">
 <!ENTITY appearance "Зовнішній вигляд">
 <!ENTITY defaults "Стандартно">
-<!ENTITY thumbnails "Зображення">
 <!ENTITY quantity "Кількість">
+<!ENTITY thumbnails "Зображення">
 <!ENTITY size "Розмір">
 <!ENTITY fixed "Фіксувати">
 <!ENTITY hideEmptyBoxes "Заховати пусті рамки">

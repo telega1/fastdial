@@ -1,4 +1,4 @@
-﻿<!ENTITY add "Ajouter">
+<!ENTITY add "Ajouter">
 <!ENTITY folder "Dossier">
 <!ENTITY bookmark "Marque-page">
 <!ENTITY sort "Trier">
@@ -54,7 +54,7 @@
 <!ENTITY font "Police ">
 <!ENTITY image "Image ">
 <!ENTITY back "Retour ">
-<!ENTITY background "Arrière-plan ">
+<!ENTITY background "Arrière plan ">
 <!ENTITY search "Zone(s) de recherche ">
 <!ENTITY thumbnail "Vignette">
 <!ENTITY normal "Normal">
@@ -69,6 +69,7 @@
 <!ENTITY searchThemes "Rechercher des thèmes sur UserLogos.org">
 <!ENTITY homeFolder "Dossier d'accueil ">
 <!ENTITY select "Sélectionner">
+<!ENTITY favicon "Favicon">
 <!ENTITY move "Déplacer">
 <!ENTITY round "Arrondis">
 <!ENTITY shadow "Ombre">
