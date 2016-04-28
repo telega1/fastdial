@@ -110,6 +110,14 @@ fastdial.File = {
                 interfaces.nsIFile.DIRECTORY_TYPE, 0x1ff);
     },
 
+    createTempDirectory: function() {
+        var dir = Components.classes["@mozilla.org/file/directory_service;1"]
+                .getService(Components.interfaces.nsIProperties)
+                .get("TmpD", Components.interfaces.nsIFile);
+        dir.createUnique(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0x1ff);
+        return dir;
+    },
+
     writeFile: function(file, data) {
         var out = Components.classes["@mozilla.org/network/file-output-stream;1"]
                 .createInstance(Components.interfaces.nsIFileOutputStream);
@@ -149,7 +157,7 @@ fastdial.File = {
                 .createInstance(Components.interfaces.nsIFilePicker);
         fp.init(window, null, mode == "save" ? fp.modeSave :
                 mode == "folder" ? fp.modeGetFolder :
-                        mode == "multiple" ? fp.modeOpenMultiple : fp.modeOpen);
+                mode == "multiple" ? fp.modeOpenMultiple : fp.modeOpen);
         for (var i in filters) {
             switch (filters[i]) {
                 case "images":
