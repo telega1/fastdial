@@ -96,15 +96,14 @@ fastdial.Storage = new function() {
         for(var i in children) {
             var child = children[i];
             if (child.logo) {
-                var nsiUrl = fastdial.URL.getNsiURL(child.logo);
-                if (nsiUrl.scheme == "file") {
-                    var path = fastdial.Utils.decode(nsiUrl.path).replace(/^\//, "").replace(/\//g, "\\");
-                    var file = fastdial.File.getNsiFile(path);
-                    try {
+                try {
+                    var nsiUrl = fastdial.URL.getNsiURL(child.logo);
+                    if (nsiUrl.scheme == "file") {
+                        var path = fastdial.Utils.decode(nsiUrl.path).replace(/^\//, "").replace(/\//g, "\\");
+                        var file = fastdial.File.getNsiFile(path);
                         file.copyTo(tempDir, file.leafName);
                     }
-                    catch(e) {}
-                }
+                } catch(e) {}
             }
             var item = {
                 "isFolder": child.isFolder,
@@ -142,13 +141,15 @@ fastdial.Storage = new function() {
         for(var i in children) {
             var child = children[i];
             if (child.logo) {
-                var nsiUrl = fastdial.URL.getNsiURL(child.logo);
-                if (nsiUrl.scheme == "file") {
-                    var file = dir.clone();
-                    var fileName = fastdial.Utils.decode(nsiUrl.fileName);
-                    file.append(fileName);
-                    child.logo = fastdial.File.getFileURL(file);
-                }
+                try {
+                    var nsiUrl = fastdial.URL.getNsiURL(child.logo);
+                    if (nsiUrl.scheme == "file") {
+                        var file = dir.clone();
+                        var fileName = fastdial.Utils.decode(nsiUrl.fileName);
+                        file.append(fileName);
+                        child.logo = fastdial.File.getFileURL(file);
+                    }
+                } catch(e) {}
             }         
             var item = {
                 "isFolder": child.isFolder,
