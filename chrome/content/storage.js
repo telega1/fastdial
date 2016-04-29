@@ -89,51 +89,83 @@ fastdial.Storage = new function() {
         return items;
     };
 
-    this.export = function(folder) {
-        var zipFile = fastdial.File.chooseFile("save", ["*.zip"]);
-        if (!zipFile) return;
-        if (!zipFile.leafName.match(/\.zip$/)) {
-            zipFile.leafName += ".zip";
-        }
-        var dir = fastdial.File.createTempDirectory();
+    function exportFolder(folder, tempDir) {
         var data = []; 
         var children = fastdial.Storage.getItems(folder.id);
 
         for(var i in children) {
             var child = children[i];
-            if (child.isFolder) continue;
-
             if (child.logo) {
                 var nsiUrl = fastdial.URL.getNsiURL(child.logo);
                 if (nsiUrl.scheme == "file") {
                     var path = fastdial.Utils.decode(nsiUrl.path).replace(/^\//, "").replace(/\//g, "\\");
                     var file = fastdial.File.getNsiFile(path);
                     try {
-                        file.copyTo(dir, file.leafName);
+                        file.copyTo(tempDir, file.leafName);
                     }
                     catch(e) {}
                 }
             }
-            data.push({
+            var item = {
+                "isFolder": child.isFolder,
                 "title": child.title,
                 "url": child.url,
                 "description": child.description,
                 "logo": child.logo
-            });
+            }
+            if (child.isFolder) {
+                item.children = exportFolder(child, tempDir);
+            }
+            data.push(item);
         }
+        return data;
+    }
+    
+    this.export = function(folder) {
+        var zipFile = fastdial.File.chooseFile("save", ["*.zip"]);
+        if (!zipFile) return;
+        if (!zipFile.leafName.match(/\.zip$/)) {
+            zipFile.leafName += ".zip";
+        }
+        var tempDir = fastdial.File.createTempDirectory();
+        var data = exportFolder(folder, tempDir);
+
         var json = fastdial.Utils.toJSON(data);
-        var jsonFile = dir.clone();
+        var jsonFile = tempDir.clone();
         jsonFile.append(zipFile.leafName.replace(/\.zip$/, ".json"));
         fastdial.File.writeFile(jsonFile, json);
-        fastdial.File.zip(zipFile, dir);
-        dir.remove(true);
-
-        var snapshot = zipFile.clone();
-        snapshot.leafName = snapshot.leafName.replace(/\.zip$/, ".png");
-        var wnd = fastdial.Utils.getBrowserWindow();
-        wnd.fastdial.Snapshot.createScreenshot(fastdial.Info.URI + "?folder=" + folder.id, snapshot);
+        fastdial.File.zip(zipFile, tempDir);
+        tempDir.remove(true);
     }
 
+    function importFolder(folder, children, dir) {
+        for(var i in children) {
+            var child = children[i];
+            if (child.logo) {
+                var nsiUrl = fastdial.URL.getNsiURL(child.logo);
+                if (nsiUrl.scheme == "file") {
+                    var file = dir.clone();
+                    var fileName = fastdial.Utils.decode(nsiUrl.fileName);
+                    file.append(fileName);
+                    child.logo = fastdial.File.getFileURL(file);
+                }
+            }         
+            var item = {
+                "isFolder": child.isFolder,
+                "title": child.title,
+                "url": child.url,
+                "description": child.description,
+                "logo": child.logo,
+                "folderId": folder.id,
+                "index": -1
+            }
+            fastdial.Storage.saveItem(item);
+            if (item.isFolder) {
+                importFolder(item, child.children);
+            }
+       }
+    }
+    
     this.import = function(folder) {
         var zipFile = fastdial.File.chooseFile("open", ["*.zip"]);
         if (!zipFile) return;
@@ -150,28 +182,6 @@ fastdial.Storage = new function() {
         jsonFile.append(zipFile.leafName.replace(/\.zip$/, ".json"));
         var json = fastdial.File.readFile(jsonFile);
         var children = fastdial.Utils.fromJSON(json);
-
-        for(var i in children) {
-            var child = children[i];
-            if (child.isFolder) continue;
-
-            if (child.logo) {
-                var nsiUrl = fastdial.URL.getNsiURL(child.logo);
-                if (nsiUrl.scheme == "file") {
-                    var file = dir.clone();
-                    var fileName = fastdial.Utils.decode(nsiUrl.fileName);
-                    file.append(fileName);
-                    child.logo = fastdial.File.getFileURL(file);
-                }
-            }         
-            fastdial.Storage.saveItem({
-                "title": child.title,
-                "url": child.url,
-                "description": child.description,
-                "logo": child.logo,
-                "folderId": folder.id,
-                "index": -1
-            });
-        }
+        importFolder(folder, children, dir);
     }
 }
