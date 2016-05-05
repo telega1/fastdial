@@ -130,7 +130,7 @@ fastdial.Storage = new function() {
 
         var json = fastdial.Utils.toJSON(data);
         var jsonFile = tempDir.clone();
-        jsonFile.append(zipFile.leafName.replace(/\.zip$/, ".json"));
+        jsonFile.append("fastdial.json");
         fastdial.File.writeFile(jsonFile, json);
         fastdial.File.zip(zipFile, tempDir);
         tempDir.remove(true);
@@ -176,7 +176,7 @@ fastdial.Storage = new function() {
         fastdial.File.unzip(zipFile, dir);
 
         var jsonFile = dir.clone();
-        jsonFile.append(zipFile.leafName.replace(/\.zip$/, ".json"));
+        jsonFile.append("fastdial.json");
         var json = fastdial.File.readFile(jsonFile);
         var children = fastdial.Utils.fromJSON(json);
         importFolder(folder, children, dir);
