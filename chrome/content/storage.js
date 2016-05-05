@@ -98,9 +98,8 @@ fastdial.Storage = new function() {
             if (child.logo) {
                 try {
                     var nsiUrl = fastdial.URL.getNsiURL(child.logo);
-                    if (nsiUrl.scheme == "file") {
-                        var path = fastdial.Utils.decode(nsiUrl.path).replace(/^\//, "").replace(/\//g, "\\");
-                        var file = fastdial.File.getNsiFile(path);
+                    if (nsiUrl.schemeIs("file")) {
+                        var file = fastdial.File.getFileFromURL(nsiUrl.spec);
                         file.copyTo(tempDir, file.leafName);
                     }
                 } catch(e) {}
@@ -143,9 +142,9 @@ fastdial.Storage = new function() {
             if (child.logo) {
                 try {
                     var nsiUrl = fastdial.URL.getNsiURL(child.logo);
-                    if (nsiUrl.scheme == "file") {
+                    if (nsiUrl.schemeIs("file")) {
+                        var fileName = fastdial.File.getFileFromURL(nsiUrl.spec).leafName;
                         var file = dir.clone();
-                        var fileName = fastdial.Utils.decode(nsiUrl.fileName);
                         file.append(fileName);
                         child.logo = fastdial.File.getFileURL(file);
                     }
@@ -173,10 +172,7 @@ fastdial.Storage = new function() {
         
         var dir = zipFile.clone();
         dir.leafName = dir.leafName.replace(/\.zip$/, "");
-        try {
-            fastdial.File.createDirectory(dir);
-        }
-        catch(e) {}
+        if (!dir.exists()) fastdial.File.createDirectory(dir);
         fastdial.File.unzip(zipFile, dir);
 
         var jsonFile = dir.clone();

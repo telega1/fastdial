@@ -79,11 +79,15 @@ fastdial.File = {
     },
 
     getFileURL: function(file) {
-        var ios = Components.classes["@mozilla.org/network/io-service;1"]
-                .getService(Components.interfaces.nsIIOService);
-        var fileHandler = ios.getProtocolHandler("file")
-                .QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+        var fileHandler = Components.classes["@mozilla.org/network/protocol;1?name=file"]
+                        .getService(Components.interfaces.nsIFileProtocolHandler);
         return fileHandler.getURLSpecFromFile(file);
+    },
+
+    getFileFromURL: function(url) {
+        var fileHandler = Components.classes["@mozilla.org/network/protocol;1?name=file"]
+                        .getService(Ci.nsIFileProtocolHandler);
+        return fileHandler.getFileFromURLSpec(url);
     },
 
     getExtensionDirectory: function() {
