@@ -162,7 +162,7 @@ fastdial.Storage = new function() {
             }
             fastdial.Storage.saveItem(item);
             if (item.isFolder) {
-                importFolder(item, child.children);
+                importFolder(item, child.children, dir);
             }
        }
     }
