@@ -389,7 +389,7 @@ function onUnload() {
 }
 
 function onClearCache(e) {
-    fastdial.URL.removeFromCache(document, e.detail);
+    fastdial.URL.clearCache(document);
 }
 
 function onReload(e) {

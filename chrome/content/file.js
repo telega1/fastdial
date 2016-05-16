@@ -272,15 +272,12 @@ fastdial.URL = {
         return data;
     },
 
-    removeFromCache: function(doc, url) {
-        var uri = this.getNsiURI(url);
-        try {
-            var tools = Components.classes["@mozilla.org/image/tools;1"]
-                                  .getService(Components.interfaces.imgITools);
-            var cache = tools.getImgCacheForDocument(doc);
-            cache.removeEntry(uri);
-        }
-        catch(e) {}
+    clearCache: function(doc) {
+        var tools = Components.classes["@mozilla.org/image/tools;1"]
+                              .getService(Components.interfaces.imgITools);
+        var cache = tools.getImgCacheForDocument(doc);
+        cache.clearCache(false);
+        cache.clearCache(true);
     }
 }
 
@@ -340,7 +337,7 @@ fastdial.Cache = {
             file.remove(false);
             var wnd = fastdial.Utils.getBrowserWindow();
             var hiddenBox = wnd.document.getElementById("fd-hidden-box");
-            var e = new CustomEvent("fastdial.clearCache", { "detail": this.getCachedURL(url, folder) });
+            var e = new Event("fastdial.clearCache");
             hiddenBox.dispatchEvent(e);
         }
         catch(e) {}
