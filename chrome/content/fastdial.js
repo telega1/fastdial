@@ -1,3 +1,4 @@
+var pageTime = new Date().getTime();
 var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
 var searchControllers = [];
@@ -26,7 +27,6 @@ document.addEventListener("unload", onUnload, false);
 
 var hiddenBox = wnd.document.getElementById("fd-hidden-box");
 hiddenBox.addEventListener("fastdial.update", initThumbnails, false);
-hiddenBox.addEventListener("fastdial.clearCache", onClearCache, false);
 hiddenBox.addEventListener("fastdial.reload", onReload, false);
 
 initThumbnails();
@@ -103,7 +103,13 @@ function createDOM(search, options, thumbnails) {
                 a.appendChild(div5);
                 var img1 = document.createElement("img");
                 img1.setAttribute("class", "image");
-                img1.setAttribute("src", thumbnail.getImageURL());
+
+                var snapshot = thumbnail.getSnapshotURL();
+                var time = fastdial.Cache.getCachedTime(snapshot);
+                var url = fastdial.Cache.getCachedURL(snapshot);
+                if (time > pageTime) url += "?" + time;
+
+                img1.setAttribute("src", url);
                 div5.appendChild(img1);
             }
             var div6 = document.createElement("div");
@@ -123,6 +129,7 @@ function initThumbnails() {
     thumbnails = getThumbnails();
 
     createDOM(fastdial.Prefs.getObject("search"), options, thumbnails);
+    pageTime = new Date().getTime();
     for (var i in thumbnails) getFavicon(i);
     onResize();
 }
@@ -384,12 +391,7 @@ function onUnload() {
 
     var hiddenBox = wnd.document.getElementById("fd-hidden-box");
     hiddenBox.removeEventListener("fastdial.update", initThumbnails, false);
-    hiddenBox.removeEventListener("fastdial.clearCache", onClearCache, false);
     hiddenBox.removeEventListener("fastdial.reload", onReload, false);
-}
-
-function onClearCache(e) {
-    fastdial.URL.clearCache(document);
 }
 
 function onReload(e) {
