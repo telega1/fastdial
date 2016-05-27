@@ -1,0 +1,78 @@
+<!ENTITY add "Añadir">
+<!ENTITY folder "Carpeta">
+<!ENTITY bookmark "Marcador">
+<!ENTITY sort "Ordenar">
+<!ENTITY none "Ninguno">
+<!ENTITY auto "Auto">
+<!ENTITY visits "Visitas">
+<!ENTITY preferences "Ajustes">
+<!ENTITY help "Ayuda">
+<!ENTITY open "Abrir">
+<!ENTITY openAll "Abrir todo">
+<!ENTITY refresh "Actualizar">
+<!ENTITY remove "Borrar">
+<!ENTITY properties "Propiedades">
+<!ENTITY url "URL">
+<!ENTITY title "Título">
+<!ENTITY description "Descripción">
+<!ENTITY logo "Logo">
+<!ENTITY favicon "Icono">
+<!ENTITY shortcutKey "Atajo de teclado">
+<!ENTITY restartIsNeeded "(es necesario reiniciar)">
+<!ENTITY refreshEvery "Actualizar cada">
+<!ENTITY minutes "minutos">
+<!ENTITY refreshAll "Actualizar Todo">
+<!ENTITY preview "Vista previa">
+<!ENTITY background "Fondo">
+<!ENTITY theme "Tema">
+<!ENTITY export "Exportar">
+<!ENTITY import "Importar">
+<!ENTITY rename "Renombrar">
+<!ENTITY makeHome "Hacer inicio">
+<!ENTITY addToFastDial "Añadir a Fast Dial">
+<!ENTITY general "General">
+<!ENTITY advanced "Avanzado">
+<!ENTITY appearance "Apariencia">
+<!ENTITY defaults "Por defecto">
+<!ENTITY quantity "Cantidad">
+<!ENTITY thumbnails "Miniaturas">
+<!ENTITY size "Tamaño">
+<!ENTITY fixed "Fijo">
+<!ENTITY hideEmptyBoxes "Ocultar cajas vacías">
+<!ENTITY hideSearch "Ocultar barra de búsqueda">
+<!ENTITY hideBackLinks "Hide Back links">
+<!ENTITY openLinksIn "Abrir enlaces en">
+<!ENTITY currentTab "pestaña actual">
+<!ENTITY newTab "pestaña nueva">
+<!ENTITY backgroundTab "pestaña de fondo">
+<!ENTITY connectionSpeed "Velocidad de conexión">
+<!ENTITY fast "Rápida">
+<!ENTITY medium "Media">
+<!ENTITY slow "Lenta">
+<!ENTITY showInBlankTabs "Mostrar Fast Dial en pestañas en blanco">
+<!ENTITY page "Página">
+<!ENTITY font "Fuente">
+<!ENTITY image "Imagen">
+<!ENTITY back "Atrás">
+<!ENTITY background "Fondo">
+<!ENTITY search "Buscar">
+<!ENTITY thumbnail "Miniatura">
+<!ENTITY normal "Normal">
+<!ENTITY active "Activa">
+<!ENTITY text "Texto">
+<!ENTITY border "Borde">
+<!ENTITY margin "Margen">
+<!ENTITY opacity "Opacidad">
+<!ENTITY visibility "Visibilidad">
+<!ENTITY close "Cerrar">
+<!ENTITY searchLogos "Buscar logos en UserLogos.org">
+<!ENTITY searchThemes "Buscar temas en UserLogos.org">
+<!ENTITY homeFolder "Carpeta inicial">
+<!ENTITY select "Seleccionar">
+<!ENTITY favicon "Icono">
+<!ENTITY move "Mover">
+<!ENTITY round "Redondeado">
+<!ENTITY shadow "Sombra">
+<!ENTITY home "Inicio">
+<!ENTITY folders "Carpetas">
+<!ENTITY newFolder "Nueva carpeta">

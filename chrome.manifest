@@ -8,6 +8,7 @@ style chrome://global/content/customizeToolbar.xul chrome://fastdial/skin/css/to
 
 locale fastdial de    chrome/locale/de/
 locale fastdial en-US chrome/locale/en-US/
+locale fastdial es-ES chrome/locale/es-ES/
 locale fastdial fr    chrome/locale/fr/
 locale fastdial pl    chrome/locale/pl/
 locale fastdial pt-BR chrome/locale/pt-BR/
