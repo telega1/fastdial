@@ -20,7 +20,9 @@ fastdial.Thumbnail = function(properties) {
                 : this.properties.refreshAll;
     };
     this.getImageURL = function() {
-        return fastdial.Cache.getCachedURL(this.getSnapshotURL());
+        var snapshot = this.getSnapshotURL();
+        var time = fastdial.Cache.getCachedTime(snapshot);
+        return fastdial.Cache.getCachedURL(snapshot) + "?" + time;
     };
     this.getImageFile = function() {
         return fastdial.Cache.getCachedFile(this.getSnapshotURL());

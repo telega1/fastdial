@@ -1,4 +1,3 @@
-var pageTime = new Date().getTime();
 var options, sort, thumbnails;
 var page = 0, pageCount, perPage;
 var searchControllers = [];
@@ -103,13 +102,7 @@ function createDOM(search, options, thumbnails) {
                 a.appendChild(div5);
                 var img1 = document.createElement("img");
                 img1.setAttribute("class", "image");
-
-                var snapshot = thumbnail.getSnapshotURL();
-                var time = fastdial.Cache.getCachedTime(snapshot);
-                var url = fastdial.Cache.getCachedURL(snapshot);
-                if (time > pageTime) url += "?" + time;
-
-                img1.setAttribute("src", url);
+                img1.setAttribute("src", thumbnail.getImageURL());
                 div5.appendChild(img1);
             }
             var div6 = document.createElement("div");
@@ -129,7 +122,6 @@ function initThumbnails() {
     thumbnails = getThumbnails();
 
     createDOM(fastdial.Prefs.getObject("search"), options, thumbnails);
-    pageTime = new Date().getTime();
     for (var i in thumbnails) getFavicon(i);
     onResize();
 }
