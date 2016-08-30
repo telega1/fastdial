@@ -160,12 +160,12 @@
                             <row align="center">
                                 <label value="&image;:"/>
                                 <hbox>
-                                    <checkbox id="center" oncommand="saveStyle();"/>
                                     <textbox id="page" flex="1" onchange="setImage('page', this.value);"/>
                                 </hbox>
                                 <hbox>
                                     <button class="browse" label="&#x2026;"
                                             tabindex="-1" oncommand="browseImage('page');"/>
+                                    <checkbox id="center" label="&center;" oncommand="saveStyle();"/>
                                 </hbox>
                             </row>
                             <row align="center">
@@ -174,8 +174,10 @@
                                           flex="1" oncommand="saveStyle();">
                                     <menupopup/>
                                 </menulist>
-                                <textbox id="font-size"
-                                         type="number" onchange="saveStyle();"/>
+                                <hbox>
+                                    <textbox id="font-size"
+                                             type="number" onchange="saveStyle();"/>
+                                </hbox>
                             </row>
                             <row align="center">
                                 <label value="&back;:"/>
@@ -313,19 +315,15 @@
                             </row>
                             <row align="center">
                                 <label value="&visibility;:"/>
-                                <checkbox id="thumbnail.title"
-                                          class="no-label" oncommand="saveStyle();"/>
+                                <checkbox id="thumbnail.title" oncommand="saveStyle();"/>
                                 <spacer/>
-                                <checkbox id="hover.title"
-                                          class="no-label" oncommand="saveStyle();"/>
+                                <checkbox id="hover.title" oncommand="saveStyle();"/>
                             </row>
                             <row align="center">
                                 <label value="&favicon;:"/>
-                                <checkbox id="thumbnail.favicon"
-                                          class="no-label" oncommand="saveStyle();"/>
+                                <checkbox id="thumbnail.favicon" oncommand="saveStyle();"/>
                                 <spacer/>
-                                <checkbox id="hover.favicon"
-                                          class="no-label" oncommand="saveStyle();"/>
+                                <checkbox id="hover.favicon" oncommand="saveStyle();"/>
                             </row>
                             <row align="center">
                                 <label value="&text;:"/>

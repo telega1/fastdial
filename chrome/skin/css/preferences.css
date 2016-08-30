@@ -25,22 +25,10 @@ textbox[type="number"], #thumbHeight {
     margin: 0px;
 }
 
-#center {
-    padding: 0px;
-}
-
-#center hbox {
-    display: none;
-}
-
 .color {
     width: 70px;
 }
 
 colorpicker {
     width: 26px;
-}
-
-.no-label hbox {
-    display: none;
 }
