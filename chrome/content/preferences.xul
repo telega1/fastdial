@@ -205,13 +205,6 @@
                         </columns>
                         <rows>
                             <row align="center">
-                                <label value="&image;:"/>
-                                <textbox id="search.image" flex="1"
-                                         onchange="setImage('search.image', this.value);"/>
-                                <button class="browse" label="&#x2026;"
-                                        tabindex="-1" oncommand="browseImage('search.image');"/>
-                            </row>
-                            <row align="center">
                                 <label value="&text;:"/>
                                 <hbox>
                                     <textbox id="search.color" class="color"
@@ -331,24 +324,6 @@
                                          onchange="updateColor(this);"/>
                                 <colorpicker type="button" onchange="updateColor(this);"/>
                                 <textbox id="hover.title.color" class="color"
-                                         onchange="updateColor(this);"/>
-                                <colorpicker type="button" onchange="updateColor(this);"/>
-                            </row>
-                            <row align="center">
-                                <label value="&background;:"/>
-                                <textbox id="thumbnail.title.background" class="color"
-                                         onchange="updateColor(this);"/>
-                                <colorpicker type="button" onchange="updateColor(this);"/>
-                                <textbox id="hover.title.background" class="color"
-                                         onchange="updateColor(this);"/>
-                                <colorpicker type="button" onchange="updateColor(this);"/>
-                            </row>
-                            <row align="center">
-                                <label value="&border;:"/>
-                                <textbox id="thumbnail.title.border" class="color"
-                                         onchange="updateColor(this);"/>
-                                <colorpicker type="button" onchange="updateColor(this);"/>
-                                <textbox id="hover.title.border" class="color"
                                          onchange="updateColor(this);"/>
                                 <colorpicker type="button" onchange="updateColor(this);"/>
                             </row>

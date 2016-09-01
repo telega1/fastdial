@@ -68,18 +68,18 @@ table.suggestion > tr > td {
     top: 0px;
     bottom: 0px;
     margin: 4px;
-    border: 1px solid lightgray;
-    border-radius: 3px;
-    overflow: hidden;
+//    border: 1px solid lightgray;
+//    border-radius: 3px;
+//    overflow: hidden;
 }
-
 
 .body, .background {
     position: absolute;
     left: 0px;
     right: 0px;
     top: 0px;
-    bottom: 1.6em;
+//    bottom: 1.6em;
+    bottom: 1.8em;
     margin-bottom: 1px;
 }
 
@@ -92,9 +92,11 @@ table.suggestion > tr > td {
 }
 
 .image {
-    border: none;
     width: 100%;
     height: 100%;
+    border: 1px solid lightgray;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .title {
@@ -103,8 +105,8 @@ table.suggestion > tr > td {
     right: 0px;
     bottom: 0px;
     height: 1.6em;
-    border-top: 1px solid lightgray;
-    background: #eee;
+//    border-top: 1px solid lightgray;
+//    background: #eee;
 }
 
 .title > div {
@@ -117,8 +119,12 @@ table.suggestion > tr > td {
     text-align: center;
 }
 
-div.thumbnail:hover .title, .hover .title {
-    background: #e8e8e8;
+//div.thumbnail:hover .title, .hover .title {
+//    background: #e8e8e8;
+//}
+
+div.thumbnail:hover .image, .hover .image {
+    border: 1px solid darkgray;
 }
 
 .title img {
