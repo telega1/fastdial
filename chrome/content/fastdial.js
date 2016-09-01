@@ -83,7 +83,7 @@ function createDOM(search, options, thumbnails) {
 
         div3 = document.createElement("div");
         div3.setAttribute("class", "title");
-        div2.appendChild(div3);
+        div1.appendChild(div3);
 
         if (thumbnail) {
             var a = document.createElement("a");
@@ -162,18 +162,17 @@ function onResize() {
     var box = fastdial.Dom.get(0);
     var thumbnail = fastdial.Dom.child(box, "thumbnail");
     var thumbnailMargin = parseInt(fastdial.Dom.css(thumbnail, "margin-left"));
-    var image = fastdial.Dom.child(thumbnail, "image");
-    var imageBorder = parseInt(fastdial.Dom.css(image, "border-top-width"));
+    var thumbnailBorder = parseInt(fastdial.Dom.css(thumbnail, "border-top-width"));
 
-    var title = fastdial.Dom.child(thumbnail, "title");
+    var title = fastdial.Dom.child(box, "title");
     var width = options.thumbWidth;
     var height = fastdial.Thumbnail.getHeight(width);
     if (!options.fixed) {
         width = (window.innerWidth - bodyPadding * 2) / options.width -
-                 thumbnailMargin * 2 - imageBorder * 2;
+                 thumbnailMargin * 2 - thumbnailBorder * 2;
 
         height = (window.innerHeight - bodyPadding * 2 - search.offsetHeight) /
-                  options.height - thumbnailMargin * 2 - imageBorder * 2 - title.offsetHeight;
+                  options.height - thumbnailMargin * 2 - thumbnailBorder * 2 - title.offsetHeight;
 
         if (height < fastdial.Thumbnail.getHeight(width)) {
             width = fastdial.Thumbnail.getWidth(height);
@@ -182,8 +181,8 @@ function onResize() {
     width = Math.max(width, fastdial.Thumbnail.MIN_WIDTH);
     height = fastdial.Thumbnail.getHeight(width);
 
-    width += thumbnailMargin * 2 + imageBorder * 2;
-    height += thumbnailMargin * 2 + imageBorder * 2 + title.offsetHeight;
+    width += thumbnailMargin * 2 + thumbnailBorder * 2;
+    height += thumbnailMargin * 2 + thumbnailBorder * 2 + title.offsetHeight;
 
     // Center #grid
     var gridTop = (window.innerHeight - bodyPadding * 2 -

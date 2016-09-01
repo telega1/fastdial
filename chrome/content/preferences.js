@@ -311,33 +311,29 @@ function initThumbnailStyle() {
     thumbnail.className = "thumbnail";
     box.appendChild(thumbnail);
 
-    var image = doc.createElement("img");
-    image.className = "image";
-    thumbnail.appendChild(image);
-
     var title = doc.createElement("div");
     title.className = "title";
-    thumbnail.appendChild(title);
+    box.appendChild(title);
     var favicon = doc.createElement("img");
     title.appendChild(favicon);
 
     var names = ["thumbnail", "hover"];
     for (var i in names) {
         var name = names[i];
-        fastdial.Dom.addClass(thumbnail, name);
-        var background = fastdial.Dom.css(image, "background-color");
+        fastdial.Dom.addClass(box, name == "hover" ? "hover" : "box");
+        var background = fastdial.Dom.css(thumbnail, "background-color");
         setColor(name + ".background", background);
-        var border = fastdial.Dom.css(image, "border-top-color");
+        var border = fastdial.Dom.css(thumbnail, "border-top-color");
         setColor(name + ".border", border);
         var margin = fastdial.Dom.css(thumbnail, "margin-top");
         fastdial.Dom.get(name + ".margin").value = parseInt(margin);
-        var opacity = fastdial.Dom.css(image, "opacity");
+        var opacity = fastdial.Dom.css(thumbnail, "opacity");
         fastdial.Dom.get(name + ".opacity").value = opacity * 10;
-        var round = fastdial.Dom.css(image, "border-top-right-radius");
+        var round = fastdial.Dom.css(thumbnail, "border-top-right-radius");
         fastdial.Dom.get(name + ".round").value = parseInt(round);
-        var shadow = fastdial.Dom.css(image, "box-shadow");
+        var shadow = fastdial.Dom.css(thumbnail, "box-shadow");
         fastdial.Dom.get(name + ".shadow").value = parseInt(shadow.match(/\d+px/));
-
+        
         var titleColor = fastdial.Dom.css(title, "color");
         setColor(name + ".title.color", titleColor);
         var visibility = fastdial.Dom.css(title, "visibility");
@@ -383,23 +379,19 @@ function getStyle(title) {
     }
     var thumbShadow = fastdial.Dom.get("thumbnail.shadow").value;
     style[".thumbnail"] = {
-        "margin"           : fastdial.Dom.get("thumbnail.margin").value + "px"
-    }
-    style[".image"] = {
         "background-color" : getColor("thumbnail.background"),
         "border"           : "1px solid " + getColor("thumbnail.border"),
+        "margin"           : fastdial.Dom.get("thumbnail.margin").value + "px",
         "opacity"          : fastdial.Dom.get("thumbnail.opacity").value / 10,
         "border-radius"    : fastdial.Dom.get("thumbnail.round").value + "px",
         "box-shadow"       : parseInt(thumbShadow) ? thumbShadow + "px " +
                                            thumbShadow + "px 5px #888888" : "none",
     }
     var hoverShadow = fastdial.Dom.get("hover.shadow").value;
-    style["div.thumbnail:hover, .hover"] = {
-        "margin"           : fastdial.Dom.get("hover.margin").value + "px",
-    }
-    style["div.thumbnail:hover .image, .hover .image"] = {
+    style["div.box:hover .thumbnail, .hover .thumbnail"] = {
         "background-color" : getColor("hover.background"),
         "border"           : "1px solid " + getColor("hover.border"),
+        "margin"           : fastdial.Dom.get("hover.margin").value + "px",
         "opacity"          : fastdial.Dom.get("hover.opacity").value / 10,
         "border-radius"    : fastdial.Dom.get("hover.round").value + "px",
         "box-shadow"       : parseInt(hoverShadow) ? hoverShadow + "px " +
@@ -409,14 +401,14 @@ function getStyle(title) {
         "color"            : getColor("thumbnail.title.color"),
         "visibility"       : fastdial.Dom.get("thumbnail.title").checked ? "visible" : "hidden"
     }
-    style["div.thumbnail:hover .title, .hover .title"] = {
+    style["div.box:hover .title, .hover .title"] = {
         "color"            : getColor("hover.title.color"),
         "visibility"       : fastdial.Dom.get("hover.title").checked ? "visible" : "hidden"
     }
     style[".title img"] = {
         "display" : fastdial.Dom.get("thumbnail.favicon").checked ? "inline" : "none"
     }
-    style["div.thumbnail:hover .title img, .hover .title img"] = {
+    style["div.box:hover .title img, .hover .title img"] = {
         "display" : fastdial.Dom.get("hover.favicon").checked ? "inline" : "none"
     }
     return createText(title, style);
