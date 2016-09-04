@@ -4,24 +4,35 @@ fastdial.Overlay = {
                               "preferences", "chrome,centerscreen,toolbar");
     },
 
+    isNewFirefox: function() {
+        var appInfo = Components.classes["@mozilla.org/xre/app-info;1"]
+                                  .getService(Components.interfaces.nsIXULAppInfo);
+        var versionChecker = Components.classes["@mozilla.org/xpcom/version-comparator;1"]
+                                          .getService(Components.interfaces.nsIVersionComparator);
+        return versionChecker.compare(appInfo.version, "33.0") >= 0;
+    },
+
     addTab: null,
     isBlankPageURL: null,
 
     hookAddTab: function() {
+
         fastdial.Overlay.addTab = gBrowser.addTab;
         fastdial.Overlay.isBlankPageURL = window.isBlankPageURL;
 
         gBrowser.addTab = function() {
-            if ((arguments[0] == "about:newtab" ||
+            if ((arguments[0] == "about:newtab" || !fastdial.Overlay.isNewFirefox() &&
                  arguments[0] == "about:blank") &&
                  fastdial.Prefs.getBool("enable")) arguments[0] = fastdial.Info.URI;
             return fastdial.Overlay.addTab.apply(gBrowser, arguments);
         }
+
         var regExp = new RegExp("^" + fastdial.Info.URI); 
         window.isBlankPageURL = function() {
             return regExp.test(arguments[0]) ||
                    fastdial.Overlay.isBlankPageURL.apply(window, arguments);
         }
+
     },
 
     initialize: function() {
