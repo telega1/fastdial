@@ -16,13 +16,12 @@ fastdial.Overlay = {
     isBlankPageURL: null,
 
     hookAddTab: function() {
-
         fastdial.Overlay.addTab = gBrowser.addTab;
         fastdial.Overlay.isBlankPageURL = window.isBlankPageURL;
 
         gBrowser.addTab = function() {
-            if ((arguments[0] == "about:newtab" || !fastdial.Overlay.isNewFirefox() &&
-                 arguments[0] == "about:blank") &&
+            var oldBlankTab = arguments[0] == "about:blank" && !fastdial.Overlay.isNewFirefox();
+            if ((arguments[0] == "about:newtab" || oldBlankTab) &&
                  fastdial.Prefs.getBool("enable")) arguments[0] = fastdial.Info.URI;
             return fastdial.Overlay.addTab.apply(gBrowser, arguments);
         }
