@@ -2,8 +2,13 @@ fastdial.SearchController = function(input, engine) {
     var index = -1;
     var table, typedValue = "";
 
-    Components.utils.import("resource://gre/modules/SearchSuggestionController.jsm");
-    var controller = new SearchSuggestionController(onSearchResult);
+    var controller;
+
+    try {
+        Components.utils.import("resource://gre/modules/SearchSuggestionController.jsm");
+        controller = new SearchSuggestionController(onSearchResult);
+    }
+    catch(e) {}
 
     input.addEventListener("input", onInput, false);
     input.addEventListener("keypress", onKeyPress, false);
@@ -14,7 +19,7 @@ fastdial.SearchController = function(input, engine) {
 
     function onInput(e) {
         if (!e.target.value) return hideTable();
-        controller.fetch(e.target.value, false, engine);
+        if (controller) controller.fetch(e.target.value, false, engine);
     }
 
     function removeTable() {
