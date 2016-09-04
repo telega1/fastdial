@@ -3,4 +3,3 @@ pref("extensions.fastdial.slowSites", "gmail.com|mail\\.google|google\\.com\\/ma
 pref("extensions.fastdial.options", "{ \"width\": 3, \"height\": 3, \"thumbWidth\": 300, \"timeout\": 1000 }");
 pref("extensions.fastdial.startTimeout", 100);
 pref("extensions.fastdial.enable", true);
-pref("view_source.tab", false);
