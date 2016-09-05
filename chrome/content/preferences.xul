@@ -205,6 +205,17 @@
                         </columns>
                         <rows>
                             <row align="center">
+                                <label value="&font;:"/>
+                                <menulist id="search.font-family"
+                                          flex="1" oncommand="saveStyle();">
+                                    <menupopup/>
+                                </menulist>
+                                <hbox>
+                                    <textbox id="search.font-size"
+                                             type="number" onchange="saveStyle();"/>
+                                </hbox>
+                            </row>
+                            <row align="center">
                                 <label value="&text;:"/>
                                 <hbox>
                                     <textbox id="search.color" class="color"

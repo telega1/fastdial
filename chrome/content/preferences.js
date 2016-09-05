@@ -241,7 +241,8 @@ function initStyle() {
 }
 
 function initPageStyle() {
-    initFontFamily();
+    initFontFamily("font-family");
+    initFontFamily("search.font-family");
     var doc = content.document;
     fastdial.Dom.get("page").value = images["page"] = getImageURL(doc.body);
     var repeat = fastdial.Dom.css(doc.body, "background-repeat");
@@ -277,8 +278,8 @@ function getImageURL(element) {
     return urls.length ? urls[0] : "";
 }
 
-function initFontFamily() {
-    var menupopup = fastdial.Dom.get("font-family").menupopup;
+function initFontFamily(name) {
+    var menupopup = fastdial.Dom.get(name).menupopup;
     fastdial.Dom.clear(menupopup);
     var fonts = fastdial.Utils.getFontList();
     for (var i = 0; i < fonts.length; i++) {
@@ -294,6 +295,10 @@ function initSearchStyle() {
     var input = doc.createElement("input");
     input.className = "search-input";
     search.appendChild(input);
+    var fontFamily = fastdial.Dom.css(input, "font-family");
+    fastdial.Utils.selectItem("search.font-family", fontFamily.match(/[^'"]+/));
+    var fontSize = fastdial.Dom.css(input, "font-size");
+    fastdial.Dom.get("search.font-size").value = parseInt(fontSize);
     setColor("search.color", fastdial.Dom.css(input, "color"));
     setColor("search.background", fastdial.Dom.css(input, "background-color"));
     setColor("search.border", fastdial.Dom.css(input, "border-top-color"));
@@ -373,6 +378,8 @@ function getStyle(title) {
         "background-image" : createImageURL("back")
     }
     style[".search-input"] = {
+        "font-family"      : "'" + fastdial.Dom.get("search.font-family").label + "'",
+        "font-size"        : fastdial.Dom.get("search.font-size").value + "px",
         "color"            : getColor("search.color"),
         "background-color" : getColor("search.background"),
         "border"           : "1px solid " + getColor("search.border")
