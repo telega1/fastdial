@@ -52,7 +52,7 @@ table.suggestion > tr.selected, table.suggestion > tr:hover {
 
 table.suggestion > tr > td {
     cursor: default;
-    width: 250px;
+    width: 35em;
     padding-left: 2px;
     padding-right: 2px;
 }

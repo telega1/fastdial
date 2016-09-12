@@ -384,6 +384,10 @@ function getStyle(title) {
         "background-color" : getColor("search.background"),
         "border"           : "1px solid " + getColor("search.border")
     }
+    style["table.suggestion"] = {
+        "font-family"      : "'" + fastdial.Dom.get("search.font-family").label + "'",
+        "font-size"        : fastdial.Dom.get("search.font-size").value + "px"
+    }        
     var thumbShadow = fastdial.Dom.get("thumbnail.shadow").value;
     style[".thumbnail"] = {
         "background-color" : getColor("thumbnail.background"),
