@@ -43,8 +43,6 @@ fastdial.Overlay = {
         fastdial.Overlay.initShortcutKeys();
         fastdial.Overlay.autoRefresh();
         fastdial.Overlay.initSort();
-        var mainMenu = fastdial.Dom.get("contentAreaContextMenu");
-        mainMenu.addEventListener("popupshowing", fastdial.Overlay.onMainMenu, false);
     },
 
     initShortcutKeys: function() {
@@ -221,35 +219,6 @@ fastdial.Overlay = {
         }
         fastdial.Prefs.setObject("search", search);
         fastdial.Overlay.updateView();
-    },
-
-    onMainMenu: function(e) {
-        var options = fastdial.Prefs.getObject("options");
-        fastdial.Dom.get("fd-add-page").hidden = (options.askFolder == "none");
-    },
-
-    addPage: function(e) {
-        var folderId;
-        var options = fastdial.Prefs.getObject("options");
-        if (options.askFolder == "folders") {
-            var result = {};
-            openDialog("chrome://fastdial/content/folder.xul", "", "chrome, centerscreen, modal, resizable", result);
-            folderId = result.folderId;
-        }
-        else {
-            var home = fastdial.Bookmark.getHome();
-            folderId = home.id;
-        }
-        if (folderId) {
-            var bookmark = {
-                url: content.location.href,
-                title: content.document.title,
-                folderId: folderId,
-                index: -1
-            }
-            fastdial.Bookmark.saveBookmark(bookmark);
-            fastdial.Overlay.updateView();
-        }
     },
 
     updateView: function() {
