@@ -27,5 +27,6 @@
         <em:iconURL>chrome://fastdial/skin/images/fastdial.png</em:iconURL>
         <em:optionsURL>chrome://fastdial/content/preferences.xul</em:optionsURL>
         <em:homepageURL>http://userlogos.org/extensions/fastdial</em:homepageURL>
+        <em:multiprocessCompatible>true</em:multiprocessCompatible>
     </Description>
 </RDF>
