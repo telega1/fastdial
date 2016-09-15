@@ -242,8 +242,7 @@ fastdial.Overlay = {
         }
         if (folderId) {
             var bookmark = {
-                url: content.location.href,
-                title: content.document.title,
+                url: gBrowser.selectedBrowser.currentURI.spec,
                 folderId: folderId,
                 index: -1
             }
