@@ -44,6 +44,11 @@
                        class="toolbarbutton-1" oncommand="fastdial.Utils.openLink(fastdial.Info.URI, event)"/>
     </toolbarpalette>
 
+    <popup id="contentAreaContextMenu">
+        <menuitem id="fd-add-page" label="&addToFastDial;" class="menuitem-iconic"
+                  image="chrome://fastdial/skin/icons/fastdial.png" oncommand="fastdial.Overlay.addPage(event);"/>
+    </popup>
+
     <script src="utils.js"/>
     <script src="dom.js"/>
     <script src="file.js"/>
