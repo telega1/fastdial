@@ -22,7 +22,7 @@ document.addEventListener("drop", onDragDrop, false);
 document.addEventListener("click", onClick, false);
 document.addEventListener("DOMMouseScroll", onMouseWheel, false);
 document.addEventListener("keypress", onKeyPress, false);
-document.addEventListener("unload", onUnload, false);
+window.addEventListener("unload", onUnload, false);
 
 var hiddenBox = wnd.document.getElementById("fd-hidden-box");
 hiddenBox.addEventListener("fastdial.update", initThumbnails, false);
@@ -376,7 +376,7 @@ function onUnload() {
     document.removeEventListener("click", onClick, false);
     document.removeEventListener("DOMMouseScroll", onMouseWheel, false);
     document.removeEventListener("keypress", onKeyPress, false);
-    document.removeEventListener("unload", onUnload, false);
+    window.removeEventListener("unload", onUnload, false);
 
     var hiddenBox = wnd.document.getElementById("fd-hidden-box");
     hiddenBox.removeEventListener("fastdial.update", initThumbnails, false);
