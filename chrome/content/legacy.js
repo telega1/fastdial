@@ -1,7 +1,7 @@
 fastdial.Legacy = new function() {
     this.migrate = function() {
         var previousVersion = fastdial.Prefs.getString("version");
-        var version = "4.16.2";
+        var version = "4.16.3";
         fastdial.Prefs.setString("version", version);
         if (version != previousVersion) 
                                 initThemes();
