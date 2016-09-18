@@ -31,6 +31,18 @@
                             <button label="&select;" onclick="selectHomeFolder();"/>
                         </row>
                         <row align="center">
+                            <label value="&ratio;:"/>
+                            <hbox>
+                                <menulist id="ratio" oncommand="saveOptions(); updateThumbHeight();">
+                                    <menupopup>
+                                        <menuitem label="4:3" value="0.75"/>
+                                        <menuitem label="16:9" value="0.5625"/>
+                                        <menuitem label="1:1" value="1"/>
+                                    </menupopup>
+                                </menulist>
+                            </hbox>
+                        </row>
+                        <row align="center">
                             <label value="&quantity;:"/>
                             <hbox align="center">
                                 <textbox id="width" type="number" min="1"
@@ -335,6 +347,15 @@
                                          onchange="updateColor(this);"/>
                                 <colorpicker type="button" onchange="updateColor(this);"/>
                                 <textbox id="hover.title.color" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                            <row align="center">
+                                <label value="&background;:"/>
+                                <textbox id="thumbnail.title.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.title.background" class="color"
                                          onchange="updateColor(this);"/>
                                 <colorpicker type="button" onchange="updateColor(this);"/>
                             </row>

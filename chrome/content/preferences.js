@@ -26,6 +26,7 @@ function defaults() {
 
 function initOptions() {
     var options = fastdial.Prefs.getObject("options");
+    fastdial.Utils.selectItem("ratio", options.ratio);
     fastdial.Dom.get("width").value = options.width;
     fastdial.Dom.get("height").value = options.height;
     fastdial.Dom.get("thumbWidth").value = options.thumbWidth;
@@ -42,6 +43,7 @@ function initOptions() {
 
 function saveOptions() {
     var options = {};
+    options.ratio = fastdial.Dom.get("ratio").value;
     options.width = fastdial.Dom.get("width").value;
     options.height = fastdial.Dom.get("height").value;
     options.thumbWidth = fastdial.Dom.get("thumbWidth").value;
@@ -344,6 +346,8 @@ function initThumbnailStyle() {
         var visibility = fastdial.Dom.css(title, "visibility");
         fastdial.Dom.get(name + ".title").checked = visibility != "hidden";
         fastdial.Dom.get(name + ".favicon").checked = fastdial.Dom.css(favicon, "display") != "none";
+        var titleBackground = fastdial.Dom.css(title, "background-color");
+        setColor(name + ".title.background", titleBackground);
         fastdial.Dom.removeClass(thumbnail, "hover");
     }
     fastdial.Dom.remove(box);
@@ -410,11 +414,13 @@ function getStyle(title) {
     }
     style[".title"] = {
         "color"            : getColor("thumbnail.title.color"),
-        "visibility"       : fastdial.Dom.get("thumbnail.title").checked ? "visible" : "hidden"
+        "visibility"       : fastdial.Dom.get("thumbnail.title").checked ? "visible" : "hidden",
+        "background"       : getColor("thumbnail.title.background")
     }
     style["div.box:hover .title, .hover .title"] = {
         "color"            : getColor("hover.title.color"),
-        "visibility"       : fastdial.Dom.get("hover.title").checked ? "visible" : "hidden"
+        "visibility"       : fastdial.Dom.get("hover.title").checked ? "visible" : "hidden",
+        "background"       : getColor("hover.title.background")
     }
     style[".title img"] = {
         "display" : fastdial.Dom.get("thumbnail.favicon").checked ? "inline" : "none"
