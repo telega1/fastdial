@@ -109,9 +109,11 @@ fastdial.Thumbnail.MIN_WIDTH = 100;
 
 fastdial.Thumbnail.getHeight = function(width) {
     var options = fastdial.Prefs.getObject("options");
-    return Math.floor(width * options.ratio);
+    var ratio = options.ratio || 0.75;
+    return Math.floor(width * ratio);
 }
 fastdial.Thumbnail.getWidth = function(height) {
     var options = fastdial.Prefs.getObject("options");
-    return Math.floor(height / options.ratio);
+    var ratio = options.ratio || 0.75;
+    return Math.floor(height / ratio);
 }
