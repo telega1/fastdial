@@ -105,15 +105,12 @@ fastdial.Thumbnail = function(properties) {
     };
 }
 
+fastdial.Thumbnail.RATIO = 0.75;
 fastdial.Thumbnail.MIN_WIDTH = 100;
 
 fastdial.Thumbnail.getHeight = function(width) {
-    var options = fastdial.Prefs.getObject("options");
-    var ratio = options.ratio || 0.75;
-    return Math.floor(width * ratio);
+    return Math.floor(width * fastdial.Thumbnail.RATIO);
 }
 fastdial.Thumbnail.getWidth = function(height) {
-    var options = fastdial.Prefs.getObject("options");
-    var ratio = options.ratio || 0.75;
-    return Math.floor(height / ratio);
+    return Math.floor(height / fastdial.Thumbnail.RATIO);
 }
