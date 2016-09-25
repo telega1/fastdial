@@ -338,6 +338,24 @@
                                          onchange="updateColor(this);"/>
                                 <colorpicker type="button" onchange="updateColor(this);"/>
                             </row>
+                            <row align="center">
+                                <label value="&background;:"/>
+                                <textbox id="thumbnail.title.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.title.background" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
+                            <row align="center">
+                                <label value="&border;:"/>
+                                <textbox id="thumbnail.title.border" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                                <textbox id="hover.title.border" class="color"
+                                         onchange="updateColor(this);"/>
+                                <colorpicker type="button" onchange="updateColor(this);"/>
+                            </row>
                         </rows>
                     </grid>
                 </tabpanel>

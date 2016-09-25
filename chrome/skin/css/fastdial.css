@@ -66,7 +66,7 @@ table.suggestion > tr > td {
     left: 0px;
     right: 0px;
     top: 0px;
-    bottom: 1.6em;
+    bottom: 0px;
     margin: 4px;
     border: 1px solid lightgray;
     border-radius: 20px;
@@ -78,9 +78,8 @@ table.suggestion > tr > td {
     left: 0px;
     right: 0px;
     top: 0px;
-    bottom: 0px;
-//    bottom: 1.6em;
-//    margin-bottom: 1px;
+    bottom: 1.6em;
+    margin-bottom: 1px;
 }
 
 .background {
@@ -102,8 +101,8 @@ table.suggestion > tr > td {
     right: 0px;
     bottom: 0px;
     height: 1.6em;
-//    border-top: 1px solid lightgray;
-//    background: #eee;
+    background: #eee;
+    border-top: 1px solid lightgray;
 }
 
 .title > div {
@@ -115,10 +114,6 @@ table.suggestion > tr > td {
     overflow: hidden;
     text-align: center;
 }
-
-//div.thumbnail:hover .title, .hover .title {
-//    background: #e8e8e8;
-//}
 
 div.box:hover .thumbnail, .hover .thumbnail {
     border: 1px solid darkgray;

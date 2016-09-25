@@ -318,7 +318,7 @@ function initThumbnailStyle() {
 
     var title = doc.createElement("div");
     title.className = "title";
-    box.appendChild(title);
+    thumbnail.appendChild(title);
     var favicon = doc.createElement("img");
     title.appendChild(favicon);
 
@@ -344,6 +344,10 @@ function initThumbnailStyle() {
         var visibility = fastdial.Dom.css(title, "visibility");
         fastdial.Dom.get(name + ".title").checked = visibility != "hidden";
         fastdial.Dom.get(name + ".favicon").checked = fastdial.Dom.css(favicon, "display") != "none";
+        var titleBackground = fastdial.Dom.css(title, "background-color");
+        setColor(name + ".title.background", titleBackground);
+        var titleBorder = fastdial.Dom.css(title, "border-top-color");
+        setColor(name + ".title.border", titleBorder);
         fastdial.Dom.removeClass(thumbnail, "hover");
     }
     fastdial.Dom.remove(box);

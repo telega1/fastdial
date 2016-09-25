@@ -80,7 +80,7 @@ function createDOM(search, options, thumbnails) {
 
         div3 = document.createElement("div");
         div3.setAttribute("class", "title");
-        div1.appendChild(div3);
+        div2.appendChild(div3);
 
         if (thumbnail) {
             var a = document.createElement("a");
@@ -164,6 +164,7 @@ function onResize() {
     var title = fastdial.Dom.child(box, "title");
     var width = options.thumbWidth;
     var height = fastdial.Thumbnail.getHeight(width);
+
     if (!options.fixed) {
         width = (window.innerWidth - bodyPadding * 2) / options.width -
                  thumbnailMargin * 2 - thumbnailBorder * 2;
