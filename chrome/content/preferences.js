@@ -414,13 +414,13 @@ function getStyle(title) {
     }
     style[".title"] = {
         "color"            : getColor("thumbnail.title.color"),
-        "visibility"       : fastdial.Dom.get("thumbnail.title").checked ? "visible" : "hidden",
+        "visibility"       : fastdial.Dom.get("thumbnail.title").checked ? "inherit" : "hidden",
         "background-color" : getColor("thumbnail.title.background"),
         "border-top"       : "1px solid " + getColor("thumbnail.title.border")
     }
     style["div.box:hover .title, .hover .title"] = {
         "color"            : getColor("hover.title.color"),
-        "visibility"       : fastdial.Dom.get("hover.title").checked ? "visible" : "hidden",
+        "visibility"       : fastdial.Dom.get("hover.title").checked ? "inherit" : "hidden",
         "background-color" : getColor("hover.title.background"),
         "border-top"       : "1px solid " + getColor("hover.title.border")
     }
