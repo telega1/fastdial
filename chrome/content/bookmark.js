@@ -24,6 +24,7 @@ fastdial.Bookmark = new function() {
         if (ids.length) {
             return this.getBookmark(ids[0]);
         } else {
+            var root = getLegacyRoot() || createRoot();
             this.setAnnotation(root.id, this.HOME, "true");
             return root;
         }
