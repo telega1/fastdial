@@ -1,0 +1,1 @@
+All files are under Mozilla Public License Version 1.1
