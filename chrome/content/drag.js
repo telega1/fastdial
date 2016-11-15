@@ -49,10 +49,9 @@ fastdial.Drag = new function() {
     function onMouseUp(e) {
         if (object) {
             var event = document.createEvent("MouseEvents");
-            event.initMouseEvent("dragdrop", e.bubbles, e.cancelable, e.view, e.detail,
+            event.initMouseEvent("drop", e.bubbles, e.cancelable, e.view, e.detail,
                     e.screenX, e.screenY, e.clientX, e.clientY,
                     e.ctrlKey, e.altKey, e.shiftKey, e.metaKey, e.button, null);
-            event.initEvent("drop", true, true);
             document.dispatchEvent(event);
         }
         stop();
