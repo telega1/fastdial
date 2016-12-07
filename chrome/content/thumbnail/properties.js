@@ -51,7 +51,7 @@ function setFolder(isFolder) {
     clear();
     fastdial.Dom.get("isFolder").selectedIndex = isFolder ? 1 : 0;
     fastdial.Dom.get("row-url").collapsed = isFolder;
-    fastdial.Dom.get("logo").value = isFolder ? fastdial.Storage.FOLDER_LOGO : "";
+    fastdial.Dom.get("logo").value = isFolder ? fastdial.Prefs.getString("folderLogo") : "";
     updateRefreshAll();
     updateFocus();
 }

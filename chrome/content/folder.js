@@ -23,7 +23,7 @@ function newFolder() {
         tree.selectItems([id], false);
 
         var item = fastdial.Storage.getItem(id);
-        item.logo = fastdial.Storage.FOLDER_LOGO;
+        item.logo = fastdial.Prefs.getString("folderLogo");
         fastdial.Storage.saveItem(item);
     }
 }

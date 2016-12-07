@@ -172,7 +172,7 @@ fastdial.Overlay = {
                 var properties = {
                     folderId: wnd.folder.id,
                     isFolder: e.target.value == "folder",
-                    logo: e.target.value == "folder" && fastdial.Storage.FOLDER_LOGO,
+                    logo: e.target.value == "folder" && fastdial.Prefs.getString("folderLogo"),
                     thumbIndex: box && wnd.getThumbIndex(box.id),
                     index: -1,
                 }
