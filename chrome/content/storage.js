@@ -1,7 +1,6 @@
 fastdial.Storage = new function() {
     var self = this;
 
-    this.FOLDER_LOGO = "chrome://fastdial/skin/images/folder.png";
     this.FOLDER_ICON = "chrome://fastdial/skin/icons/folder.png";
     this.SHORTCUT_KEY = "fastdial/shortcutKey";
     this.REFRESH = "fastdial/refresh";
@@ -109,7 +108,12 @@ fastdial.Storage = new function() {
                 "title": child.title,
                 "url": child.url,
                 "description": child.description,
-                "logo": child.logo
+                "logo": child.logo,
+                "thumbIndex": child.thumbIndex,
+                "shortcutKey": child.shortcutKey,
+                "refresh": child.refresh,
+                "refreshAll": child.refreshAll,
+                "preview": child.preview
             }
             if (child.isFolder) {
                 item.children = exportFolder(child, tempDir);
@@ -156,6 +160,11 @@ fastdial.Storage = new function() {
                 "url": child.url,
                 "description": child.description,
                 "logo": child.logo,
+                "thumbIndex": child.thumbIndex,
+                "shortcutKey": child.shortcutKey,
+                "refresh": child.refresh,
+                "refreshAll": child.refreshAll,
+                "preview": child.preview,
                 "folderId": folder.id,
                 "index": -1
             }
