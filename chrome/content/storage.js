@@ -113,7 +113,8 @@ fastdial.Storage = new function() {
                 "shortcutKey": child.shortcutKey,
                 "refresh": child.refresh,
                 "refreshAll": child.refreshAll,
-                "preview": child.preview
+                "preview": child.preview,
+                "loadInSidebar": child.loadInSidebar
             }
             if (child.isFolder) {
                 item.children = exportFolder(child, tempDir);
@@ -165,6 +166,7 @@ fastdial.Storage = new function() {
                 "refresh": child.refresh,
                 "refreshAll": child.refreshAll,
                 "preview": child.preview,
+                "loadInSidebar": child.loadInSidebar,
                 "folderId": folder.id,
                 "index": -1
             }
