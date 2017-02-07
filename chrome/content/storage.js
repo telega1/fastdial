@@ -47,11 +47,16 @@ fastdial.Storage = new function() {
         var sort = order == "title" ? fastdial.Bookmark.SORT_TITLE :
                    order == "visits" ? fastdial.Bookmark.SORT_VISITS : 0;
         var items = [];
+        var numFolders = 0;
+
         var bookmarks = fastdial.Bookmark.getBookmarks(folderId, sort, maxResults);
         for (var i = 0; i < bookmarks.length; i++) {
             var bookmark = bookmarks[i];
             getProperties(bookmark);
-            if (order) items.push(bookmark);
+            if (order) {
+                if (bookmark.isFolder) items.splice(numFolders++, 0, bookmark);
+                else items.push(bookmark);
+            }
             else {
                 if (isNaN(parseInt(bookmark.thumbIndex)) || items[bookmark.thumbIndex]) {
                     bookmark.thumbIndex = getFreeIndex(items);
