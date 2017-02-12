@@ -201,6 +201,7 @@ function onResize() {
 }
 
 function onContextMenu(e) {
+    if (fastdial.Dom.is(e.target, "search-icon")) return e.preventDefault();
     if (fastdial.Dom.is(e.target, "search-input")) return;
     wnd.document.popupNode = e.target;
     var box = fastdial.Dom.parent(e.target, "box");
